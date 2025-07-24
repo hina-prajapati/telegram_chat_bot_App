@@ -93,7 +93,6 @@ class TelegramController extends Controller
         // App::setLocale($state->language ?? 'en');
         App::setLocale($state->language ?? config('app.locale'));
 
-
         $handlers = $this->getHandlers();
         $currentStep = $state->current_step;
         $answers = $state->answers ?? [];
@@ -101,6 +100,75 @@ class TelegramController extends Controller
         if (strtolower($text) === '/start') {
             return $this->handleStartCommand($chatId, $state);
         }
+
+        if (strtolower($text) === '/profile') {
+            $profile = Profile::where('telegram_user_id', $chatId)->first();
+            $preference = Preference::where('telegram_user_id', $chatId)->first();
+
+            if (!$profile || !$preference) {
+                return $this->sendMessage($chatId, "❌ You haven't created a profile yet. Type /start to begin.");
+            }
+
+            return $this->showProfile($chatId);
+        }
+
+        if (strtolower($text) === '/matches') {
+            // Check if profile exists
+            $profile = Profile::where('telegram_user_id', $chatId)->first();
+            if (!$profile) {
+                return $this->sendMessage($chatId, "❌ You need to create a profile first. Type /start.");
+            }
+
+            $matchController = app(\App\Http\Controllers\MatchController::class);
+            return $matchController->findMatches($chatId, $profile);
+        }
+
+             if (strtolower($text) === '/approved') {
+                $profile = Profile::where('telegram_user_id', $chatId)->first();
+
+                // if (!$profile) {
+                //     return $this->sendMessage($chatId, "❌ You need to create a profile first using /start.");
+                // }
+
+                // Fetch all approved requests involving this user
+                $approvedRequests = MatchRequest::where('status', 'approved')
+                    ->where(function ($query) use ($profile) {
+                        $query->where('sender_id', $profile->id)
+                            ->orWhere('receiver_id', $profile->id);
+                    })
+                    ->get();
+
+                if ($approvedRequests->isEmpty()) {
+                    return $this->sendMessage($chatId, "😕 You haven't approved or been approved by any users yet.");
+                }
+
+                // Collect other profiles (either sender or receiver)
+                foreach ($approvedRequests as $request) {
+                    $otherProfile = $request->sender_id == $profile->id
+                        ? Profile::find($request->receiver_id)
+                        : Profile::find($request->sender_id);
+
+                    if (!$otherProfile) continue;
+
+                    $summary = "*❤️ Approved Match:*\n";
+                    $summary .= "▪️ *Name:* {$otherProfile->name}\n";
+                    $summary .= "▪️ *Gender:* {$otherProfile->gender}\n";
+                    $summary .= "▪️ *Caste:* {$otherProfile->caste}\n";
+                    $summary .= "▪️ *Height:* {$otherProfile->height}\n";
+                    $summary .= "▪️ *City:* {$otherProfile->city}\n";
+                    $summary .= "▪️ *Phone:* {$otherProfile->phone}\n";
+                    $summary .= "▪️ *Email:* {$otherProfile->email}\n";
+
+                    $photo = $otherProfile->profile_photo ?? 'profile_Pic.jpg';
+                    $photoUrl = asset('uploads/profiles/' . $photo);
+
+                    $this->sendPhoto($chatId, $photoUrl);
+                    $this->sendMessage($chatId, $summary, ['parse_mode' => 'Markdown']);
+                }
+
+                return response('ok');
+            }
+
 
         if ($currentStep === 'selecting_language') {
             return $this->handleLanguageSelection($chatId, $text, $state);
@@ -527,34 +595,6 @@ class TelegramController extends Controller
             return $this->handleSendRequest($chatId, $matchId);
         }
 
-        // if (str_starts_with($callbackData, 'approve_request_')) {
-        //     [$prefix, $action, $senderId, $receiverId] = explode('_', $callbackData);
-
-        //     Log::info('🔍 Approving request', compact('senderId', 'receiverId'));
-
-        //     $matchRequest = MatchRequest::where('sender_id', $senderId)
-        //         ->where('receiver_id', $receiverId)
-        //         ->first();
-
-        //     if (!$matchRequest) {
-        //         Log::warning("❌ MatchRequest not found", [
-        //             'sender_id' => $senderId,
-        //             'receiver_id' => $receiverId
-        //         ]);
-
-        //         return $this->sendMessage($chatId, "❌ Match request not found.");
-        //     }
-
-        //     $matchRequest->status = 'approved';
-        //     $matchRequest->save();
-
-        //     $sender = Profile::find($senderId);
-        //     $receiver = Profile::find($receiverId); // Make sure this ID is correct!
-
-        //     $this->sendMessage($sender->telegram_user_id, "🎉 *{$receiver->name}* has approved your request!", ['parse_mode' => 'Markdown']);
-        //     $this->sendMessage($chatId, "✅ You have approved *{$sender->name}*'s request!", ['parse_mode' => 'Markdown']);
-        // }
-
 
         if (str_starts_with($callbackData, 'approve_request_')) {
             [$prefix, $action, $senderId, $receiverId] = explode('_', $callbackData);
@@ -606,28 +646,6 @@ class TelegramController extends Controller
             );
         }
 
-
-        // ❌ Reject Request
-        // if (str_starts_with($callbackData, 'reject_request_')) {
-        //     $senderId = str_replace('reject_request_', '', $callbackData);
-        //     $receiver = Profile::where('telegram_user_id', $chatId)->first();
-
-        //     $matchRequest = \App\Models\MatchRequest::where('sender_id', $senderId)
-        //         ->where('receiver_id', $receiver->id)
-        //         ->first();
-
-        //     if ($matchRequest) {
-        //         $matchRequest->status = 'rejected';
-        //         $matchRequest->save();
-
-        //         $sender = Profile::find($senderId);
-        //         app(TelegramController::class)->sendMessage($sender->telegram_user_id, "❌ *{$receiver->name}* rejected your request.", ['parse_mode' => 'Markdown']);
-        //         return $this->sendMessage($chatId, "❌ You rejected *{$sender->name}*'s request.", ['parse_mode' => 'Markdown']);
-        //     }
-
-        //     return $this->sendMessage($chatId, "❌ Match request not found.");
-        // }
-
         if (str_starts_with($callbackData, 'reject_request_')) {
             [$prefix, $action, $senderId, $receiverId] = explode('_', $callbackData);
 
@@ -659,7 +677,6 @@ class TelegramController extends Controller
 
             return $this->sendMessage($chatId, "❌ Match request not found.");
         }
-
 
         // ⬅️ Previous Matches
         if ($callbackData === 'previous_match') {
@@ -722,7 +739,7 @@ class TelegramController extends Controller
     {
         $matchUser = Profile::find($matchId);
         $currentUser = Profile::where('telegram_user_id', $chatId)->first();
-
+         
         if (!$matchUser || !$currentUser) {
             return $this->sendMessage($chatId, "❌ Unable to send request.");
         }
@@ -893,5 +910,4 @@ class TelegramController extends Controller
             ['parse_mode' => 'Markdown']
         );
     }
-
 }

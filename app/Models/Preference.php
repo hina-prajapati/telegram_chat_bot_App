@@ -19,7 +19,9 @@ class Preference extends Model
         'partner_max_height',
         'partner_gender',
         'partner_language',
-        'partner_income_range'
+        'partner_income_range',
+        'partner_religion',
+        'partner_job_status'
     ];
 
 

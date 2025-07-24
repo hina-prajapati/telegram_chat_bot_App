@@ -206,7 +206,16 @@ return [
 
 
 
-
+    'ask_partner_job_status' => '💼 *What is your preferred partner\'s job status?*',
+    'thanks_partner_job_status' => '✅ Preferred partner job status saved as *:status*.',
+    'job_employed' => 'Employed',
+    'job_self_employed' => 'Self-employed',
+    'job_student' => 'Student',
+    'job_unemployed' => 'Unemployed',
+    'job_service' => 'Service/Job',
+    'job_business' => 'Business',
+    'job_home_business' => 'Home-based Business',
+    'job_house_maker' => 'House Maker',
 
 
     'ask_job_status' => '💼 *Select your current job status:*',
@@ -295,6 +304,20 @@ return [
 
      'ask_height_select' => '📏 *Please select your height* from the list below.',
 
+
+     'ask_partner_religion' => "🙏 What is your *preferred partner's religion*?",
+    'thanks_partner_religion' => "✅ Preferred partner religion saved as *:partner_religion*.",
+    'partner_religion_hindu' => 'Hindu',
+    'partner_religion_muslim' => 'Muslim',
+    'partner_religion_christian' => 'Christian',
+    'partner_religion_sikh' => 'Sikh',
+    'partner_religion_buddhist' => 'Buddhist',
+    'partner_religion_jain' => 'Jain',
+    'partner_religion_parsi' => 'Parsi (Zoroastrian)',
+    'partner_religion_jewish' => 'Jewish',
+    'partner_religion_tribal' => 'Tribal / Indigenous',
+    'partner_religion_none' => 'No Religion / Atheist',
+    'partner_religion_any' => 'Any',
 
     'ask_body_type' => "🏋️‍♂️ What is your *Body Type*?",
     'body_type_saved' => "✅ Body Type saved as *:value*.",
