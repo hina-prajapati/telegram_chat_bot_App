@@ -182,26 +182,45 @@ class MatchController extends TelegramController
                 $query->where('height', '<=', $preference->partner_max_height);
             }
 
+              if ($preference->partner_caste && strtolower($preference->partner_caste) !== 'any') {
+                $query->where('caste', $preference->partner_caste);
+            }
+
+            if ($preference->partner_income_range && $preference->partner_income_range !== 'Any') {
+            $incomeHelper = new \App\Http\Controllers\Profile\IncomeRangeController();
+            $prefIncome = $incomeHelper->getMinMax($preference->partner_income_range);
+
+            $profiles = $profiles->filter(function ($profile) use ($incomeHelper, $prefIncome) {
+            $profileIncome = $incomeHelper->getMinMax($profile->income_range);
+
+            $overlap = $profileIncome && $prefIncome
+                ? ($profileIncome['max'] >= $prefIncome['min'] && $profileIncome['min'] <= $prefIncome['max'])
+                : false;
+
+                return $overlap;
+            });
+        }
+
             $match = $query->first();
         }
 
         // ----------- LEVEL 3: Gender + Location (State/City) -----------
-        if (!$match) {
-            Log::info('Running 3nd level match:', [
-                'chat_id' => $chatId,
-                'opposite_gender' => $oppositeGender,
-            ]);
-            $query = Profile::query()
-                ->where('telegram_user_id', '!=', $chatId)
-                ->whereRaw('LOWER(gender) = ?', [$oppositeGender])
-                // ->where('state', $userProfile->state)
-                ->whereNotIn('id', $shownIds);
+        // if (!$match) {
+        //     Log::info('Running 3nd level match:', [
+        //         'chat_id' => $chatId,
+        //         'opposite_gender' => $oppositeGender,
+        //     ]);
+        //     $query = Profile::query()
+        //         ->where('telegram_user_id', '!=', $chatId)
+        //         ->whereRaw('LOWER(gender) = ?', [$oppositeGender])
+        //         // ->where('state', $userProfile->state)
+        //         ->whereNotIn('id', $shownIds);
 
-            // Optionally, also filter by city
-            // ->where('city', $userProfile->city);
+        //     // Optionally, also filter by city
+        //     // ->where('city', $userProfile->city);
 
-            $match = $query->first();
-        }
+        //     $match = $query->first();
+        // }
 
         // ----------- No Match Found -----------
         if (!$match) {
@@ -252,18 +271,15 @@ class MatchController extends TelegramController
             //     ->whereIn('status', ['pending', 'approved'])
             //     ->first();
 
-
-          $existingRequest = MatchRequest::where(function ($q) use ($senderProfile, $match) {
-        $q->where('sender_id', $senderProfile->id)
-          ->where('receiver_id', $match->id);
-        })
-        ->orWhere(function ($q) use ($senderProfile, $match) {
-            $q->where('sender_id', $match->id)
-            ->where('receiver_id', $senderProfile->id);
-        })
-        ->where('status', 'approved')
-        ->first();
-
+            $existingRequest = MatchRequest::where(function ($q) use ($senderProfile, $match) {
+                $q->where('sender_id', $senderProfile->id)
+                ->where('receiver_id', $match->id);
+            })->orWhere(function ($q) use ($senderProfile, $match) {
+                $q->where('sender_id', $match->id)
+                ->where('receiver_id', $senderProfile->id);
+            })
+            ->whereIn('status', ['pending', 'approved'])
+            ->first();
 
             $buttons = [];
             if ($existingRequest) {
@@ -367,13 +383,31 @@ class MatchController extends TelegramController
         if ($preference->partner_max_age) {
             $query->whereRaw("TIMESTAMPDIFF(YEAR, dob, CURDATE()) <= ?", [$preference->partner_max_age]);
         }
-        if ($preference->partner_marital_status) {
+        // if ($preference->partner_marital_status) {
+        //     $query->where('marital_status', $preference->partner_marital_status);
+        // }
+
+        if (
+        $preference->partner_marital_status &&
+        strtolower($preference->partner_marital_status) !== 'any'
+        )
+         {
             $query->where('marital_status', $preference->partner_marital_status);
         }
-        if ($preference->partner_caste) {
+
+        // if ($preference->partner_caste) {
+        //     $query->where('caste', $preference->partner_caste);
+        // }
+
+        if ($preference->partner_caste && strtolower($preference->partner_caste) !== 'any') {
             $query->where('caste', $preference->partner_caste);
         }
-        if ($preference->partner_language) {
+
+        // if ($preference->partner_language) {
+        //     $query->where('mother_tongue', $preference->partner_language);
+        // }
+
+        if ($preference->partner_language && strtolower($preference->partner_language) !== 'any') {
             $query->where('mother_tongue', $preference->partner_language);
         }
 

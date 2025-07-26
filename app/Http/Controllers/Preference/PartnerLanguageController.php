@@ -87,7 +87,7 @@ class PartnerLanguageController extends BaseQuestionController
                 'keyboard' => [
                     [['text' => 'Hindi'], ['text' => 'English']],
                     [['text' => 'Gujarati'], ['text' => 'Marathi']],
-                    [['text' => 'Punjabi'], ['text' => 'Other']]
+                    [['text' => 'Punjabi'], ['text' => 'Any']]
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true
@@ -97,7 +97,7 @@ class PartnerLanguageController extends BaseQuestionController
 
     private static function allowedOptions(): array
     {
-        return ['Hindi', 'English', 'Gujarati', 'Marathi', 'Punjabi', 'Other'];
+        return ['Hindi', 'English', 'Gujarati', 'Marathi', 'Punjabi', 'Any'];
     }
 }
 

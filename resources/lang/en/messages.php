@@ -203,9 +203,6 @@ return [
 
 
 
-
-
-
     'ask_partner_job_status' => '💼 *What is your preferred partner\'s job status?*',
     'thanks_partner_job_status' => '✅ Preferred partner job status saved as *:status*.',
     'job_employed' => 'Employed',
@@ -252,7 +249,7 @@ return [
     'profession_businessman' => 'Businessman',
     'profession_student' => 'Student',
     'profession_house_maker' => 'House Maker',
-    // 'profession_other' => 'Other',
+    'profession_other' => 'Other',
 
     // Profile income
     'ask_income_range' => '💰 *Please select your Income Range:*',
