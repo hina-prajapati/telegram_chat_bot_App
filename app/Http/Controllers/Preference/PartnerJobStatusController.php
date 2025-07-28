@@ -6,7 +6,7 @@ use App\Models\Preference;
 use App\Models\TelegramUserState;
 use App\Http\Controllers\BaseQuestionController;
 
-class JobStatusController extends BaseQuestionController
+class PartnerJobStatusController extends BaseQuestionController
 {
     public function handle($chatId, $text, TelegramUserState $state)
     {

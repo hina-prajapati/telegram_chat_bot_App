@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Profile\TelegramController;
+use App\Http\Controllers\Profile\IncomeRangeController;
 
 class MatchController extends TelegramController
 {
@@ -155,17 +156,21 @@ class MatchController extends TelegramController
         $match = $profiles->first();
 
         // ----------- LEVEL 2: Gender, Age, Height Only -----------
+
+
         if (!$match) {
-            Log::info('Running 2nd level match: Gender, Age, Height only', [
+
+            Log::info('Running match 2 : Gender, Age, Height, and Income', [
                 'chat_id' => $chatId,
                 'opposite_gender' => $oppositeGender,
                 'min_age' => $preference->partner_min_age,
                 'max_age' => $preference->partner_max_age,
                 'min_height' => $preference->partner_min_height,
                 'max_height' => $preference->partner_max_height,
+                'income_range' => $preference->partner_income_range,
             ]);
             $query = Profile::query()
-                ->where('telegram_user_id', '!=', $chatId)
+                ->where('id', '!=', $userProfile->id)
                 ->whereRaw('LOWER(gender) = ?', [$oppositeGender])
                 ->whereNotIn('id', $shownIds);
 
@@ -181,27 +186,25 @@ class MatchController extends TelegramController
             if ($preference->partner_max_height) {
                 $query->where('height', '<=', $preference->partner_max_height);
             }
-
-              if ($preference->partner_caste && strtolower($preference->partner_caste) !== 'any') {
-                $query->where('caste', $preference->partner_caste);
+            if ($preference->partner_religion && strtolower($preference->partner_religion) !== 'any') {
+                $query->where('caste', $preference->partner_religion);
             }
 
-            if ($preference->partner_income_range && $preference->partner_income_range !== 'Any') {
-            $incomeHelper = new \App\Http\Controllers\Profile\IncomeRangeController();
-            $prefIncome = $incomeHelper->getMinMax($preference->partner_income_range);
+            $results = $query->get();
 
-            $profiles = $profiles->filter(function ($profile) use ($incomeHelper, $prefIncome) {
-            $profileIncome = $incomeHelper->getMinMax($profile->income_range);
+            if ($preference->partner_income_range !== 'Any') {
+                $incomeHelper = new IncomeRangeController();
+                $prefIncome = $incomeHelper->getMinMax($preference->partner_income_range);
 
-            $overlap = $profileIncome && $prefIncome
-                ? ($profileIncome['max'] >= $prefIncome['min'] && $profileIncome['min'] <= $prefIncome['max'])
-                : false;
+                $results = $results->filter(function ($profile) use ($incomeHelper, $prefIncome) {
+                    $profileIncome = $incomeHelper->getMinMax($profile->income_range);
+                    return $profileIncome && $prefIncome &&
+                        $profileIncome['max'] >= $prefIncome['min'] &&
+                        $profileIncome['min'] <= $prefIncome['max'];
+                });
+            }
 
-                return $overlap;
-            });
-        }
-
-            $match = $query->first();
+            $match = $results->first();
         }
 
         // ----------- LEVEL 3: Gender + Location (State/City) -----------
@@ -273,13 +276,13 @@ class MatchController extends TelegramController
 
             $existingRequest = MatchRequest::where(function ($q) use ($senderProfile, $match) {
                 $q->where('sender_id', $senderProfile->id)
-                ->where('receiver_id', $match->id);
+                    ->where('receiver_id', $match->id);
             })->orWhere(function ($q) use ($senderProfile, $match) {
                 $q->where('sender_id', $match->id)
-                ->where('receiver_id', $senderProfile->id);
+                    ->where('receiver_id', $senderProfile->id);
             })
-            ->whereIn('status', ['pending', 'approved'])
-            ->first();
+                ->whereIn('status', ['pending', 'approved'])
+                ->first();
 
             $buttons = [];
             if ($existingRequest) {
@@ -383,38 +386,23 @@ class MatchController extends TelegramController
         if ($preference->partner_max_age) {
             $query->whereRaw("TIMESTAMPDIFF(YEAR, dob, CURDATE()) <= ?", [$preference->partner_max_age]);
         }
-        // if ($preference->partner_marital_status) {
-        //     $query->where('marital_status', $preference->partner_marital_status);
-        // }
 
         if (
-        $preference->partner_marital_status &&
-        strtolower($preference->partner_marital_status) !== 'any'
-        )
-         {
+            $preference->partner_marital_status &&
+            strtolower($preference->partner_marital_status) !== 'any'
+        ) {
             $query->where('marital_status', $preference->partner_marital_status);
         }
 
-        // if ($preference->partner_caste) {
-        //     $query->where('caste', $preference->partner_caste);
-        // }
-
-        if ($preference->partner_caste && strtolower($preference->partner_caste) !== 'any') {
-            $query->where('caste', $preference->partner_caste);
+        if ($preference->partner_religion && strtolower($preference->partner_religion) !== 'any') {
+            $query->where('religion', $preference->partner_religion);
         }
-
-        // if ($preference->partner_language) {
-        //     $query->where('mother_tongue', $preference->partner_language);
-        // }
 
         if ($preference->partner_language && strtolower($preference->partner_language) !== 'any') {
             $query->where('mother_tongue', $preference->partner_language);
         }
 
-        if ($preference->partner_religion && $preference->partner_religion !== 'Any') {
-            $query->where('religion', $preference->partner_religion);
-        }
-        if ($preference->partner_job_status && $preference->partner_job_status !== 'Any') {
+        if ($preference->partner_job_status && $preference->partner_job_status !== 'any') {
             $query->where('job_status', $preference->partner_job_status);
         }
 
@@ -436,7 +424,7 @@ class MatchController extends TelegramController
                     ? ($profileIncome['max'] >= $prefIncome['min'] && $profileIncome['min'] <= $prefIncome['max'])
                     : false;
 
-                Log::info('Income Range Debug', [
+                Log::info('Income Range Debug first', [
                     'profile_id' => $profile->id,
                     'profile_income' => $profile->income_range,
                     'profile_min' => $profileIncome['min'] ?? null,

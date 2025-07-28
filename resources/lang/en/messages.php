@@ -302,7 +302,7 @@ return [
      'ask_height_select' => '📏 *Please select your height* from the list below.',
 
 
-     'ask_partner_religion' => "🙏 What is your *preferred partner's religion*?",
+    'ask_partner_religion' => "🙏 What is your *preferred partner's religion*?",
     'thanks_partner_religion' => "✅ Preferred partner religion saved as *:partner_religion*.",
     'partner_religion_hindu' => 'Hindu',
     'partner_religion_muslim' => 'Muslim',
