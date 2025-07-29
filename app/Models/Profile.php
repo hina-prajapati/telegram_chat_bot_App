@@ -49,4 +49,10 @@ class Profile extends Model
     {
         return $this->telegram_user_id; // Telegram chat ID
     }
+
+    public function preference()
+    {
+        return $this->hasOne(\App\Models\Preference::class, 'profile_id', 'id');
+    }
+
 }

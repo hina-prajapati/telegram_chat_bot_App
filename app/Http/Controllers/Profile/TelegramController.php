@@ -17,6 +17,7 @@ use App\Models\{
     MatchRequest
 };
 use Illuminate\Support\Facades\{Log, Http};
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Profile\{
     NameController,
     BioController,
@@ -99,11 +100,27 @@ class TelegramController extends Controller
         $currentStep = $state->current_step;
         $answers = $state->answers ?? [];
 
+        // if (strtolower($text) === '/start') {
+        //     return $this->handleStartCommand($chatId, $state);
+        // }
+
         if (strtolower($text) === '/start') {
+            // Send instructions to the user
+            $instructions = "📌 Welcome! Here are the commands you can use:\n"
+                . "/start - Create your profile\n"
+                . "/profile - View your profile\n"
+                . "/matches - See your matches\n"
+                . "/approved - View approved matches\n"
+                . "/pending - View pending profiles";
+
+            $this->sendMessage($chatId, $instructions);
+
             return $this->handleStartCommand($chatId, $state);
         }
 
+
         if (strtolower($text) === '/profile') {
+
             $profile = Profile::where('telegram_user_id', $chatId)->first();
             $preference = Preference::where('telegram_user_id', $chatId)->first();
 
@@ -125,52 +142,143 @@ class TelegramController extends Controller
             return $matchController->findMatches($chatId, $profile);
         }
 
-             if (strtolower($text) === '/approved') {
-                $profile = Profile::where('telegram_user_id', $chatId)->first();
+        //  if (strtolower($text) === '/approved') {
+        //     $profile = Profile::where('telegram_user_id', $chatId)->first();
 
-                // if (!$profile) {
-                //     return $this->sendMessage($chatId, "❌ You need to create a profile first using /start.");
-                // }
+        //     // if (!$profile) {
+        //     //     return $this->sendMessage($chatId, "❌ You need to create a profile first using /start.");
+        //     // }
 
-                // Fetch all approved requests involving this user
-                $approvedRequests = MatchRequest::where('status', 'approved')
-                    ->where(function ($query) use ($profile) {
-                        $query->where('sender_id', $profile->id)
-                            ->orWhere('receiver_id', $profile->id);
-                    })
-                    ->get();
+        //     // Fetch all approved requests involving this user
+        //     $approvedRequests = MatchRequest::where('status', 'approved')
+        //         ->where(function ($query) use ($profile) {
+        //             $query->where('sender_id', $profile->id)
+        //                 ->orWhere('receiver_id', $profile->id);
+        //         })
+        //         ->get();
 
-                if ($approvedRequests->isEmpty()) {
-                    return $this->sendMessage($chatId, "😕 You haven't approved or been approved by any users yet.");
-                }
+        //     if ($approvedRequests->isEmpty()) {
+        //         return $this->sendMessage($chatId, "😕 You haven't approved or been approved by any users yet.");
+        //     }
 
-                // Collect other profiles (either sender or receiver)
-                foreach ($approvedRequests as $request) {
-                    $otherProfile = $request->sender_id == $profile->id
-                        ? Profile::find($request->receiver_id)
-                        : Profile::find($request->sender_id);
+        //     // Collect other profiles (either sender or receiver)
+        //     foreach ($approvedRequests as $request) {
+        //         $otherProfile = $request->sender_id == $profile->id
+        //             ? Profile::find($request->receiver_id)
+        //             : Profile::find($request->sender_id);
 
-                    if (!$otherProfile) continue;
+        //         if (!$otherProfile) continue;
 
-                    $summary = "*❤️ Approved Match:*\n";
-                    $summary .= "▪️ *Name:* {$otherProfile->name}\n";
-                    $summary .= "▪️ *Gender:* {$otherProfile->gender}\n";
-                    $summary .= "▪️ *Caste:* {$otherProfile->caste}\n";
-                    $summary .= "▪️ *Height:* {$otherProfile->height}\n";
-                    $summary .= "▪️ *City:* {$otherProfile->city}\n";
-                    $summary .= "▪️ *Phone:* {$otherProfile->phone}\n";
-                    $summary .= "▪️ *Email:* {$otherProfile->email}\n";
+        //         $summary = "*❤️ Approved Match:*\n";
+        //         $summary .= "▪️ *Name:* {$otherProfile->name}\n";
+        //         $summary .= "▪️ *Gender:* {$otherProfile->gender}\n";
+        //         $summary .= "▪️ *Caste:* {$otherProfile->caste}\n";
+        //         $summary .= "▪️ *Height:* {$otherProfile->height}\n";
+        //         $summary .= "▪️ *City:* {$otherProfile->city}\n";
+        //         $summary .= "▪️ *Phone:* {$otherProfile->phone}\n";
+        //         $summary .= "▪️ *Email:* {$otherProfile->email}\n";
 
-                    $photo = $otherProfile->profile_photo ?? 'profile_Pic.jpg';
-                    $photoUrl = asset('uploads/profiles/' . $photo);
+        //         $summary .= "▪️ *Mother Tongue:* {$otherProfile->mother_tongue}\n";
+        //         $summary .= "▪️ *Religion:* {$otherProfile->religion}\n";
+        //         $summary .= "▪️ *Caste:* {$otherProfile->caste}\n";
+        //         $summary .= "▪️ *Education Level:* {$otherProfile->education_level}\n";
+        //         $summary .= "▪️ *Education Field:* {$otherProfile->education_field}\n";
+        //         $summary .= "▪️ *Working Sector:* {$otherProfile->working_sector}\n";
+        //         $summary .= "▪️ *Profession:* {$otherProfile->profession}\n";
+        //         $summary .= "▪️ *Phone:* {$otherProfile->phone}\n";
+        //         $summary .= "▪️ *Diet:* {$otherProfile->diet}\n";
+        //         $summary .= "▪️ *Smoking:* {$otherProfile->smoking}\n";
+        //         $summary .= "▪️ *Drinking:* {$otherProfile->drinking}\n";
+        //         $summary .= "▪️ *Height:* {$otherProfile->height}\n";
+        //         $summary .= "▪️ *Body Type:* {$otherProfile->body_type}\n";
+        //         $summary .= "▪️ *Skin Tone:* {$otherProfile->skin_tone}\n";
+        //         $summary .= "▪️ *Gender:* {$otherProfile->gender}\n";
+        //         $summary .= "▪️ *Job Status:* {$otherProfile->job_status}\n";
 
-                    $this->sendPhoto($chatId, $photoUrl);
-                    $this->sendMessage($chatId, $summary, ['parse_mode' => 'Markdown']);
-                }
+        //         $summary .= "▪️ *Partner Marital Status:* {$otherProfile->partner_marital_status}\n";
+        //         $summary .= "▪️ *Partner Caste:* {$otherProfile->partner_caste}\n";
+        //         $summary .= "▪️ *Partner Min Age:* {$otherProfile->partner_min_age}\n";
+        //         $summary .= "▪️ *Partner Max Age:* {$otherProfile->partner_max_age}\n";
+        //         $summary .= "▪️ *Partner Max Height:* {$otherProfile->partner_max_height}\n";
+        //         $summary .= "▪️ *Partner Gender:* {$otherProfile->partner_gender}\n";
 
-                return response('ok');
+        //         $summary .= "▪️ *Partner Income Range:* {$otherProfile->partner_income_range}\n";
+        //         $summary .= "▪️ *Partner Religion:* {$otherProfile->partner_religion}\n";
+        //         $summary .= "▪️ *Partner Job Status:* {$otherProfile->partner_job_status}\n";
+
+
+
+        //         $photo = $otherProfile->profile_photo ?? 'profile_Pic.jpg';
+        //         $photoUrl = secure_asset('uploads/profiles/' . $photo);
+
+        //         $this->sendPhoto($chatId, $photoUrl);
+        //         $this->sendMessage($chatId, $summary, ['parse_mode' => 'Markdown']);
+        //     }
+
+        //     return response('ok');
+        // }
+
+        if (strtolower($text) === '/approved') {
+            $profile = Profile::where('telegram_user_id', $chatId)->first();
+
+            if (!$profile) {
+                return $this->sendMessage($chatId, "❌ You need to create a profile first using /start.");
             }
 
+            // Fetch all approved match requests
+            $approvedRequests = MatchRequest::where('status', 'approved')
+                ->where(function ($query) use ($profile) {
+                    $query->where('sender_id', $profile->id)
+                        ->orWhere('receiver_id', $profile->id);
+                })
+                ->get();
+
+            if ($approvedRequests->isEmpty()) {
+                return $this->sendMessage($chatId, "😕 You haven't approved or been approved by any users yet.");
+            }
+
+            // Loop through and show other profiles using existing method
+            foreach ($approvedRequests as $request) {
+                $otherProfileId = $request->sender_id == $profile->id
+                    ? $request->receiver_id
+                    : $request->sender_id;
+
+                $this->showOtherProfile($chatId, $otherProfileId, true); // true = reveal contact
+            }
+
+            return response('ok');
+        }
+
+        if (strtolower($text) === '/pending') {
+            $profile = Profile::where('telegram_user_id', $chatId)->first();
+
+            if (!$profile) {
+                return $this->sendMessage($chatId, "❌ You need to create a profile first using /start.");
+            }
+
+            // Fetch all pending match requests (sent or received)
+            $pendingRequests = MatchRequest::where('status', 'pending')
+                ->where(function ($query) use ($profile) {
+                    $query->where('sender_id', $profile->id)
+                        ->orWhere('receiver_id', $profile->id);
+                })
+                ->get();
+
+            if ($pendingRequests->isEmpty()) {
+                return $this->sendMessage($chatId, "😕 You have no pending match requests.");
+            }
+
+            // Loop through and show the other profiles
+            foreach ($pendingRequests as $request) {
+                $otherProfileId = $request->sender_id == $profile->id
+                    ? $request->receiver_id
+                    : $request->sender_id;
+
+                $this->showOtherProfile($chatId, $otherProfileId, false); // false = hide contact
+            }
+
+            return response('ok');
+        }
 
         if ($currentStep === 'selecting_language') {
             return $this->handleLanguageSelection($chatId, $text, $state);
@@ -224,7 +332,6 @@ class TelegramController extends Controller
     private function getHandlers(): array
     {
         return [
-
             'awaiting_name' => NameController::class,
             'awaiting_bio' => BioController::class,
             'awaiting_email' => EmailController::class,
@@ -254,8 +361,8 @@ class TelegramController extends Controller
             'awaiting_partner_caste' => PartnerCasteController::class,
             'awaiting_partner_min_age' => PartnerMinAgeController::class,
             'awaiting_partner_max_age' => PartnerMaxAgeController::class,
-            'awaiting_partner_gender' => PartnerReligionController::class,
-            'awaiting_partner_gender' => PartnerJobStatusController::class,
+            'awaiting_partner_religion' => PartnerReligionController::class,
+            'awaiting_partner_job_status' => PartnerJobStatusController::class,
             'awaiting_partner_income_range' => PartnerIncomeRangeController::class,
             'awaiting_partner_min_height' => PartnerMinHeightController::class,
             'awaiting_partner_max_height' => PartnerMaxHeightController::class,
@@ -349,7 +456,7 @@ class TelegramController extends Controller
             'chat_id' => $chatId,
             'text' => $text,
             'parse_mode' => 'Markdown'
-        ], $options);
+        ], is_array($options) ? $options : []);
 
         $response = Http::post($url, $payload);
 
@@ -361,31 +468,86 @@ class TelegramController extends Controller
         return $response->json();
     }
 
-    public function sendPhoto($chatId, $photoUrlOrPath, $caption = '')
+    // public function sendPhoto($chatId, $photoUrlOrPath, $caption = '')
+    // {
+    //     // If it's a local path, use multipart
+    //     if (file_exists(public_path('uploads/profiles/' . basename($photoUrlOrPath)))) {
+    //         $response = Http::attach(
+    //             'photo',
+    //             file_get_contents(public_path('uploads/profiles/' . basename($photoUrlOrPath))),
+    //             basename($photoUrlOrPath)
+    //         )->post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendPhoto", [
+    //             'chat_id' => $chatId,
+    //             'caption' => $caption,
+    //             'parse_mode' => 'Markdown',
+    //         ]);
+    //     } else {
+    //         // Otherwise, fallback to URL
+    //         $response = Http::post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendPhoto", [
+    //             'chat_id' => $chatId,
+    //             'photo' => $photoUrlOrPath,
+    //             'caption' => $caption,
+    //             'parse_mode' => 'Markdown',
+    //         ]);
+    //     }
+
+    //     Log::info('sendPhoto response: ' . $response->body());
+    // }
+
+    // public function sendPhoto($chatId, $photoUrlOrPath, $caption = '')
+    // {
+    //     $fullPath = public_path('uploads/profiles/' . basename($photoUrlOrPath));
+
+    //     if (file_exists($fullPath) && is_readable($fullPath)) {
+    //         $response = Http::attach(
+    //             'photo',
+    //             file_get_contents($fullPath),
+    //             basename($fullPath)
+    //         )->post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendPhoto", [
+    //             'chat_id' => $chatId,
+    //             'caption' => $caption,
+    //             'parse_mode' => 'Markdown',
+    //         ]);
+    //     } else {
+    //         Log::error("❌ Image not found or unreadable: $fullPath");
+    //         $this->sendMessage($chatId, "⚠️ Profile image not found.");
+    //         return;
+    //     }
+
+    //     Log::info('sendPhoto response: ' . $response->body());
+    // }
+    public function sendPhoto($chatId, $photoUrlOrPath, $caption = '', $extraOptions = [])
     {
-        // If it's a local path, use multipart
-        if (file_exists(public_path('uploads/profiles/' . basename($photoUrlOrPath)))) {
+        $isLocal = file_exists(public_path('uploads/profiles/' . basename($photoUrlOrPath)));
+
+        if ($isLocal) {
             $response = Http::attach(
                 'photo',
                 file_get_contents(public_path('uploads/profiles/' . basename($photoUrlOrPath))),
                 basename($photoUrlOrPath)
-            )->post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendPhoto", [
+            )->post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendPhoto", array_merge([
                 'chat_id' => $chatId,
                 'caption' => $caption,
                 'parse_mode' => 'Markdown',
-            ]);
+            ], $extraOptions));
         } else {
-            // Otherwise, fallback to URL
-            $response = Http::post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendPhoto", [
+            if (!preg_match('/\.(jpg|jpeg|png|gif)$/i', $photoUrlOrPath)) {
+                Log::error("Invalid image URL: $photoUrlOrPath");
+                return;
+            }
+
+            $response = Http::post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendPhoto", array_merge([
                 'chat_id' => $chatId,
                 'photo' => $photoUrlOrPath,
                 'caption' => $caption,
                 'parse_mode' => 'Markdown',
-            ]);
+            ], $extraOptions));
         }
 
         Log::info('sendPhoto response: ' . $response->body());
     }
+
+
 
     public function showProfile($chatId, $answers = [])
     {
@@ -460,15 +622,23 @@ class TelegramController extends Controller
             ? $gallery->image_path
             : 'profile_Pic.jpg'; // ✅ fallback default
 
-        $photoPath = public_path('uploads/profiles/' . $filename);
+        // $photoPath = public_path('uploads/profiles/' . $filename);
 
-        // ✅ Always send photo — either user's or default
-        if (file_exists($photoPath)) {
-            $this->sendPhoto($chatId, $photoPath, $summary, ['parse_mode' => 'Markdown']);
-        } else {
-            $photoUrl = secure_asset('uploads/profiles/' . $filename);
-            $this->sendPhoto($chatId, $photoUrl, $summary, ['parse_mode' => 'Markdown']);
+        // // ✅ Always send photo — either user's or default
+        // if (file_exists($photoPath)) {
+        //     $this->sendPhoto($chatId, $photoPath, $summary, ['parse_mode' => 'Markdown']);
+        // } else {
+        //     $photoUrl = secure_asset('uploads/profiles/' . $filename);
+        //     $this->sendPhoto($chatId, $photoUrl, $summary, ['parse_mode' => 'Markdown']);
+        // }
+        $photoPath = public_path("uploads/profiles/{$filename}");
+
+        if (!file_exists($photoPath) || !is_readable($photoPath)) {
+            $photoPath = public_path("uploads/profiles/profile_Pic.jpg"); // fallback local path
         }
+
+        $this->sendPhoto($chatId, $photoPath, $summary);
+
         // ✅ Now show match button
         $matchController = app(\App\Http\Controllers\MatchController::class);
         return $matchController->findMatches($chatId, $profile);
@@ -705,9 +875,18 @@ class TelegramController extends Controller
                 // $summary .= "▪️ *Phone:* {$match->phone}\n";
 
                 // 📸 Send photo
-                $image = $match->profile_photo ?? 'profile_Pic.jpg';
-                $photoUrl = asset('uploads/profiles/' . $image);
-                $this->sendPhoto($chatId, $photoUrl);
+                // $image = $match->profile_photo ?? 'profile_Pic.jpg';
+                // $photoUrl = asset('uploads/profiles/' . $image);
+
+                $gallery = Gallery::where('profile_id', $match->id)
+                    ->latest('created_at')
+                    ->first();
+
+                $filename = ($gallery && $gallery->image_path)
+                    ? $gallery->image_path
+                    : 'profile_Pic.jpg';
+
+                // $this->sendPhoto($chatId, $photoUrl);
                 $senderProfile = Profile::where('telegram_user_id', $chatId)->first();
 
                 // ✅ Check if request already sent
@@ -724,11 +903,22 @@ class TelegramController extends Controller
 
                 $buttons[] = [['text' => '⏭️ Next Match', 'callback_data' => 'next_match']];
 
-                $this->sendMessage($chatId, $summary, [
-                    'parse_mode' => 'Markdown',
+                // $this->sendMessage($chatId, $summary, [
+                //     'parse_mode' => 'Markdown',
+                //     'reply_markup' => json_encode([
+                //         'inline_keyboard' => $buttons
+                //     ])
+                // ]);
+                $photoPath = public_path("uploads/profiles/{$filename}");
+
+                if (!file_exists($photoPath) || !is_readable($photoPath)) {
+                    $photoPath = public_path("uploads/profiles/profile_Pic.jpg"); // fallback local path
+                }
+
+                $this->sendPhoto($chatId, $photoPath, $summary, [
                     'reply_markup' => json_encode([
                         'inline_keyboard' => $buttons
-                    ])
+                    ]),
                 ]);
             }
 
@@ -742,7 +932,7 @@ class TelegramController extends Controller
     {
         $matchUser = Profile::find($matchId);
         $currentUser = Profile::where('telegram_user_id', $chatId)->first();
-         
+
         if (!$matchUser || !$currentUser) {
             return $this->sendMessage($chatId, "❌ Unable to send request.");
         }
@@ -770,7 +960,6 @@ class TelegramController extends Controller
         ]);
     }
 
-   
     public function showOtherProfile($chatId, $profileId, $revealContact = false)
     {
         $profile = Profile::find($profileId);
@@ -836,5 +1025,19 @@ class TelegramController extends Controller
             $summary,
             ['parse_mode' => 'Markdown']
         );
+    }
+
+    public function index()
+    {
+        $records = Profile::with('preference')->get();
+        // dd($records);
+        return view('getAllData', compact('records'));
+    }
+
+    public function show($id)
+    {
+        $record = Profile::with('preference')->findOrFail($id);
+        // dd($record);
+        return view('profiles.show', compact('record'));
     }
 }

@@ -22,6 +22,8 @@ Route::get('/', function () {
 Route::post('/telegram-webhook', [TelegramController::class, 'handleUpdate']);
 
 Route::get('/getAllData', [TelegramController::class, 'index'])->name('getAllData');
+Route::get('profiles/{id}', [TelegramController::class, 'show'])->name('profiles.show');
+
 // Route::get('/send-test-message', [TelegramController::class, 'sendTestMessage']);
 
 

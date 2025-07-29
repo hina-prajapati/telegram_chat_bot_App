@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Gallery;
 use App\Models\Profile;
 use App\Models\DailyMatch;
 use App\Models\Preference;
@@ -154,7 +155,9 @@ class MatchController extends TelegramController
         }
 
         $match = $profiles->first();
-
+        if ($match) {
+            $matchMessage = "🎯 Profile found based on your complete preferences.";
+        }
         // ----------- LEVEL 2: Gender, Age, Height Only -----------
 
 
@@ -187,7 +190,7 @@ class MatchController extends TelegramController
                 $query->where('height', '<=', $preference->partner_max_height);
             }
             if ($preference->partner_religion && strtolower($preference->partner_religion) !== 'any') {
-                $query->where('caste', $preference->partner_religion);
+                $query->where('religion', $preference->partner_religion);
             }
 
             $results = $query->get();
@@ -205,6 +208,9 @@ class MatchController extends TelegramController
             }
 
             $match = $results->first();
+            if ($match) {
+                $matchMessage = "🔍 Profile found based on some of your preferences (e.g., gender, age, height, religion, and income).";
+            }
         }
 
         // ----------- LEVEL 3: Gender + Location (State/City) -----------
@@ -253,6 +259,7 @@ class MatchController extends TelegramController
 
         // ----------- Build match summary -----------
         $summary = "*👤 Match Found:*\n";
+        $summary .= $matchMessage . "\n\n"; // ✅ First time is fine
         $summary .= "▪️ *Name:* {$match->name}\n";
         $summary .= "▪️ *Gender:* {$match->gender}\n";
         $summary .= "▪️ *Caste:* {$match->caste}\n";
@@ -264,16 +271,16 @@ class MatchController extends TelegramController
             $image = $match->profile_photo ?? 'profile_Pic.jpg';
             $path = public_path('uploads/profiles/' . $image);
 
-            if (file_exists($path)) {
-                $this->sendPhoto($chatId, $path);
-            }
             $senderProfile = Profile::where('telegram_user_id', $chatId)->first();
 
-            // $existingRequest = MatchRequest::where('sender_id', $senderProfile->id)
-            //     ->where('receiver_id', $match->id)
-            //     ->whereIn('status', ['pending', 'approved'])
-            //     ->first();
 
+            $gallery = Gallery::where('profile_id', $match->id)
+                ->latest('created_at')
+                ->first();
+
+            $filename = ($gallery && $gallery->image_path)
+                ? $gallery->image_path
+                : 'profile_Pic.jpg';
             $existingRequest = MatchRequest::where(function ($q) use ($senderProfile, $match) {
                 $q->where('sender_id', $senderProfile->id)
                     ->where('receiver_id', $match->id);
@@ -295,12 +302,16 @@ class MatchController extends TelegramController
                 $buttons[] = [['text' => '✅ Send Request', 'callback_data' => 'send_request_' . $match->id]];
             }
             $buttons[] = [['text' => '⏭️ Next Match', 'callback_data' => 'next_match']];
+            $photoPath = public_path("uploads/profiles/{$filename}");
 
-            $this->sendMessage($chatId, $summary, [
-                'parse_mode' => 'Markdown',
+            if (!file_exists($photoPath) || !is_readable($photoPath)) {
+                $photoPath = public_path("uploads/profiles/profile_Pic.jpg"); // fallback local path
+            }
+
+            $this->sendPhoto($chatId, $photoPath, $summary, [
                 'reply_markup' => json_encode([
                     'inline_keyboard' => $buttons
-                ])
+                ]),
             ]);
         } catch (\Exception $e) {
             $this->sendMessage($chatId, $summary, ['parse_mode' => 'Markdown']);

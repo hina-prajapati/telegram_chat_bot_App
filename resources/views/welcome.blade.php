@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Matchease – Find Your Perfect Match</title>
@@ -20,7 +21,7 @@
             background-color: #fff;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
             text-align: center;
             max-width: 500px;
         }
@@ -58,11 +59,26 @@
         }
     </style>
 </head>
+
 <body>
     <div class="card">
         <h1>Welcome to <strong>Matchease</strong> ❤️</h1>
-        <p>Start your journey of love and companionship.<br>Chat with our <strong>Matchmaking Bot</strong> now!</p>
+        <p>Start your journey of love and companionship.<br>
+            Chat with our <strong>Matchmaking Bot</strong> now!</p>
         <a href="https://t.me/My_chat_marry_bot" target="_blank" class="telegram-btn">💬 Chat Now on Telegram</a>
+
+        <hr>
+
+        <h3>📘 How to Use:</h3>
+        <ul>
+            <li><strong>/start</strong> – Create your profile if you're new.</li>
+            <li><strong>/profile</strong> – View your profile details.</li>
+            <li><strong>/matches</strong> – See your suggested matches.</li>
+            <li><strong>/approved</strong> – View profiles you've approved.</li>
+        </ul>
+        <p>Open the bot and type any of these commands to get started!</p>
     </div>
+
 </body>
+
 </html>
