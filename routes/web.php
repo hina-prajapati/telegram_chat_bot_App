@@ -3,6 +3,7 @@
 use App\Models\Profile;
 // use App\Http\Controllers\TelegramController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Profile\TelegramController;
 
 /*
@@ -23,6 +24,10 @@ Route::post('/telegram-webhook', [TelegramController::class, 'handleUpdate']);
 
 Route::get('/getAllData', [TelegramController::class, 'index'])->name('getAllData');
 Route::get('profiles/{id}', [TelegramController::class, 'show'])->name('profiles.show');
+
+
+Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::post('/profile/update/{id}', [ProfileController::class, 'update'])->name('profile.update');
 
 // Route::get('/send-test-message', [TelegramController::class, 'sendTestMessage']);
 

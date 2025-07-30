@@ -202,7 +202,6 @@ return [
 
 
 
-
     'ask_partner_job_status' => '💼 *What is your preferred partner\'s job status?*',
     'thanks_partner_job_status' => '✅ Preferred partner job status saved as *:status*.',
     'job_employed' => 'Employed',

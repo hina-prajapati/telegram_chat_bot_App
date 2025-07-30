@@ -1,23 +1,54 @@
-<h2>All Users</h2>
-<table border="1">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>City</th>
-            <th>Gender</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($records as $record)
-            <tr>
-                <td>{{ $record->name }}</td>
-                <td>{{ $record->city }}</td>
-                <td>{{ $record->gender }}</td>
-                <td>
-                    <a href="{{ route('profiles.show', ['id' => $record->id]) }}">View Profile</a>
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-gradient text-white" style="background: linear-gradient(90deg, #007bff, #00c6ff);">
+            <h4 class="mb-0"><i class="bi bi-people-fill me-2"></i>All Users</h4>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Photo</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">City</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($records as $index => $record)
+                            <tr class="text-center">
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    <img src="{{ asset('uploads/profiles/' . ($record->profile_photo ?? 'profile_Pic.jpg')) }}"
+                                         alt="Profile" width="40" height="40" class="rounded-circle shadow-sm">
+                                </td>
+                                <td class="fw-semibold">{{ $record->name }}</td>
+                                <td>{{ $record->city }}</td>
+                                <td>{{ ucfirst($record->gender) }}</td>
+                                <td>
+                                    <a href="{{ route('profiles.show', ['id' => $record->id]) }}"
+                                       class="btn btn-sm btn-outline-primary">
+                                       <i class="bi bi-eye-fill me-1"></i>View
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-3">
+                                    <i class="bi bi-emoji-frown"></i> No users found.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional: Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">

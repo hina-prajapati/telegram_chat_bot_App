@@ -249,6 +249,33 @@ class TelegramController extends Controller
             return response('ok');
         }
 
+        if (strtolower($text) === '/update_profile') {
+        $profile = Profile::where('telegram_user_id', $chatId)->first();
+        $preference = Preference::where('telegram_user_id', $chatId)->first();
+
+         $profile = Profile::where('telegram_user_id', $chatId)->first();
+         $preference = Preference::where('telegram_user_id', $chatId)->first();
+
+        // Step 2: Validation
+        if (!$profile || !$preference) {
+            return $this->sendMessage($chatId, "❌ No profile or preferences found. Type /start to create your profile.");
+        }
+        $profileId = $profile->id;
+
+        // Step 3: Ensure profile_id in preferences matches profile table
+        if ($preference->profile_id != $profile->id) {
+            return $this->sendMessage($chatId, "❌ Mismatch in profile linkage. Please contact support.");
+        }
+
+        // $editUrl = "http://127.0.0.1:8000/profile/edit/$profileId";
+        $editUrl = "http://127.0.0.1:8000/profile/edit/$profileId?chat_id=$chatId";
+
+        return $this->sendMessage($chatId, "📝 Click the link below to update your profile:\n\n<a href='$editUrl'>Edit Profile</a>", [
+            'parse_mode' => 'HTML'
+        ]);
+        }
+
+
         if (strtolower($text) === '/pending') {
             $profile = Profile::where('telegram_user_id', $chatId)->first();
 
@@ -274,7 +301,7 @@ class TelegramController extends Controller
                     ? $request->receiver_id
                     : $request->sender_id;
 
-                $this->showOtherProfile($chatId, $otherProfileId, false); // false = hide contact
+                $this->showProfile($chatId, $otherProfileId, false); // false = hide contact
             }
 
             return response('ok');
