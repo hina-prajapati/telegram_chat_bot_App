@@ -243,7 +243,12 @@ class MatchController extends TelegramController
                 $buttons[] = [['text' => '⬅️ Previous Profile', 'callback_data' => 'previous_match']];
             }
 
-            return $this->sendMessage($chatId, "😔 No more matches found.", [
+            // return $this->sendMessage($chatId, "😔 No more matches found.", [
+            //     'reply_markup' => json_encode([
+            //         'inline_keyboard' => $buttons
+            //     ])
+            // ]);
+            return $this->sendMessage($chatId, "🔍 Hang in there! We're continuously searching for a perfect match for you.", [ // subtle placeholder
                 'reply_markup' => json_encode([
                     'inline_keyboard' => $buttons
                 ])
