@@ -51,7 +51,7 @@ class GenderController extends BaseQuestionController
         $validOptions = [
             __('messages.gender_male'),
             __('messages.gender_female'),
-            __('messages.gender_other'),
+            // __('messages.gender_other'),
         ];
 
         if (!in_array($text, $validOptions)) {
@@ -82,7 +82,7 @@ class GenderController extends BaseQuestionController
             'reply_markup' => json_encode([
                 'keyboard' => [
                     [['text' => __('messages.gender_male')], ['text' => __('messages.gender_female')]],
-                    [['text' => __('messages.gender_other')]]
+                    // [['text' => __('messages.gender_other')]]
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true

@@ -54,5 +54,8 @@ class Profile extends Model
     {
         return $this->hasOne(\App\Models\Preference::class, 'profile_id', 'id');
     }
-
+public function gallery()
+{
+    return $this->hasOne(Gallery::class)->latestOfMany();
+}
 }

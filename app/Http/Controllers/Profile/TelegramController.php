@@ -111,7 +111,8 @@ class TelegramController extends Controller
                 . "/profile - View your profile\n"
                 . "/matches - See your matches\n"
                 . "/approved - View approved matches\n"
-                . "/pending - View pending profiles";
+                . "/pending - View pending profiles"
+                . "/update_profile - Update Your profile";
 
             $this->sendMessage($chatId, $instructions);
 
@@ -141,82 +142,6 @@ class TelegramController extends Controller
             $matchController = app(\App\Http\Controllers\MatchController::class);
             return $matchController->findMatches($chatId, $profile);
         }
-
-        //  if (strtolower($text) === '/approved') {
-        //     $profile = Profile::where('telegram_user_id', $chatId)->first();
-
-        //     // if (!$profile) {
-        //     //     return $this->sendMessage($chatId, "❌ You need to create a profile first using /start.");
-        //     // }
-
-        //     // Fetch all approved requests involving this user
-        //     $approvedRequests = MatchRequest::where('status', 'approved')
-        //         ->where(function ($query) use ($profile) {
-        //             $query->where('sender_id', $profile->id)
-        //                 ->orWhere('receiver_id', $profile->id);
-        //         })
-        //         ->get();
-
-        //     if ($approvedRequests->isEmpty()) {
-        //         return $this->sendMessage($chatId, "😕 You haven't approved or been approved by any users yet.");
-        //     }
-
-        //     // Collect other profiles (either sender or receiver)
-        //     foreach ($approvedRequests as $request) {
-        //         $otherProfile = $request->sender_id == $profile->id
-        //             ? Profile::find($request->receiver_id)
-        //             : Profile::find($request->sender_id);
-
-        //         if (!$otherProfile) continue;
-
-        //         $summary = "*❤️ Approved Match:*\n";
-        //         $summary .= "▪️ *Name:* {$otherProfile->name}\n";
-        //         $summary .= "▪️ *Gender:* {$otherProfile->gender}\n";
-        //         $summary .= "▪️ *Caste:* {$otherProfile->caste}\n";
-        //         $summary .= "▪️ *Height:* {$otherProfile->height}\n";
-        //         $summary .= "▪️ *City:* {$otherProfile->city}\n";
-        //         $summary .= "▪️ *Phone:* {$otherProfile->phone}\n";
-        //         $summary .= "▪️ *Email:* {$otherProfile->email}\n";
-
-        //         $summary .= "▪️ *Mother Tongue:* {$otherProfile->mother_tongue}\n";
-        //         $summary .= "▪️ *Religion:* {$otherProfile->religion}\n";
-        //         $summary .= "▪️ *Caste:* {$otherProfile->caste}\n";
-        //         $summary .= "▪️ *Education Level:* {$otherProfile->education_level}\n";
-        //         $summary .= "▪️ *Education Field:* {$otherProfile->education_field}\n";
-        //         $summary .= "▪️ *Working Sector:* {$otherProfile->working_sector}\n";
-        //         $summary .= "▪️ *Profession:* {$otherProfile->profession}\n";
-        //         $summary .= "▪️ *Phone:* {$otherProfile->phone}\n";
-        //         $summary .= "▪️ *Diet:* {$otherProfile->diet}\n";
-        //         $summary .= "▪️ *Smoking:* {$otherProfile->smoking}\n";
-        //         $summary .= "▪️ *Drinking:* {$otherProfile->drinking}\n";
-        //         $summary .= "▪️ *Height:* {$otherProfile->height}\n";
-        //         $summary .= "▪️ *Body Type:* {$otherProfile->body_type}\n";
-        //         $summary .= "▪️ *Skin Tone:* {$otherProfile->skin_tone}\n";
-        //         $summary .= "▪️ *Gender:* {$otherProfile->gender}\n";
-        //         $summary .= "▪️ *Job Status:* {$otherProfile->job_status}\n";
-
-        //         $summary .= "▪️ *Partner Marital Status:* {$otherProfile->partner_marital_status}\n";
-        //         $summary .= "▪️ *Partner Caste:* {$otherProfile->partner_caste}\n";
-        //         $summary .= "▪️ *Partner Min Age:* {$otherProfile->partner_min_age}\n";
-        //         $summary .= "▪️ *Partner Max Age:* {$otherProfile->partner_max_age}\n";
-        //         $summary .= "▪️ *Partner Max Height:* {$otherProfile->partner_max_height}\n";
-        //         $summary .= "▪️ *Partner Gender:* {$otherProfile->partner_gender}\n";
-
-        //         $summary .= "▪️ *Partner Income Range:* {$otherProfile->partner_income_range}\n";
-        //         $summary .= "▪️ *Partner Religion:* {$otherProfile->partner_religion}\n";
-        //         $summary .= "▪️ *Partner Job Status:* {$otherProfile->partner_job_status}\n";
-
-
-
-        //         $photo = $otherProfile->profile_photo ?? 'profile_Pic.jpg';
-        //         $photoUrl = secure_asset('uploads/profiles/' . $photo);
-
-        //         $this->sendPhoto($chatId, $photoUrl);
-        //         $this->sendMessage($chatId, $summary, ['parse_mode' => 'Markdown']);
-        //     }
-
-        //     return response('ok');
-        // }
 
         if (strtolower($text) === '/approved') {
             $profile = Profile::where('telegram_user_id', $chatId)->first();
@@ -250,29 +175,29 @@ class TelegramController extends Controller
         }
 
         if (strtolower($text) === '/update_profile') {
-        $profile = Profile::where('telegram_user_id', $chatId)->first();
-        $preference = Preference::where('telegram_user_id', $chatId)->first();
+            $profile = Profile::where('telegram_user_id', $chatId)->first();
+            $preference = Preference::where('telegram_user_id', $chatId)->first();
 
-         $profile = Profile::where('telegram_user_id', $chatId)->first();
-         $preference = Preference::where('telegram_user_id', $chatId)->first();
+            $profile = Profile::where('telegram_user_id', $chatId)->first();
+            $preference = Preference::where('telegram_user_id', $chatId)->first();
 
-        // Step 2: Validation
-        if (!$profile || !$preference) {
-            return $this->sendMessage($chatId, "❌ No profile or preferences found. Type /start to create your profile.");
-        }
-        $profileId = $profile->id;
+            // Step 2: Validation
+            if (!$profile || !$preference) {
+                return $this->sendMessage($chatId, "❌ No profile or preferences found. Type /start to create your profile.");
+            }
+            $profileId = $profile->id;
 
-        // Step 3: Ensure profile_id in preferences matches profile table
-        if ($preference->profile_id != $profile->id) {
-            return $this->sendMessage($chatId, "❌ Mismatch in profile linkage. Please contact support.");
-        }
+            // Step 3: Ensure profile_id in preferences matches profile table
+            if ($preference->profile_id != $profile->id) {
+                return $this->sendMessage($chatId, "❌ Mismatch in profile linkage. Please contact support.");
+            }
 
-        // $editUrl = "http://127.0.0.1:8000/profile/edit/$profileId";
-        $editUrl = "http://127.0.0.1:8000/profile/edit/$profileId?chat_id=$chatId";
+            // $editUrl = "http://127.0.0.1:8000/profile/edit/$profileId";
+            $editUrl = "http://127.0.0.1:8000/profile/edit/$profileId";
 
-        return $this->sendMessage($chatId, "📝 Click the link below to update your profile:\n\n<a href='$editUrl'>Edit Profile</a>", [
-            'parse_mode' => 'HTML'
-        ]);
+            return $this->sendMessage($chatId, "📝 Click the link below to update your profile:\n\n<a href='$editUrl'>Edit Profile</a>", [
+                'parse_mode' => 'HTML'
+            ]);
         }
 
 
@@ -283,29 +208,40 @@ class TelegramController extends Controller
                 return $this->sendMessage($chatId, "❌ You need to create a profile first using /start.");
             }
 
-            // Fetch all pending match requests (sent or received)
+            // Show only requests sent *to* the user (they can approve/reject)
             $pendingRequests = MatchRequest::where('status', 'pending')
-                ->where(function ($query) use ($profile) {
-                    $query->where('sender_id', $profile->id)
-                        ->orWhere('receiver_id', $profile->id);
-                })
+                ->where('receiver_id', $profile->id)
                 ->get();
 
             if ($pendingRequests->isEmpty()) {
                 return $this->sendMessage($chatId, "😕 You have no pending match requests.");
             }
 
-            // Loop through and show the other profiles
             foreach ($pendingRequests as $request) {
-                $otherProfileId = $request->sender_id == $profile->id
-                    ? $request->receiver_id
-                    : $request->sender_id;
+                $senderProfile = Profile::find($request->sender_id);
 
-                $this->showProfile($chatId, $otherProfileId, false); // false = hide contact
+                if (!$senderProfile) continue;
+
+                // 👇 show profile with image and basic details using existing method
+                app(TelegramController::class)->showOtherProfile($chatId, $senderProfile->id, false);
+
+                // ✅ Now send buttons for approve/reject
+                $buttons = [
+                    [
+                        ['text' => '✅ Approve', 'callback_data' => "approve_request__{$senderProfile->id}_{$profile->id}"],
+                        ['text' => '❌ Reject', 'callback_data' => "reject_request__{$senderProfile->id}_{$profile->id}"]
+                    ]
+                ];
+
+                $this->sendMessage($chatId, "What would you like to do?", [
+                    'reply_markup' => json_encode(['inline_keyboard' => $buttons]),
+                    'parse_mode' => 'Markdown'
+                ]);
             }
 
             return response('ok');
         }
+
 
         if ($currentStep === 'selecting_language') {
             return $this->handleLanguageSelection($chatId, $text, $state);
@@ -1056,7 +992,7 @@ class TelegramController extends Controller
 
     public function index()
     {
-        $records = Profile::with('preference')->get();
+        $records = Profile::with('preference', 'gallery')->get();
         // dd($records);
         return view('getAllData', compact('records'));
     }

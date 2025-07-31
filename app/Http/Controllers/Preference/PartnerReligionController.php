@@ -22,7 +22,7 @@ class PartnerReligionController extends BaseQuestionController
             __('messages.religion_jewish'),
             __('messages.religion_tribal'),
             __('messages.religion_none'),
-            __('messages.any'),
+            __('messages.religion_any'),
         ];
 
         if (!in_array($text, $validOptions)) {
@@ -60,7 +60,7 @@ class PartnerReligionController extends BaseQuestionController
                     [['text' => __('messages.religion_buddhist')], ['text' => __('messages.religion_jain')]],
                     [['text' => __('messages.religion_parsi')], ['text' => __('messages.religion_jewish')]],
                     [['text' => __('messages.religion_tribal')], ['text' => __('messages.religion_none')]],
-                    [['text' => __('messages.any')]]
+                    [['text' => __('messages.religion_any')]],
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true

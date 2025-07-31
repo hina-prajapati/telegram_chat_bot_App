@@ -54,7 +54,7 @@ class MaritalStatusController extends BaseQuestionController
             __('messages.status_single'),
             __('messages.status_married'),
             __('messages.status_divorced'),
-            __('messages.status_any'),
+            __('messages.status_widow'),
         ];
 
         if (!in_array($text, $validOptions)) {
@@ -86,7 +86,7 @@ class MaritalStatusController extends BaseQuestionController
                     [['text' => __('messages.status_single')]],
                     [['text' => __('messages.status_married')]],
                     [['text' => __('messages.status_divorced')]],
-                    [['text' => __('messages.status_any')]],
+                    [['text' => __('messages.status_widow')]],
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true

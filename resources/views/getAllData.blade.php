@@ -22,17 +22,29 @@
                         @forelse ($records as $index => $record)
                             <tr class="text-center">
                                 <td>{{ $index + 1 }}</td>
-                                <td>
+                                {{-- <td>
                                     <img src="{{ asset('uploads/profiles/' . ($record->profile_photo ?? 'profile_Pic.jpg')) }}"
                                          alt="Profile" width="40" height="40" class="rounded-circle shadow-sm">
+                                </td> --}}
+                                <td>
+                                    @php
+                                        $imagePath =
+                                            $record->gallery && $record->gallery->image_path
+                                                ? 'uploads/profiles/' . $record->gallery->image_path
+                                                : 'uploads/profiles/' . ($record->profile_photo ?? 'profile_Pic.jpg');
+                                    @endphp
+
+                                    <img src="{{ asset($imagePath) }}" alt="Profile" width="40" height="40"
+                                        class="rounded-circle shadow-sm">
                                 </td>
+
                                 <td class="fw-semibold">{{ $record->name }}</td>
                                 <td>{{ $record->city }}</td>
                                 <td>{{ ucfirst($record->gender) }}</td>
                                 <td>
                                     <a href="{{ route('profiles.show', ['id' => $record->id]) }}"
-                                       class="btn btn-sm btn-outline-primary">
-                                       <i class="bi bi-eye-fill me-1"></i>View
+                                        class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye-fill me-1"></i>View
                                     </a>
                                 </td>
                             </tr>

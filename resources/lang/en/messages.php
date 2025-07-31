@@ -3,7 +3,7 @@
 return [
     'language_select' => "🌐 Please choose your language",
     'registration_welcome' => "💖 *Welcome to LoveConnect!* 💖\n\nLet's start by knowing a bit about you!",
-    'ask_name' => "👉 *What's your name?*",
+    'ask_name' => "👉 *Enter your Full name?*",
     'thanks_name' => "✅ Thanks, :name!",
 
     'ask_bio' => "📝 Please write a short *bio* about yourself (max 255 characters):",
@@ -18,14 +18,14 @@ return [
     'invalid_option' => '❌ Please select a valid option from the keyboard.',
     'gender_male' => "Male",
     'gender_female' => "Female",
-    'gender_other' => "Other",
+    // 'gender_other' => "Other",
 
     'ask_marital_status' => "💍 *Please select your marital status:*",
     'thanks_marital_status' => "✅ Marital status saved as *:status*.",
     'status_single' => "Single",
     'status_married' => "Married",
     'status_divorced' => "Divorced",
-    'status_any' => "Any",
+    'status_widow' => "Widow",
 
     'ask_birth_year' => "📅 *Please select your Birth Year:*",
     'ask_birth_month' => "📆 *Please select your Birth Month:*",
@@ -251,11 +251,11 @@ return [
     'profession_other' => 'Other',
 
     // Profile income
-    'ask_income_range' => '💰 *Please select your Income Range:*',
+    'ask_income_range' => '💰 *Please select your Income Range(Annual Income):*',
     'income_saved' => '✅ Income range saved as *:value*.',
 
     // Partner income preference
-    'ask_partner_income_range' => '💸 *What income range do you prefer for your partner?*',
+    'ask_partner_income_range' => '💸 *What annual income range do you prefer for your partner?*',
     'partner_income_saved' => '✅ Preferred partner income saved as *:value*.',
 
         // '₹0 - ₹1L',

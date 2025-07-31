@@ -25,5 +25,9 @@ class Preference extends Model
         'profile_id'
     ];
 
+    public function profile()
+    {
+        return $this->belongsTo(\App\Models\Profile::class, 'profile_id', 'id');
+    }
 
 }

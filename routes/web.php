@@ -32,6 +32,7 @@ Route::post('/profile/update/{id}', [ProfileController::class, 'update'])->name(
 // Route::get('/send-test-message', [TelegramController::class, 'sendTestMessage']);
 
 
-Route::get('/test', [TelegramController::class, 'test'])->name('test');
-
+Route::get('/test', function () {
+    return view('test');
+});
 

@@ -196,7 +196,7 @@ class PartnerCasteController extends BaseQuestionController
             'nigam'           => __('messages.caste_nigam'),
             'srivastava'      => __('messages.caste_srivastava'),
             'verma'           => __('messages.caste_verma'),
-            'other'           => __('messages.caste_other'),
+            'any'           => __('messages.caste_any'),
         ];
     }
 }
