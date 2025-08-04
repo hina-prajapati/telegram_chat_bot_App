@@ -65,8 +65,13 @@ class EducationLevelController extends BaseQuestionController
             __('messages.education_bachelor'),
             __('messages.education_master'),
             __('messages.education_phd'),
+            __('messages.education_postdoc'),
+            __('messages.education_professional'),
+            __('messages.education_incomplete'),
+            __('messages.education_prefer_not_say'),
             __('messages.other'),
         ];
+
 
         if (!in_array($text, $validOptions)) {
             return [
@@ -105,9 +110,18 @@ class EducationLevelController extends BaseQuestionController
                     ],
                     [
                         ['text' => __('messages.education_phd')],
+                        ['text' => __('messages.education_postdoc')],
+                    ],
+                    [
+                        ['text' => __('messages.education_professional')],
+                        ['text' => __('messages.education_incomplete')],
+                    ],
+                    [
+                        ['text' => __('messages.education_prefer_not_say')],
                         ['text' => __('messages.other')],
-                    ]
+                    ],
                 ],
+
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true
             ])

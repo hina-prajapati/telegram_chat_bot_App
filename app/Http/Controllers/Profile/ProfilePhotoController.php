@@ -127,7 +127,7 @@ class ProfilePhotoController extends Controller
                 'parse_mode' => 'Markdown',
                 'reply_markup' => json_encode([
                     'keyboard' => [
-                        [[ 'text' => __('messages.upload_another_photo') ]],
+                        // [[ 'text' => __('messages.upload_another_photo') ]],
                         [[ 'text' => __('messages.skip_photo') ]] // show localized "Done" button
                     ],
                     'resize_keyboard' => true,

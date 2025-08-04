@@ -77,12 +77,26 @@ class EducationFieldController extends BaseQuestionController
     public function handle($chatId, $text, TelegramUserState $state)
     {
         $validOptions = [
-            __('messages.field_engineering'),
             __('messages.field_arts'),
-            __('messages.field_commerce'),
             __('messages.field_science'),
+            __('messages.field_commerce'),
+            __('messages.field_engineering'),
+            __('messages.field_medical'),
+            __('messages.field_law'),
+            __('messages.field_management'),
+            __('messages.field_it'),
+            __('messages.field_architecture'),
+            __('messages.field_pharmacy'),
+            __('messages.field_agriculture'),
+            __('messages.field_media'),
+            __('messages.field_fine_arts'),
+            __('messages.field_education'),
+            __('messages.field_vocational'),
+            __('messages.field_designing'),
+            __('messages.field_sports'),
             __('messages.other'),
         ];
+
 
         // Reject if input is not from allowed options
         if (!in_array($text, $validOptions)) {
@@ -113,10 +127,44 @@ class EducationFieldController extends BaseQuestionController
             'parse_mode' => 'Markdown',
             'reply_markup' => json_encode([
                 'keyboard' => [
-                    [['text' => __('messages.field_engineering')], ['text' => __('messages.field_arts')]],
-                    [['text' => __('messages.field_commerce')], ['text' => __('messages.field_science')]],
-                    [['text' => __('messages.other')]]
+                    [
+                        ['text' => __('messages.field_arts')],
+                        ['text' => __('messages.field_science')],
+                    ],
+                    [
+                        ['text' => __('messages.field_commerce')],
+                        ['text' => __('messages.field_engineering')],
+                    ],
+                    [
+                        ['text' => __('messages.field_medical')],
+                        ['text' => __('messages.field_law')],
+                    ],
+                    [
+                        ['text' => __('messages.field_management')],
+                        ['text' => __('messages.field_it')],
+                    ],
+                    [
+                        ['text' => __('messages.field_architecture')],
+                        ['text' => __('messages.field_pharmacy')],
+                    ],
+                    [
+                        ['text' => __('messages.field_agriculture')],
+                        ['text' => __('messages.field_media')],
+                    ],
+                    [
+                        ['text' => __('messages.field_fine_arts')],
+                        ['text' => __('messages.field_education')],
+                    ],
+                    [
+                        ['text' => __('messages.field_vocational')],
+                        ['text' => __('messages.field_designing')],
+                    ],
+                    [
+                        ['text' => __('messages.field_sports')],
+                        ['text' => __('messages.other')],
+                    ],
                 ],
+
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true
             ])

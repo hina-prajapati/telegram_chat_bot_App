@@ -35,7 +35,8 @@ class Profile extends Model
         'gender',
         'job_status',
         'bio',
-        'income_range'
+        'income_range',
+        'sub_caste'
         
     ];
     // app/Models/Profile.php

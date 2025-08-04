@@ -12,17 +12,17 @@ class PartnerReligionController extends BaseQuestionController
     public function handle($chatId, $text, TelegramUserState $state)
     {
         $validOptions = [
-            __('messages.religion_hindu'),
-            __('messages.religion_muslim'),
-            __('messages.religion_christian'),
-            __('messages.religion_sikh'),
-            __('messages.religion_buddhist'),
-            __('messages.religion_jain'),
-            __('messages.religion_parsi'),
-            __('messages.religion_jewish'),
-            __('messages.religion_tribal'),
-            __('messages.religion_none'),
-            __('messages.religion_any'),
+            __('messages.partner_religion_hindu'),
+            __('messages.partner_religion_muslim'),
+            __('messages.partner_religion_christian'),
+            __('messages.partner_religion_sikh'),
+            __('messages.partner_religion_buddhist'),
+            __('messages.partner_religion_jain'),
+            __('messages.partner_religion_parsi'),
+            __('messages.partner_religion_jewish'),
+            __('messages.partner_religion_tribal'),
+            __('messages.partner_religion_none'),
+            __('messages.partner_religion_any'),
         ];
 
         if (!in_array($text, $validOptions)) {
@@ -55,12 +55,12 @@ class PartnerReligionController extends BaseQuestionController
             'parse_mode' => 'Markdown',
             'reply_markup' => json_encode([
                 'keyboard' => [
-                    [['text' => __('messages.religion_hindu')], ['text' => __('messages.religion_muslim')]],
-                    [['text' => __('messages.religion_christian')], ['text' => __('messages.religion_sikh')]],
-                    [['text' => __('messages.religion_buddhist')], ['text' => __('messages.religion_jain')]],
-                    [['text' => __('messages.religion_parsi')], ['text' => __('messages.religion_jewish')]],
-                    [['text' => __('messages.religion_tribal')], ['text' => __('messages.religion_none')]],
-                    [['text' => __('messages.religion_any')]],
+                    [['text' => __('messages.partner_religion_hindu')], ['text' => __('messages.partner_religion_muslim')]],
+                    [['text' => __('messages.partner_religion_christian')], ['text' => __('messages.partner_religion_sikh')]],
+                    [['text' => __('messages.partner_religion_buddhist')], ['text' => __('messages.partner_religion_jain')]],
+                    [['text' => __('messages.partner_religion_parsi')], ['text' => __('messages.partner_religion_jewish')]],
+                    [['text' => __('messages.partner_religion_tribal')], ['text' => __('messages.partner_religion_none')]],
+                    [['text' => __('messages.partner_religion_any')]],
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true

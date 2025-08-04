@@ -43,7 +43,8 @@ use App\Http\Controllers\Profile\{
     SkinToneController,
     GenderController,
     JobStatusController,
-    IncomeRangeController
+    IncomeRangeController,
+    SubCasteController
 };
 use App\Http\Controllers\Preference\{
     PartnerMaritalStatusController,
@@ -307,6 +308,7 @@ class TelegramController extends Controller
             'awaiting_mother_tongue' => MotherTongueController::class,
             'awaiting_religion' => ReligionController::class,
             'awaiting_caste' => CasteController::class,
+            'awaiting_sub_caste' => SubCasteController::class,
             'awaiting_education_level' => EducationLevelController::class,
             'awaiting_education_field' => EducationFieldController::class,
             'awaiting_job_status' => JobStatusController::class,
