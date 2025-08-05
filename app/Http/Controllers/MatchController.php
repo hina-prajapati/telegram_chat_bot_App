@@ -149,8 +149,20 @@ class MatchController extends TelegramController
         try {
             $profiles = $this->buildQuery($preference, $chatId, $oppositeGender);
             // Filter out already shown matches
-            $profiles = $profiles->whereNotIn('id', $shownIds)->values();
+            // $profiles = $profiles->whereNotIn('id', $shownIds)->values();
+            $profiles = $profiles->reject(fn($p) => in_array($p->id, $shownIds))->values();
+
+            // $profiles = $this->buildQuery($preference, $chatId, $oppositeGender)
+            //     ->whereNotIn('id', $shownIds)
+            //     ->get()
+            //     ->values();
         } catch (\Exception $e) {
+            Log::error('Match Query Error', [
+                'chat_id' => $chatId,
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return $this->sendMessage($chatId, "❌ Error building match query.");
         }
 
@@ -323,11 +335,12 @@ class MatchController extends TelegramController
         }
     }
 
+
     // private function buildQuery($preference, $excludeUserId, $matchGender)
     // {
     //     $query = Profile::query()
     //         ->where('telegram_user_id', '!=', $excludeUserId)
-    //         ->whereRaw('LOWER(gender) = ?', [$matchGender]); // Cross-gender match
+    //         ->whereRaw('LOWER(gender) = ?', [$matchGender]);
 
     //     $profile = Profile::where('telegram_user_id', $excludeUserId)->first();
 
@@ -337,50 +350,105 @@ class MatchController extends TelegramController
     //     if ($preference->partner_max_height) {
     //         $query->where('height', '<=', $preference->partner_max_height);
     //     }
-
-    //     // Log::info('Min Height:', [$preference->partner_min_height]);
-    //     // Log::info('Max Height:', [$preference->partner_max_height]);
-
-    //     // $age = \Carbon\Carbon::parse($profile->dob)->age;
-    //     // Log::info("User age:", ['age' => $age]);
-
     //     if ($preference->partner_min_age) {
     //         $query->whereRaw("TIMESTAMPDIFF(YEAR, dob, CURDATE()) >= ?", [$preference->partner_min_age]);
     //     }
-
     //     if ($preference->partner_max_age) {
     //         $query->whereRaw("TIMESTAMPDIFF(YEAR, dob, CURDATE()) <= ?", [$preference->partner_max_age]);
     //     }
 
-    //     if ($preference->partner_marital_status) {
+    //     if (
+    //         $preference->partner_marital_status &&
+    //         strtolower($preference->partner_marital_status) !== 'any'
+    //     ) {
     //         $query->where('marital_status', $preference->partner_marital_status);
     //     }
 
-    //     if ($preference->partner_caste) {
-    //         $query->where('caste', $preference->partner_caste);
+    //     if (
+    //         $preference->partner_religion &&
+    //         strtolower($preference->partner_religion) !== 'any'
+    //     ) {
+    //         $query->where(function ($q) use ($preference) {
+    //             $q->where('religion', $preference->partner_religion)
+    //                 ->orWhere('religion', 'Other');
+    //         });
     //     }
 
-    //     if ($preference->partner_language) {
-    //         $query->where('mother_tongue', $preference->partner_language);
+    //     if (
+    //         $preference->partner_caste &&
+    //         strtolower($preference->partner_caste) !== 'any'
+    //     ) {
+    //         $query->where(function ($q) use ($preference) {
+    //             $q->where('caste', $preference->partner_caste)
+    //                 ->orWhere('caste', 'Other'); // allow "Other" caste to pass
+    //         });
     //     }
 
-    //     // if ($preference->partner_income_range) {
-    //     //     $query->where('income_range', $preference->partner_income_range);
-    //     // }
-
-    //     if ($preference->partner_religion && $preference->partner_religion !== 'Any') {
-    //         $query->where('religion', $preference->partner_religion);
+    //     if (
+    //     $preference->partner_education_level &&
+    //     strtolower($preference->partner_education_level) !== 'any'
+    //     ) {
+    //         $query->where(function ($q) use ($preference) {
+    //             $q->where('education_level', $preference->partner_education_level)
+    //             ->orWhere('education_level', 'Other'); // Allow profiles with "Other"
+    //         });
     //     }
 
-    //     if ($preference->partner_job_status && $preference->partner_job_status !== 'Any') {
-    //         $query->where('job_status', $preference->partner_job_status);
+    //  if (
+    //         $preference->partner_religion &&
+    //         strtolower($preference->partner_religion) !== 'any'
+    //     ) {
+    //         $query->where(function ($q) use ($preference) {
+    //             $q->where('religion', $preference->partner_religion)
+    //                 ->orWhere('religion', 'Other');
+    //         });
     //     }
+
+    //     if (
+    //     $preference->partner_job_status &&
+    //     strtolower($preference->partner_job_status) !== 'any'
+    //     ) {
+    //         $query->where(function ($q) use ($preference) {
+    //             $q->where('job_status', $preference->partner_job_status)
+    //             ->orWhere('job_status', 'Other');
+    //         });
+    //     }
+
     //     Log::info('SQL:', [$query->toSql()]);
     //     Log::info('Bindings:', [$query->getBindings()]);
 
-    //     return $query->with('galleries');
-    // }
+    //     // Fetch all profiles matching other filters
+    //     $profiles = $query->with('galleries')->get();
 
+    //     // Filter by income range overlap in PHP
+    //     if ($preference->partner_income_range && $preference->partner_income_range !== 'Any') {
+    //         $incomeHelper = new \App\Http\Controllers\Profile\IncomeRangeController();
+    //         $prefIncome = $incomeHelper->getMinMax($preference->partner_income_range);
+
+    //         $profiles = $profiles->filter(function ($profile) use ($incomeHelper, $prefIncome) {
+    //             $profileIncome = $incomeHelper->getMinMax($profile->income_range);
+
+    //             $overlap = $profileIncome && $prefIncome
+    //                 ? ($profileIncome['max'] >= $prefIncome['min'] && $profileIncome['min'] <= $prefIncome['max'])
+    //                 : false;
+
+    //             Log::info('Income Range Debug first', [
+    //                 'profile_id' => $profile->id,
+    //                 'profile_income' => $profile->income_range,
+    //                 'profile_min' => $profileIncome['min'] ?? null,
+    //                 'profile_max' => $profileIncome['max'] ?? null,
+    //                 'pref_min' => $prefIncome['min'] ?? null,
+    //                 'pref_max' => $prefIncome['max'] ?? null,
+    //                 'overlap' => $overlap ? 'MATCH' : 'NO MATCH'
+    //             ]);
+
+    //             return $overlap;
+    //         });
+    //     }
+
+    //     // return $query;
+    //     return $profiles;
+    // }
 
     private function buildQuery($preference, $excludeUserId, $matchGender)
     {
@@ -388,8 +456,7 @@ class MatchController extends TelegramController
             ->where('telegram_user_id', '!=', $excludeUserId)
             ->whereRaw('LOWER(gender) = ?', [$matchGender]);
 
-        $profile = Profile::where('telegram_user_id', $excludeUserId)->first();
-
+        // Height & Age filters
         if ($preference->partner_min_height) {
             $query->where('height', '>=', $preference->partner_min_height);
         }
@@ -403,33 +470,52 @@ class MatchController extends TelegramController
             $query->whereRaw("TIMESTAMPDIFF(YEAR, dob, CURDATE()) <= ?", [$preference->partner_max_age]);
         }
 
-        if (
-            $preference->partner_marital_status &&
-            strtolower($preference->partner_marital_status) !== 'any'
-        ) {
+        // Marital Status
+        if ($preference->partner_marital_status && strtolower($preference->partner_marital_status) !== 'any') {
             $query->where('marital_status', $preference->partner_marital_status);
         }
 
+        // Religion
         if ($preference->partner_religion && strtolower($preference->partner_religion) !== 'any') {
-            $query->where('religion', $preference->partner_religion);
+            $query->where(function ($q) use ($preference) {
+                $q->where('religion', $preference->partner_religion)
+                    ->orWhere('religion', 'Other');
+            });
         }
 
-        if ($preference->partner_language && strtolower($preference->partner_language) !== 'any') {
-            $query->where('mother_tongue', $preference->partner_language);
+        // Caste
+        if ($preference->partner_caste && strtolower($preference->partner_caste) !== 'any') {
+            $query->where(function ($q) use ($preference) {
+                $q->where('caste', $preference->partner_caste)
+                    ->orWhere('caste', 'Other');
+            });
         }
 
-        if ($preference->partner_job_status && $preference->partner_job_status !== 'any') {
-            $query->where('job_status', $preference->partner_job_status);
+        // Education Level
+        if ($preference->partner_education_level && strtolower($preference->partner_education_level) !== 'any') {
+            $query->where(function ($q) use ($preference) {
+                $q->where('education_level', $preference->partner_education_level)
+                    ->orWhere('education_level', 'Other');
+            });
         }
 
+        // Job Status
+        if ($preference->partner_job_status && strtolower($preference->partner_job_status) !== 'any') {
+            $query->where(function ($q) use ($preference) {
+                $q->where('job_status', $preference->partner_job_status)
+                    ->orWhere('job_status', 'Other');
+            });
+        }
+
+        // Log query for debugging
         Log::info('SQL:', [$query->toSql()]);
         Log::info('Bindings:', [$query->getBindings()]);
 
-        // Fetch all profiles matching other filters
+        // Execute the query and get results
         $profiles = $query->with('galleries')->get();
 
-        // Filter by income range overlap in PHP
-        if ($preference->partner_income_range && $preference->partner_income_range !== 'Any') {
+        // Filter by income range only in PHP (optional)
+        if ($preference->partner_income_range && strtolower($preference->partner_income_range) !== 'any') {
             $incomeHelper = new \App\Http\Controllers\Profile\IncomeRangeController();
             $prefIncome = $incomeHelper->getMinMax($preference->partner_income_range);
 
@@ -440,7 +526,7 @@ class MatchController extends TelegramController
                     ? ($profileIncome['max'] >= $prefIncome['min'] && $profileIncome['min'] <= $prefIncome['max'])
                     : false;
 
-                Log::info('Income Range Debug first', [
+                Log::info('Income Range Debug', [
                     'profile_id' => $profile->id,
                     'profile_income' => $profile->income_range,
                     'profile_min' => $profileIncome['min'] ?? null,
@@ -451,9 +537,9 @@ class MatchController extends TelegramController
                 ]);
 
                 return $overlap;
-            });
+            })->values(); // reset keys
         }
 
-        return $profiles;
+        return $profiles; // final filtered result
     }
 }

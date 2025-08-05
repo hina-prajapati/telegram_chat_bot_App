@@ -32,7 +32,24 @@ class ProfileController extends Controller
             $cities = DB::table('cities')->where('state_id', $state->id)->get();
         }
 
-        return view('profiles.edit', compact('profile', 'preference', 'states', 'cities'));
+        $casts = DB::table('casts')->get();
+
+        $caste = DB::table('casts')->where('caste_name', $profile->caste)->first();
+
+        // dd($caste);
+        $subcasts = [];
+
+        if ($caste) {
+            $subcasts = DB::table('subcasts')->where('caste_id', $caste->caste_id)->get();
+        }
+
+
+        $profession_categories = DB::table('profession_categories')->get();
+
+        $specific_profession =  DB::table('profession_categories')->where('name', $profile->profession)->first();
+
+        // dd($specific_profession);
+        return view('profiles.edit', compact('profile', 'preference', 'states', 'cities', 'casts', 'subcasts', 'profession_categories'));
     }
 
 
@@ -40,7 +57,6 @@ class ProfileController extends Controller
     {
         $profile = Profile::with('preference')->findOrFail($id);
         // dd($profile);
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'dob' => 'required',
@@ -77,8 +93,14 @@ class ProfileController extends Controller
             'partner_religion' => 'required',
             'partner_job_status' => 'required',
             'partner_language' => 'required',
-            'partner_income_range' => 'required'
+            'partner_income_range' => 'required',
+            'caste' => 'required',
+            'sub_caste' => 'required',
+            'profession' => 'required'
         ]);
+        // Get the names from their IDs
+      $stateName = DB::table('states')->where('id', $request->state)->value('name');
+        $cityName = DB::table('cities')->where('id', $request->city)->value('name');
 
         $profile->update($validated);
 
@@ -99,6 +121,11 @@ class ProfileController extends Controller
             ['profile_id' => $profile->id],
             $preferenceData
         );
+
+       // Save names into profile
+        $profile->state = $stateName;
+        $profile->city = $cityName;
+        $profile->save();
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
@@ -128,4 +155,11 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('success', 'Profile updated successfully.');
     }
+
+    public function getCities($state_id)
+    {
+        $cities = DB::table('cities')->where('state_id', $state_id)->get();
+        return response()->json($cities);
+    }
+
 }

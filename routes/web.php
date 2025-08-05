@@ -36,3 +36,4 @@ Route::get('/test', function () {
     return view('test');
 });
 
+Route::get('/get-cities/{state_id}', [ProfileController::class, 'getCities']);

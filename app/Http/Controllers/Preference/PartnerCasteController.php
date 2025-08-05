@@ -254,12 +254,17 @@ class PartnerCasteController extends BaseQuestionController
         ];
     }
 
-    private function getCasteList(): array
+   private function getCasteList(): array
     {
-        return DB::table('casts')
+        $castes = DB::table('casts')
             ->orderBy('caste_name')
             ->pluck('caste_name')
             ->toArray();
-            
+
+        // Add "Any" at the beginning only for dropdown/list use
+        array_unshift($castes, 'Any');
+
+        return $castes;
     }
+
 }

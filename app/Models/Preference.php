@@ -22,7 +22,11 @@ class Preference extends Model
         'partner_income_range',
         'partner_religion',
         'partner_job_status',
-        'profile_id'
+        'profile_id',
+        'partner_sub_caste',
+        'partner_education_level',
+        'profession',
+        'specific_profession'
     ];
 
     public function profile()

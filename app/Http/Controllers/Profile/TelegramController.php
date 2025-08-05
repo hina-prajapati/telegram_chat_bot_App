@@ -44,11 +44,13 @@ use App\Http\Controllers\Profile\{
     GenderController,
     JobStatusController,
     IncomeRangeController,
-    SubCasteController
+    SubCasteController,
+    SpecificProfessionController
 };
 use App\Http\Controllers\Preference\{
     PartnerMaritalStatusController,
     PartnerCasteController,
+    PartnerEducationLevelController,
     PartnerIncomeRangeController,
     PartnerJobStatusController,
     PartnerMinAgeController,
@@ -57,7 +59,9 @@ use App\Http\Controllers\Preference\{
     PartnerMaxHeightController,
     // PartnerGenderController,
     PartnerLanguageController,
-    PartnerReligionController
+    PartnerReligionController,
+    PartnerSubCasteController,
+    
 };
 
 class TelegramController extends Controller
@@ -314,6 +318,7 @@ class TelegramController extends Controller
             'awaiting_job_status' => JobStatusController::class,
             'awaiting_working_sector' => WorkingSectorController::class,
             'awaiting_profession' => ProfessionController::class,
+            'awaiting_profession' => SpecificProfessionController::class,
             'awaiting_income_range' => IncomeRangeController::class,
             'awaiting_profile_photo' => ProfilePhotoController::class,
             'awaiting_diet' => DietController::class,
@@ -324,9 +329,11 @@ class TelegramController extends Controller
             'awaiting_skin_tone' => SkinToneController::class,
             'awaiting_partner_marital_status' => PartnerMaritalStatusController::class,
             'awaiting_partner_caste' => PartnerCasteController::class,
+            'awaiting_partner_sub_caste' => PartnerSubCasteController::class,
             'awaiting_partner_min_age' => PartnerMinAgeController::class,
             'awaiting_partner_max_age' => PartnerMaxAgeController::class,
             'awaiting_partner_religion' => PartnerReligionController::class,
+            'awaiting_partner_education_level' => PartnerEducationLevelController::class,
             'awaiting_partner_job_status' => PartnerJobStatusController::class,
             'awaiting_partner_income_range' => PartnerIncomeRangeController::class,
             'awaiting_partner_min_height' => PartnerMinHeightController::class,
@@ -542,6 +549,7 @@ class TelegramController extends Controller
             'mother_tongue',
             'religion',
             'caste',
+            'sub_caste',
             'height',
             'education_level',
             'education_field',

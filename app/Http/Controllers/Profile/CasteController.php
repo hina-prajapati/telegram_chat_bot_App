@@ -8,52 +8,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\BaseQuestionController;
 
-// class CasteController extends BaseQuestionController
-// {
-//     public function handle($chatId, $text, TelegramUserState $state)
-//     {
-//         $answers = $state->answers;
-//         $answers['caste'] = $text;
-
-//         $this->saveAnswer($chatId, $state, 'caste', $text, Profile::class);
-
-//         return [
-//             'text' => __('messages.thanks_caste', ['caste' => $text]),
-//             'options' => [
-//                 'parse_mode' => 'Markdown'
-//             ]
-//         ];
-//     }
-
-
-//     public static function getQuestion(): string
-//     {
-//         return __('messages.ask_caste');
-//     }
-
-//     public static function getOptions(): array
-//     {
-//         return [
-//             'parse_mode' => 'Markdown',
-//             'reply_markup' => json_encode([
-//                 'keyboard' => [
-//                     [
-//                         ["text" => __('messages.caste_brahmin')],
-//                         ["text" => __('messages.caste_kshatriya')],
-//                     ],
-//                     [
-//                         ["text" => __('messages.caste_vaishya')],
-//                         ["text" => __('messages.caste_shudra')],
-//                     ],
-//                     [["text" => __('messages.other')]],
-//                 ],
-//                 'resize_keyboard' => true,
-//                 'one_time_keyboard' => true
-//             ])
-//         ];
-//     }
-// }
-
 
 class CasteController extends BaseQuestionController
 {

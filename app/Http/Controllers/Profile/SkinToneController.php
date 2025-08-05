@@ -81,7 +81,9 @@ class SkinToneController extends BaseQuestionController
             'reply_markup' => json_encode([
                 'keyboard' => [
                     [['text' => __('messages.skin_fair')], ['text' => __('messages.skin_wheatish')]],
-                    [['text' => __('messages.skin_dusky')], ['text' => __('messages.skin_dark')]]
+                    [['text' => __('messages.skin_wheatish_brown')], ['text' => __('messages.skin_dark')]],
+                    [['text' => __('messages.skin_olive')], ['text' => __('messages.skin_brown')]],
+                    [['text' => __('messages.skin_prefer_not_to_say')]],
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true
@@ -94,8 +96,11 @@ class SkinToneController extends BaseQuestionController
         return [
             __('messages.skin_fair'),
             __('messages.skin_wheatish'),
-            __('messages.skin_dusky'),
+            __('messages.skin_wheatish_brown'),
             __('messages.skin_dark'),
+            __('messages.skin_olive'),
+            __('messages.skin_brown'),
+            __('messages.skin_prefer_not_to_say'),
         ];
     }
 }

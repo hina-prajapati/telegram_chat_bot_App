@@ -41,7 +41,7 @@ class PartnerLanguageController extends BaseQuestionController
             __('messages.mother_tongue_kutchhi'),
             __('messages.mother_tongue_marwari'),
             __('messages.mother_tongue_english'),
-            __('messages.mother_tongue_other'),
+            __('messages.mother_tongue_any'),
         ];
 
         if (!in_array($text, $validMotherTongues)) {
@@ -130,7 +130,7 @@ class PartnerLanguageController extends BaseQuestionController
                         ['text' => __('messages.mother_tongue_english')],
                     ],
                     [
-                        ['text' => __('messages.mother_tongue_other')],
+                        ['text' => __('messages.mother_tongue_any')],
                     ],
                 ],
                 'resize_keyboard' => true,

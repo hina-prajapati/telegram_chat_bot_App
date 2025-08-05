@@ -17,7 +17,9 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.3s ease;
-        } .sm-btn {
+        }
+
+        .sm-btn {
             margin-top: 20px;
         }
 
@@ -109,12 +111,12 @@
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
                                 <label for="name">State:</label>
-                                <select name="state" class="form-control">
-                                    <option value="">Select State</option>
+                                <select id="state" name="state" class="form-control">
                                     @foreach ($states as $state)
-                                        <option value="{{ $state->name }}"
+                                        <option value="{{ $state->id }}"
                                             {{ old('state', $profile->state) == $state->name ? 'selected' : '' }}>
-                                            {{ $state->name }}</option>
+                                            {{ $state->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -123,10 +125,9 @@
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
                                 <label for="name">City:</label>
-                                <select name="city" class="form-control">
-                                    <option value="">Select City</option>
+                                <select id="city" name="city" class="form-control">
                                     @foreach ($cities as $city)
-                                        <option value="{{ $city->name }}"
+                                        <option value="{{ $city->id }}"
                                             {{ old('city', $profile->city) == $city->name ? 'selected' : '' }}>
                                             {{ $city->name }}
                                         </option>
@@ -206,116 +207,24 @@
                             <div class="form-group">
                                 <label for="name">Caste:</label>
                                 <select name="caste" class="form-control">
-                                    @php
-                                        $castes = [
-                                            'Brahmin' => 'Brahmin',
-                                            'Kshatriya' => 'Kshatriya',
-                                            'Vaishya' => 'Vaishya',
-                                            'Shudra' => 'Shudra',
-                                            'SC' => 'SC',
-                                            'ST' => 'ST',
-                                            'OBC' => 'OBC',
-                                            'Jain' => 'Jain',
-                                            'Sindhi' => 'Sindhi',
-                                            'Rajput' => 'Rajput',
-                                            'Yadav' => 'Yadav',
-                                            'Kayastha' => 'Kayastha',
-                                            'Maratha' => 'Maratha',
-                                            'Agarwal' => 'Agarwal',
-                                            'Koli' => 'Koli',
-                                            'Kumhar' => 'Kumhar',
-                                            'Patel' => 'Patel',
-                                            'Reddy' => 'Reddy',
-                                            'Kapoor' => 'Kapoor',
-                                            'Gupta' => 'Gupta',
-                                            'Bania' => 'Bania',
-                                            'Kurmi' => 'Kurmi',
-                                            'Maurya' => 'Maurya',
-                                            'Chaudhary' => 'Chaudhary',
-                                            'Jat' => 'Jat',
-                                            'Lodha' => 'Lodha',
-                                            'Saini' => 'Saini',
-                                            'Teli' => 'Teli',
-                                            'Nair' => 'Nair',
-                                            'Menon' => 'Menon',
-                                            'Pillai' => 'Pillai',
-                                            'Chettiar' => 'Chettiar',
-                                            'Mudaliar' => 'Mudaliar',
-                                            'Gounder' => 'Gounder',
-                                            'Nadar' => 'Nadar',
-                                            'Ezhava' => 'Ezhava',
-                                            'Naidu' => 'Naidu',
-                                            'Nayak' => 'Nayak',
-                                            'Gujar' => 'Gujar',
-                                            'Ahir' => 'Ahir',
-                                            'Meena' => 'Meena',
-                                            'Meitei' => 'Meitei',
-                                            'Chamar' => 'Chamar',
-                                            'Dhangar' => 'Dhangar',
-                                            'Giri' => 'Giri',
-                                            'Prajapati' => 'Prajapati',
-                                            'Mali' => 'Mali',
-                                            'Bhoi' => 'Bhoi',
-                                            'Bhandari' => 'Bhandari',
-                                            'Sonar' => 'Sonar',
-                                            'Dhobi' => 'Dhobi',
-                                            'Khatik' => 'Khatik',
-                                            'Barber (Nai)' => 'Barber (Nai)',
-                                            'Kahar' => 'Kahar',
-                                            'Tonk Kshatriya' => 'Tonk Kshatriya',
-                                            'Bairwa' => 'Bairwa',
-                                            'Paswan' => 'Paswan',
-                                            'Pal' => 'Pal',
-                                            'Rawat' => 'Rawat',
-                                            'Thakur' => 'Thakur',
-                                            'Lingayat' => 'Lingayat',
-                                            'Devanga' => 'Devanga',
-                                            'Kamma' => 'Kamma',
-                                            'Vokkaliga' => 'Vokkaliga',
-                                            'Balija' => 'Balija',
-                                            'Kapu' => 'Kapu',
-                                            'Jatav' => 'Jatav',
-                                            'Mochi' => 'Mochi',
-                                            'Valmiki' => 'Valmiki',
-                                            'Bhatt' => 'Bhatt',
-                                            'Bhils' => 'Bhils',
-                                            'Gond' => 'Gond',
-                                            'Halba' => 'Halba',
-                                            'Kunbi' => 'Kunbi',
-                                            'Maheshwari' => 'Maheshwari',
-                                            'Modi' => 'Modi',
-                                            'Oswal' => 'Oswal',
-                                            'Chandravanshi' => 'Chandravanshi',
-                                            'Rajgond' => 'Rajgond',
-                                            'Malviya' => 'Malviya',
-                                            'Dixit' => 'Dixit',
-                                            'Trivedi' => 'Trivedi',
-                                            'Chaturvedi' => 'Chaturvedi',
-                                            'Tripathi' => 'Tripathi',
-                                            'Mishra' => 'Mishra',
-                                            'Sharma' => 'Sharma',
-                                            'Pandey' => 'Pandey',
-                                            'Tiwari' => 'Tiwari',
-                                            'Joshi' => 'Joshi',
-                                            'Pathak' => 'Pathak',
-                                            'Dwivedi' => 'Dwivedi',
-                                            'Upadhyay' => 'Upadhyay',
-                                            'Bhargava' => 'Bhargava',
-                                            'Dubey' => 'Dubey',
-                                            'Bajpai' => 'Bajpai',
-                                            'Bhatnagar' => 'Bhatnagar',
-                                            'Nigam' => 'Nigam',
-                                            'Srivastava' => 'Srivastava',
-                                            'Verma' => 'Verma',
-                                            'Other' => 'Other',
-                                        ];
+                                    @foreach ($casts as $cast)
+                                        <option value="{{ $cast->caste_name }}"
+                                            {{ old('caste', $profile->caste ?? '') == $cast->caste_name ? 'selected' : '' }}>
+                                            {{ $cast->caste_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-                                    @endphp
-
-                                    @foreach ($castes as $value => $label)
-                                        <option value="{{ $value }}"
-                                            {{ old('caste', $profile->caste ?? '') == $value ? 'selected' : '' }}>
-                                            {{ $label }}
+                        <div class="col-md-6 col-lg-3">
+                            <div class="form-group">
+                                <label for="name">Sub Caste:</label>
+                                <select name="sub_caste" class="form-control">
+                                    @foreach ($subcasts as $cast)
+                                        <option value="{{ $cast->sub_caste_name }}"
+                                            {{ old('caste', $profile->sub_caste ?? '') == $cast->sub_caste_name ? 'selected' : '' }}>
+                                            {{ $cast->sub_caste_name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -428,23 +337,26 @@
                             <div class="form-group">
                                 <label for="name">Profession:</label>
                                 <select name="profession" class="form-control">
-                                    @php
-                                        $professions = [
-                                            'Software Engineer' => 'Software Engineer',
-                                            'Doctor' => 'Doctor',
-                                            'Teacher' => 'Teacher',
-                                            'Businessman' => 'Businessman',
-                                            'Student' => 'Student',
-                                            'House Maker' => 'House Maker',
-                                            'Other' => 'Other',
-                                        ];
 
-                                    @endphp
+                                    @foreach ($profession_categories as $category)
+                                        <option value="{{ $category->name }}"
+                                            {{ old('profession', $profile->profession ?? '') == $category->name ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-                                    @foreach ($professions as $value => $label)
-                                        <option value="{{ $value }}"
-                                            {{ old('profession', $profile->profession ?? '') == $value ? 'selected' : '' }}>
-                                            {{ $label }}
+                        <div class="col-md-6 col-lg-3">
+                            <div class="form-group">
+                                <label for="name">Specific Profession:</label>
+                                <select name="specific_profession" class="form-control">
+
+                                    @foreach ($profession_categories as $category)
+                                        <option value="{{ $category->name }}"
+                                            {{ old('profession', $profile->specific_profession ?? '') == $category->name ? 'selected' : '' }}>
+                                            {{ $category->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -1009,7 +921,27 @@
         </div>
     </div>
     {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"> --}}
+    <script>
+        document.getElementById('state').addEventListener('change', function() {
+            let stateId = this.value;
+            console.log(stateId)
 
+            fetch(`/get-cities/${stateId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    let citySelect = document.getElementById('city');
+                    citySelect.innerHTML = '';
+
+                    data.forEach(city => {
+                        let option = document.createElement('option');
+                        option.value = city.id;
+                        option.text = city.name;
+                        citySelect.appendChild(option);
+                    });
+                });
+        });
+    </script>
 </body>
 
 </html>
