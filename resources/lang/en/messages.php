@@ -2,6 +2,8 @@
 
 return [
     'language_select' => "🌐 Please choose your language",
+    'language_invalid' => '❌ Invalid input. Please choose a language by tapping one of the buttons below.',
+
     'registration_welcome' => "💖 *Welcome to Matchease!* 💖\n\nLet's start by knowing a bit about you!",
     'ask_name' => "👉 *Enter your Full name?*",
     'thanks_name' => "✅ Thanks, :name!",
@@ -28,6 +30,7 @@ return [
     'status_widowed' => "Widowed",
 
     'ask_birth_year' => "📅 *Please select your Birth Year:*",
+    'ask_birth_year_val' => " *Please select your Birth Year Text Based Not accepted:*",
     'ask_birth_month' => "📆 *Please select your Birth Month:*",
     'ask_birth_day' => "🗓️ *Please select your Birth Day:*",
     'thanks_dob' => "✅ Date of birth saved as *:dob*.",
@@ -93,6 +96,17 @@ return [
     'thanks_education' => "✅ Education level saved as *:education*.",
     'invalid_option' => '❌ Please select an option from the keyboard below.',
 
+      'education_highschool' => 'High School (or equivalent like 10th Pass)',
+    'education_diploma' => 'Intermediate/Diploma (12th Pass, ITI, etc.)',
+    'education_bachelor' => "Bachelor's Degree",
+    'education_master' => "Master's Degree",
+    'education_phd' => 'Doctorate/Ph.D.',
+    'education_postdoc' => 'Post Doctorate',
+    'education_professional' => 'Professional Degree (e.g., CA, CS, MBBS, etc.)',
+    'education_incomplete' => 'Did not complete high school',
+    'education_prefer_not_say' => 'Prefer not to say',
+    'education_any' => 'Any',
+
     'ask_partner_education' => "🎓 *Please select your Partner Highest Education Level:*",
     'thanks_education' => "✅ Education level saved as *:education*.",
     'invalid_option' => '❌ Please select an option from the keyboard below.',
@@ -106,7 +120,7 @@ return [
     'education_professional' => 'Professional Degree (e.g., CA, CS, MBBS, etc.)',
     'education_incomplete' => 'Did not complete high school',
     'education_prefer_not_say' => 'Prefer not to say',
-    'other' => 'Other',
+    'education_other' => 'Other',
 
     'ask_education_field' => "🔬 *Please enter your Education Stream* (e.g., Engineering, Arts, Commerce):",
     'thanks_education_field' => "✅ Field of study saved as *:field*.",
@@ -131,8 +145,6 @@ return [
     'other' => 'Other',
 
 
-
-
     'ask_partner_job_status' => '💼 *What is your preferred partner\'s job status?*',
     'thanks_partner_job_status' => '✅ Preferred partner job status saved as *:status*.',
     'job_employed' => 'Employed',
@@ -143,6 +155,7 @@ return [
     'job_student' => 'Student',
     'job_retired' => 'Retired',
     'job_prefer_not' => 'Prefer not to say',
+    'job_other' => 'Other',
 
 
     'ask_job_status' => '💼 *Select your current job status:*',
@@ -188,9 +201,12 @@ return [
 
     'ask_partner_profession' => "💼 *Please select your Partner Profession*.",
     'thanks_profession' => "✅ Profession saved as *:profession*.",
+    'partner_profession_invalid_option' => "❌ Invalid option selected. Please try again.",
 
     'ask_partner_specific_profession' => "💼 *Please select your Partner Specific Profession*.",
     'thanks_profession' => "✅ Profession saved as *:profession*.",
+    'partner_specific_profession_invalid_option' => " *Invalid option selected. Please try again.",
+    
 
     // 'profession_software_engineer' => 'Software Engineer',
     // 'profession_doctor' => 'Doctor',
@@ -208,21 +224,33 @@ return [
     'ask_partner_income_range' => '💸 *What is annual income range do you prefer for your partner?*',
     'partner_income_saved' => '✅ Preferred partner income saved as *:value*.',
 
-
-
-    'ask_mobile' => "📱 *Please enter your 10-digit Mobile Number*",
+    'ask_mobile' => "📱 *Please enter your 10-digit mobile number*",
     'invalid_mobile' => "❌ Invalid number. Please enter a *valid 10-digit* mobile number.",
-    'thanks_mobile' => "✅ Mobile Number saved as *:mobile*.",
+    'thanks_mobile' => "✅ Mobile number saved as *:mobile*.",
 
     'ask_profile_photo' => "📸 *Please upload your Profile Photo* as an image attachment:",
-    'skip_photo' => 'Skip Photo',
-    // 'upload_another_photo' => 'Upload Another Photo',
-    'profile_photo_skipped' => "✅ Got it! Let's move on to the next question.",
-    'profile_photo_invalid_text' => "❌ Please send a valid photo or tap *Done* to continue.",
-    'profile_photo_invalid' => "❌ Please send a valid photo.",
-    'profile_photo_process_failed' => "❌ Could not process image.",
-    'profile_photo_save_failed' => "❌ Failed to save the image.",
-    'profile_photo_uploaded' => "🖼️ Photo added to your gallery!",
+    // 'skip_photo' => 'Skip Photo',
+    // // 'upload_another_photo' => 'Upload Another Photo',
+    // 'profile_photo_skipped' => "✅ Got it! Let's move on to the next question.",
+    // 'profile_photo_invalid_text' => "❌ Please send a valid photo or tap *Done* to continue.",
+    // 'profile_photo_invalid' => "❌ Please send a valid photo.",
+    // 'profile_photo_process_failed' => "❌ Could not process image.",
+    // 'profile_photo_save_failed' => "❌ Failed to save the image.",
+    // 'profile_photo_uploaded' => "🖼️ Photo added to your gallery!",
+ 'upload_more' => 'Upload more',
+'continue' => 'Continue',
+'profile_photo_required' => '❌ Please upload a photo before continuing.',
+'profile_photo_invalid_text' => '❌ Please upload a photo or use the buttons below.',
+'profile_photo_uploaded_first' => '✅ Your photo has been uploaded. You can upload one more or continue.',
+'profile_photo_uploaded_max' => '✅ You’ve uploaded two photos. Let’s continue.',
+'profile_photo_prompt_second' => 'You can upload another photo or continue.',
+'profile_photo_max_reached' => '⚠️ Maximum of 2 photos allowed.',
+'profile_photo_invalid' => '❌ Invalid input. Please upload a photo.',
+'profile_photo_process_failed' => '❌ Failed to process the photo.',
+'profile_photo_save_failed' => '❌ Failed to save the photo.',
+'ask_diet' => '🍽️ What is your dietary preference?', // Or your actual message
+
+
 
     // 'ask_chovihar' => "Do you observe *Chovihar*?",
     // 'ask_partner_chovihar' => "Do you observe *Chovihar*?",
@@ -231,9 +259,9 @@ return [
     'invalid_diet' => "❌ Please select a valid diet option from the buttons below.",
     'saved_diet' => '✅ Your diet preference has been saved as *:diet*.',
 
-    //  'ask_partner_diet' => '🍽️ *What is your diet preference?*',
-    // 'invalid_diet' => "❌ Please select a valid diet option from the buttons below.",
-    // 'saved_diet' => '✅ Your diet preference has been saved as *:diet*.',
+     'ask_partner_diet' => '🍽️ *What is your Parnter diet preference?*',
+    'partner_invalid_diet' => "❌ Please select a valid diet option from the buttons below.",
+    'saved_diet' => '✅ Your diet preference has been saved as *:diet*.',
 
     'ask_smoke' => "🚬 Do you *Smoke*?",
     'saved_smoking' => "✅ Smoking preference saved as *:value*.",
@@ -290,6 +318,7 @@ return [
     'skin_olive' => 'Olive',
     'skin_brown' => 'Brown',
     'skin_prefer_not_to_say' => 'Prefer not to say',
+    'skin_other' => 'Other',
 
 
     'ask_partner_marital_status' => "💍 What is your *preferred partner's marital status*?",
@@ -323,12 +352,12 @@ return [
 
     'partner_min_height_question' => '📏 Please select the *minimum partner height* from the list below.',
     'partner_min_height_saved' => '✅ Minimum partner height saved: :value',
-    'partner_height_invalid' => "❌ Please enter a valid height.",
+    'height_invalid' => '❌ Invalid format. Please select a height from the list or use the format: 5 ft 7 in → 170 cm.',
 
-    
     'partner_max_height_question' => '📏 Please select the *maximum partner height* from the list below.',
     'partner_max_height_saved' => '✅ Maximum partner height saved: :value',
-
+    'height_invalid' => '❌ Invalid format. Please select a height from the list or use the format: 5 ft 7 in → 170 cm.',
+    'height_max_less_than_min' => '⚠️ *Maximum height* should be greater than or equal to *minimum height* (:min cm). Please select a valid height.',
 
     'ask_partner_language' => "🌐 What is the *preferred Mother Tongue* of your partner?",
     'profile_already_complete' => '✅ Your profile is already complete! You can type /start anytime to view or edit it.',

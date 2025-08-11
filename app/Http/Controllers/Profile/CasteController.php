@@ -67,7 +67,7 @@ class CasteController extends BaseQuestionController
     private function getCasteList(): array
     {
         return DB::table('casts')
-            ->orderBy('caste_name')
+            // ->orderBy('caste_name')
             ->pluck('caste_name')
             ->toArray();
             

@@ -76,7 +76,7 @@ class PartnerCasteController extends BaseQuestionController
 
         $castes = array_values($castes);
 
-        array_unshift($castes, 'Any');
+        array_push($castes, 'Any');
 
         return $castes;
     }

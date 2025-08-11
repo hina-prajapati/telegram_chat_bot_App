@@ -32,7 +32,7 @@ class PartnerChoviharController extends BaseQuestionController
     public static function getQuestion(): string
     {
         //  return __('messages.ask_partner_chovihar');
-        return "Do you observe *Chovihar*?";
+        return "Do you observe Parnter *Chovihar*?";
     }
 
     public static function getOptions(): array

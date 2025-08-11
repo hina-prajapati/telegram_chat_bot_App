@@ -285,7 +285,7 @@ class TelegramController extends Controller
 
                 // Only move to next step if dob was fully captured
                 if (!isset($state->answers['dob_day'])) {
-                    return $this->sendStructuredMessage($chatId, $response); // ↩️ Stay in DOB flow
+                    return $this->sendStructuredMessage($chatId, $response);
                 }
             }
 
@@ -321,17 +321,16 @@ class TelegramController extends Controller
     {
         return [
             'awaiting_name' => NameController::class,
+            'awaiting_profile_photo' => ProfilePhotoController::class,
             'awaiting_bio' => BioController::class,
             'awaiting_email' => EmailController::class,
             'awaiting_gender' => GenderController::class,
             'awaiting_mobile' => MobileController::class,
             'awaiting_marital_status' => MaritalStatusController::class,
             'awaiting_dob' => DobController::class,
-            'awaiting_dob' => DobController::class,
             'awaiting_birth_time' => BirthTimeController::class,
             'awaiting_birth_place' => BirthPlaceController::class,
             'awaiting_native_place' => NativePlaceController::class,
-            'awaiting_terms_and_conditions' => TermsAndConditionsController::class,
             'awaiting_state' => StateController::class,
             'awaiting_city' => CityController::class,
             'awaiting_mother_tongue' => MotherTongueController::class,
@@ -369,6 +368,7 @@ class TelegramController extends Controller
             'awaiting_partner_min_height' => PartnerMinHeightController::class,
             'awaiting_partner_max_height' => PartnerMaxHeightController::class,
             'awaiting_partner_language' => PartnerLanguageController::class,
+            'awaiting_terms_and_conditions' => TermsAndConditionsController::class,
         ];
     }
 
@@ -725,6 +725,35 @@ class TelegramController extends Controller
         ]);
     }
 
+    // protected function handleLanguageSelection($chatId, $text, TelegramUserState $state)
+    // {
+    //     $languages = [
+    //         'English' => 'en',
+    //         'हिन्दी' => 'hi',
+    //         'मराठी' => 'mr',
+    //         'ગુજરાતી' => 'gu',
+    //     ];
+
+    //     if (array_key_exists($text, $languages)) {
+    //         $lang = $languages[$text];
+    //         App::setLocale($lang);
+
+    //         $state->update([
+    //             'language' => $lang,
+    //             'current_step' => 'awaiting_name',
+    //             'answers' => [],
+    //         ]);
+
+    //         return $this->sendMessage(
+    //             $chatId,
+    //             __('messages.registration_welcome') . "\n\n" . NameController::getQuestion(),
+    //             NameController::getOptions()
+    //         );
+    //     }
+
+    //     return $this->sendMessage($chatId, __('messages.language_invalid'));
+    // }
+
     protected function handleLanguageSelection($chatId, $text, TelegramUserState $state)
     {
         $languages = [
@@ -734,24 +763,35 @@ class TelegramController extends Controller
             'ગુજરાતી' => 'gu',
         ];
 
-        if (array_key_exists($text, $languages)) {
-            $lang = $languages[$text];
-            App::setLocale($lang);
-
-            $state->update([
-                'language' => $lang,
-                'current_step' => 'awaiting_name',
-                'answers' => [],
+        // ✅ Validate input
+        if (!array_key_exists($text, $languages)) {
+            return $this->sendMessage($chatId, __('messages.language_invalid'), [
+                'reply_markup' => json_encode([
+                    'keyboard' => [
+                        [['text' => 'English'], ['text' => 'हिन्दी']],
+                        [['text' => 'मराठी'], ['text' => 'ગુજરાતી']],
+                    ],
+                    'resize_keyboard' => true,
+                    'one_time_keyboard' => true,
+                ])
             ]);
-
-            return $this->sendMessage(
-                $chatId,
-                __('messages.registration_welcome') . "\n\n" . NameController::getQuestion(),
-                NameController::getOptions()
-            );
         }
 
-        return $this->sendMessage($chatId, __('messages.language_invalid'));
+        // ✅ Valid input, continue
+        $lang = $languages[$text];
+        App::setLocale($lang);
+
+        $state->update([
+            'language' => $lang,
+            'current_step' => 'awaiting_name',
+            'answers' => [],
+        ]);
+
+        return $this->sendMessage(
+            $chatId,
+            __('messages.registration_welcome') . "\n\n" . NameController::getQuestion(),
+            NameController::getOptions()
+        );
     }
 
     protected function handlePhotoUpload($chatId, $message, $text, $state, $controller, $handlers)

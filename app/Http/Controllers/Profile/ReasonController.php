@@ -11,6 +11,15 @@ use Illuminate\Http\Request;
 
 class ReasonController extends TelegramController
 {
+    protected $reasons = [
+        'I found a match from this portal',
+        'I found a match from other portal',
+        "I'm taking a break",
+        'Not getting suitable matches',
+        'Created account by mistake',
+        'Other'
+    ];
+
     public function handleDeletion($chatId, $text, TelegramUserState $state)
     {
         if (strtolower($text) === '/delete_profile') {
@@ -23,10 +32,24 @@ class ReasonController extends TelegramController
             $state->current_step = 'deletion_reason';
             $state->save();
 
-            return $this->sendMessage($chatId, "🗑️ Please tell us the reason why you want to delete your profile:");
+            // Send the predefined options as a keyboard
+            return $this->sendMessage(
+                $chatId,
+                "🗑️ Please select the reason why you want to delete your profile:",
+                $this->getReasonKeyboard()
+            );
         }
 
         if ($state->current_step === 'deletion_reason') {
+            // Check if the input text matches one of the predefined reasons
+            if (!in_array($text, $this->reasons, true)) {
+                return $this->sendMessage(
+                    $chatId,
+                    "❌ Invalid option selected. Please choose a reason from the keyboard below.",
+                    $this->getReasonKeyboard()
+                );
+            }
+
             // Save deletion reason
             DeletionReason::create([
                 'telegram_user_id' => $chatId,
@@ -44,5 +67,23 @@ class ReasonController extends TelegramController
         }
 
         return null;
+    }
+
+    private function getReasonKeyboard()
+    {
+        $keyboard = [];
+
+        // Put each reason in its own row
+        foreach ($this->reasons as $reason) {
+            $keyboard[] = [['text' => $reason]];
+        }
+
+        return [
+            'reply_markup' => json_encode([
+                'keyboard' => $keyboard,
+                'resize_keyboard' => true,
+                'one_time_keyboard' => true
+            ])
+        ];
     }
 }

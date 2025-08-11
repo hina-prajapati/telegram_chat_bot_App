@@ -69,7 +69,7 @@ class EducationLevelController extends BaseQuestionController
             __('messages.education_professional'),
             __('messages.education_incomplete'),
             __('messages.education_prefer_not_say'),
-            __('messages.other'),
+            __('messages.education_other'),
         ];
 
 
@@ -118,7 +118,7 @@ class EducationLevelController extends BaseQuestionController
                     ],
                     [
                         ['text' => __('messages.education_prefer_not_say')],
-                        ['text' => __('messages.other')],
+                        ['text' => __('messages.education_other')],
                     ],
                 ],
 

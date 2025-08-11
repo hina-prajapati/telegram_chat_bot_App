@@ -58,13 +58,14 @@ class PartnerIncomeRangeController extends BaseQuestionController
     private function getIncomeOptions(): array
     {
         return [
-             'Any'           => ['min' => null,      'max' => null], // <-- Add this line
+         
             '₹0 - ₹1L'      => ['min' => 0,        'max' => 100000],
             '₹1L - ₹2L'     => ['min' => 100000,   'max' => 200000],
             '₹2L - ₹5L'     => ['min' => 200000,   'max' => 500000],
             '₹5L - ₹10L'    => ['min' => 500000,   'max' => 1000000],
             '₹10L - ₹25L'   => ['min' => 1000000,  'max' => 2500000],
             'Above ₹25L'    => ['min' => 2500000,  'max' => 99999999],
+            'Any'           => ['min' => null,      'max' => null], // <-- Add this line
         ];
     }
 

@@ -8,11 +8,21 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\BaseQuestionController;
 
-
 class StateController extends BaseQuestionController
 {
     public function handle($chatId, $text, TelegramUserState $state)
     {
+        $states = DB::table('states')->pluck('name')->toArray();
+        $states[] = 'Other';
+
+        if (!in_array($text, $states)) {
+            return [
+                'text' => "❌ Invalid state. Please select a valid option from the keyboard.",
+                'options' => self::getOptions(),
+                'halt_flow' => true
+            ];
+        }
+
         $answers = $state->answers;
         $answers['state'] = $text;
 
@@ -53,6 +63,3 @@ class StateController extends BaseQuestionController
         ];
     }
 }
-
-
-   

@@ -51,17 +51,17 @@ class PartnerLanguageController extends BaseQuestionController
                 'halt_flow' => true
             ];
         }
-        $answers = $state->answers ?? [];
-        $answers['partner_language'] = $text;
+        // $answers = $state->answers ?? [];
+        // $answers['partner_language'] = $text;
 
         
         $this->saveAnswer($chatId, $state, 'partner_language', $text, Preference::class);
 
-        $state->answers = $answers;
-        $state->current_step = null;
-        $state->save();
-        $telegramController = app(\App\Http\Controllers\Profile\TelegramController::class);
-        return $telegramController->showProfile($chatId, $answers);
+        // $state->answers = $answers;
+        // $state->current_step = null;
+        // $state->save();
+        // $telegramController = app(\App\Http\Controllers\Profile\TelegramController::class);
+        // return $telegramController->showProfile($chatId, $answers);
 
         return [
             'text' => __('messages.thanks_partner_language', ['tongue' => $text]),

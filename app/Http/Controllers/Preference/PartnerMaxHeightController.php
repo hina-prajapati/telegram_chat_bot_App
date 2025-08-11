@@ -9,32 +9,6 @@ use App\Models\Preference;
 
 class PartnerMaxHeightController extends BaseQuestionController
 {
-    // public function handle($chatId, $text, TelegramUserState $state)
-    // {
-    //     // Expecting input like: 5 ft 7 in → 170 cm
-    //     if (!preg_match('/^(\d) ft (\d{1,2}) in → (\d{3}) cm$/', $text, $matches)) {
-    //         return $this->invalidHeightResponse();
-    //     }
-
-    //     $feet = (int) $matches[1];
-    //     $inches = (int) $matches[2];
-    //     $heightInCm = (int) $matches[3];
-
-    //     // Extra safety checks (optional)
-    //     if ($feet < 4 || $feet > 6 || $inches > 11 || $heightInCm < 100 || $heightInCm > 250) {
-    //         return $this->invalidHeightResponse();
-    //     }
-
-    //     // Save to DB
-    //     $this->saveAnswer($chatId, $state, 'partner_max_height', $heightInCm, Preference::class);
-
-    //     return [
-    //         'text' => __('messages.partner_max_height_saved', [
-    //             'value' => "{$feet}'{$inches}\" ({$heightInCm} cm)"
-    //         ]),
-    //         'options' => ['parse_mode' => 'Markdown']
-    //     ];
-    // }
 
     public function handle($chatId, $text, TelegramUserState $state)
     {

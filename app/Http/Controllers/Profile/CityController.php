@@ -10,11 +10,50 @@ use Illuminate\Support\Facades\DB;
 
 class CityController extends BaseQuestionController
 {
+
     public function handle($chatId, $text, TelegramUserState $state)
     {
-        $answers = $state->answers;
-        $answers['city'] = $text;
+        $answers = $state->answers ?? [];
 
+        // Check if state is selected
+        if (empty($answers['state'])) {
+            return [
+                'text' => "⚠️ Please select a state first.",
+                'options' => self::getOptions($answers),
+                'halt_flow' => true
+            ];
+        }
+
+        // Fetch valid cities for selected state
+        $selectedState = $answers['state'];
+        $selectedStateRecord = DB::table('states')->where('name', $selectedState)->first();
+
+        if (!$selectedStateRecord) {
+            return [
+                'text' => "❌ Invalid state selection. Please go back and select a valid state.",
+                'options' => self::getOptions($answers),
+                'halt_flow' => true
+            ];
+        }
+
+        $cities = DB::table('cities')
+            ->where('state_id', $selectedStateRecord->id)
+            ->pluck('name')
+            ->toArray();
+
+        $cities[] = 'Other';
+
+        // ✅ Validate user input
+        if (!in_array($text, $cities)) {
+            return [
+                'text' => "❌ Invalid city. Please select a valid option from the keyboard.",
+                'options' => self::getOptions($answers),
+                'halt_flow' => true
+            ];
+        }
+
+        // Save valid city
+        $answers['city'] = $text;
         $this->saveAnswer($chatId, $state, 'city', $text, Profile::class);
 
         return [
@@ -79,6 +118,4 @@ class CityController extends BaseQuestionController
             ])
         ];
     }
-
 }
-

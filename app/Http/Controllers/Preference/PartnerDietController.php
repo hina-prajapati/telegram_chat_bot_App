@@ -17,7 +17,7 @@ class PartnerDietController extends BaseQuestionController
         $validOptions = ['Veg', 'Non-Veg', 'Jain', 'Any'];
         if (!in_array($text, $validOptions)) {
             return [
-                'text' => __('messages.invalid_diet'),
+                'text' => __('messages.partner_invalid_diet'),
                 'options' => self::getOptions(),
                 'halt_flow' => true
             ];
@@ -54,7 +54,7 @@ class PartnerDietController extends BaseQuestionController
 
     public static function getQuestion(): string
     {
-        return __('messages.ask_diet');
+        return __('messages.ask_partner_diet');
     }
 
     public static function getOptions(): array

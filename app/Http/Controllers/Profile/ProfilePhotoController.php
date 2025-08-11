@@ -12,64 +12,6 @@ use App\Models\Gallery;
 class ProfilePhotoController extends Controller
 {
 
-    // public function handle($chatId, $photoOrText, TelegramUserState $state)
-    // {
-    //     if (is_string($photoOrText)) {
-    //         $text = strtolower(trim($photoOrText));
-
-    //         if ($text === 'skip photo' || $text === 'done') {
-
-             
-    //             return [
-    //                 'text' => __('messages.profile_photo_skipped'),
-    //                 'options' => [
-    //                     'parse_mode' => 'Markdown'
-    //                 ]
-    //             ];
-    //         }
-
-    //         return ['text' => __('messages.profile_photo_invalid_text')];
-    //     }
-
-    //     if (!is_array($photoOrText)) {
-    //         return ['text' => __('messages.profile_photo_invalid')];
-    //     }
-
-    //     $fileId = end($photoOrText)['file_id'] ?? null;
-    //     if (!$fileId) {
-    //         return ['text' => __('messages.profile_photo_process_failed')];
-    //     }
-
-    //     $filename = $this->downloadAndSaveProfilePhoto($fileId);
-    //     if (!$filename) {
-    //         return ['text' => __('messages.profile_photo_save_failed')];
-    //     }
-
-    //     $profile = Profile::where('telegram_user_id', $chatId)->first();
-    //     if ($profile) {
-    //         Gallery::create([
-    //             'profile_id' => $profile->id,
-    //             'image_path' => $filename
-    //         ]);
-    //     }
-
-    //     return [
-    //         // 'text' => "🖼️ Photo added to your gallery!",
-    //         'text' => __('messages.profile_photo_uploaded'),
-    //         'options' => [
-    //             'parse_mode' => 'Markdown',
-    //             'reply_markup' => json_encode([
-    //                 'keyboard' => [
-    //                     [['text' => __('messages.upload_another_photo')]],
-    //                     [['text' => 'Done']]
-    //                 ],
-    //                 'resize_keyboard' => true,
-    //                 'one_time_keyboard' => false
-    //             ])
-    //         ]
-    //     ];
-    // }
-
     public function handle($chatId, $photoOrText, TelegramUserState $state)
     {
         // Define localized skip/done commands

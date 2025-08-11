@@ -19,7 +19,7 @@ class PartnerSpecificProfessionController extends BaseQuestionController
 
         if (!in_array($text, $allowedProfessions, true)) {
             return [
-                'text' => __('messages.invalid_option'),
+                'text' => __('messages.partner_specific_profession_invalid_option'),
                 'options' => self::getOptions($state),
                 'halt_flow' => true
             ];
@@ -44,8 +44,8 @@ class PartnerSpecificProfessionController extends BaseQuestionController
     public static function getOptions($state = null): array
     {
         $selectedCategory = is_array($state)
-            ? ($state['profession'] ?? null)
-            : ($state->answers['profession'] ?? null);
+            ? ($state['partner_profession'] ?? null)
+            : ($state->answers['partner_profession'] ?? null);
 
         if (!$selectedCategory) {
             return [
