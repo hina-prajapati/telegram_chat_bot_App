@@ -11,19 +11,17 @@ class ReligionController extends BaseQuestionController
 {
     public function handle($chatId, $text, TelegramUserState $state)
     {
-        $validOptions = [
-            __('messages.religion_hindu'),
-            __('messages.religion_muslim'),
-            __('messages.religion_christian'),
-            __('messages.religion_sikh'),
-            __('messages.religion_buddhist'),
-            __('messages.religion_jain'),
-            __('messages.religion_parsi'),
-            __('messages.religion_jewish'),
-            __('messages.religion_tribal'),
-            __('messages.religion_none'),
-            __('messages.other'),
-        ];
+       $validOptions = [
+        __('messages.religion_hinduism'),
+        __('messages.religion_islam'),
+        __('messages.religion_christianity'),
+        __('messages.religion_sikhism'),
+        __('messages.religion_buddhism'),
+        __('messages.religion_jainism'),
+        __('messages.other'),
+        __('messages.religion_none'),
+    ];
+
 
         if (!in_array($text, $validOptions)) {
             return [
@@ -54,14 +52,12 @@ class ReligionController extends BaseQuestionController
         return [
             'parse_mode' => 'Markdown',
             'reply_markup' => json_encode([
-                'keyboard' => [
-                    [['text' => __('messages.religion_hindu')], ['text' => __('messages.religion_muslim')]],
-                    [['text' => __('messages.religion_christian')], ['text' => __('messages.religion_sikh')]],
-                    [['text' => __('messages.religion_buddhist')], ['text' => __('messages.religion_jain')]],
-                    [['text' => __('messages.religion_parsi')], ['text' => __('messages.religion_jewish')]],
-                    [['text' => __('messages.religion_tribal')], ['text' => __('messages.religion_none')]],
-                    [['text' => __('messages.other')]]
-                ],
+                  'keyboard' => [
+        [['text' => __('messages.religion_hinduism')], ['text' => __('messages.religion_islam')]],
+        [['text' => __('messages.religion_christianity')], ['text' => __('messages.religion_sikhism')]],
+        [['text' => __('messages.religion_buddhism')], ['text' => __('messages.religion_jainism')]],
+        [['text' => __('messages.other')], ['text' => __('messages.religion_none')]],
+    ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true
             ])

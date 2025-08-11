@@ -25,8 +25,11 @@ class Preference extends Model
         'profile_id',
         'partner_sub_caste',
         'partner_education_level',
-        'profession',
-        'specific_profession'
+        'partner_profession',
+        'partner_specific_profession',
+        'chovihar',
+        'partner_diet',
+        'partner_chovihar'
     ];
 
     public function profile()

@@ -42,11 +42,31 @@
                                 <td>{{ $record->city }}</td>
                                 <td>{{ ucfirst($record->gender) }}</td>
                                 <td>
+                                    <!-- View Button -->
                                     <a href="{{ route('profiles.show', ['id' => $record->id]) }}"
                                         class="btn btn-sm btn-outline-primary">
                                         <i class="bi bi-eye-fill me-1"></i>View
                                     </a>
+
+                                    <!-- Edit Button -->
+                                    <a href="{{ route('profile.edit', ['id' => $record->id, 'chat_id' => $record->telegram_user_id]) }}"
+                                        class="btn btn-sm btn-outline-warning">
+                                        <i class="bi bi-pencil-square me-1"></i>Edit
+                                    </a>
+
+
+                                    <!-- Delete Button -->
+                                    <form action="{{ route('profiles.destroy', ['id' => $record->id]) }}" method="POST"
+                                        style="display:inline-block;"
+                                        onsubmit="return confirm('Are you sure you want to delete this profile?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash-fill me-1"></i>Delete
+                                        </button>
+                                    </form>
                                 </td>
+
                             </tr>
                         @empty
                             <tr>

@@ -12,7 +12,7 @@ class PartnerLanguageController extends BaseQuestionController
 {
     public function handle($chatId, $text, TelegramUserState $state)
     {
-       $validMotherTongues = [
+        $validMotherTongues = [
             __('messages.mother_tongue_hindi'),
             __('messages.mother_tongue_bengali'),
             __('messages.mother_tongue_marathi'),
@@ -41,7 +41,7 @@ class PartnerLanguageController extends BaseQuestionController
             __('messages.mother_tongue_kutchhi'),
             __('messages.mother_tongue_marwari'),
             __('messages.mother_tongue_english'),
-            __('messages.mother_tongue_any'),
+            __('messages.mother_tongue_any')
         ];
 
         if (!in_array($text, $validMotherTongues)) {
@@ -51,8 +51,17 @@ class PartnerLanguageController extends BaseQuestionController
                 'halt_flow' => true
             ];
         }
+        $answers = $state->answers ?? [];
+        $answers['partner_language'] = $text;
 
+        
         $this->saveAnswer($chatId, $state, 'partner_language', $text, Preference::class);
+
+        $state->answers = $answers;
+        $state->current_step = null;
+        $state->save();
+        $telegramController = app(\App\Http\Controllers\Profile\TelegramController::class);
+        return $telegramController->showProfile($chatId, $answers);
 
         return [
             'text' => __('messages.thanks_partner_language', ['tongue' => $text]),
@@ -71,7 +80,7 @@ class PartnerLanguageController extends BaseQuestionController
     {
         return [
             'parse_mode' => 'Markdown',
-              'reply_markup' => json_encode([
+            'reply_markup' => json_encode([
                 'keyboard' => [
                     [
                         ['text' => __('messages.mother_tongue_hindi')],
@@ -139,4 +148,3 @@ class PartnerLanguageController extends BaseQuestionController
         ];
     }
 }
-

@@ -79,17 +79,15 @@ return [
     'ask_religion' => "🙏 Please select your *Religion*:",
     'invalid_option' => '❌ Please select a valid option from the keyboard.',
     'thanks_religion' => "✅ Religion saved as *:religion*.",
-    'religion_hindu' => 'Hindu',
-    'religion_muslim' => 'Muslim',
-    'religion_christian' => 'Christian',
-    'religion_sikh' => 'Sikh',
-    'religion_buddhist' => 'Buddhist',
-    'religion_jain' => 'Jain',
-    'religion_parsi' => 'Parsi (Zoroastrian)',
-    'religion_jewish' => 'Jewish',
-    'religion_tribal' => 'Tribal / Indigenous',
+    'religion_hinduism' => 'Hinduism',
+    'religion_islam' => 'Islam',
+    'religion_christianity' => 'Christianity',
+    'religion_sikhism' => 'Sikhism',
+    'religion_buddhism' => 'Buddhism',
+    'religion_jainism' => 'Jainism',
     'religion_none' => 'No Religion / Atheist',
     'other' => 'Other',
+
 
     'ask_education' => "🎓 *Please select your Highest Education Level:*",
     'thanks_education' => "✅ Education level saved as *:education*.",
@@ -212,7 +210,7 @@ return [
 
 
 
-    'ask_mobile' => "📱 *Please enter your 10-digit Mobile Number* starting with 6–9:",
+    'ask_mobile' => "📱 *Please enter your 10-digit Mobile Number*",
     'invalid_mobile' => "❌ Invalid number. Please enter a *valid 10-digit* mobile number.",
     'thanks_mobile' => "✅ Mobile Number saved as *:mobile*.",
 
@@ -226,9 +224,16 @@ return [
     'profile_photo_save_failed' => "❌ Failed to save the image.",
     'profile_photo_uploaded' => "🖼️ Photo added to your gallery!",
 
+    // 'ask_chovihar' => "Do you observe *Chovihar*?",
+    // 'ask_partner_chovihar' => "Do you observe *Chovihar*?",
+
     'ask_diet' => '🍽️ *What is your diet preference?*',
     'invalid_diet' => "❌ Please select a valid diet option from the buttons below.",
     'saved_diet' => '✅ Your diet preference has been saved as *:diet*.',
+
+    //  'ask_partner_diet' => '🍽️ *What is your diet preference?*',
+    // 'invalid_diet' => "❌ Please select a valid diet option from the buttons below.",
+    // 'saved_diet' => '✅ Your diet preference has been saved as *:diet*.',
 
     'ask_smoke' => "🚬 Do you *Smoke*?",
     'saved_smoking' => "✅ Smoking preference saved as *:value*.",
@@ -248,17 +253,20 @@ return [
 
     'ask_partner_religion' => "🙏 What is your *preferred partner's religion*?",
     'thanks_partner_religion' => "✅ Preferred partner religion saved as *:partner_religion*.",
-    'partner_religion_hindu' => 'Hindu',
-    'partner_religion_muslim' => 'Muslim',
-    'partner_religion_christian' => 'Christian',
-    'partner_religion_sikh' => 'Sikh',
-    'partner_religion_buddhist' => 'Buddhist',
-    'partner_religion_jain' => 'Jain',
+
+    'partner_religion_hindu' => 'Hinduism',
+    'partner_religion_muslim' => 'Islam',
+    'partner_religion_christian' => 'Christianity',
+    'partner_religion_sikh' => 'Sikhism',
+    'partner_religion_buddhist' => 'Buddhism',
+    'partner_religion_jain' => 'Jainism',
     'partner_religion_parsi' => 'Parsi (Zoroastrian)',
     'partner_religion_jewish' => 'Jewish',
     'partner_religion_tribal' => 'Tribal / Indigenous',
     'partner_religion_none' => 'No Religion / Atheist',
     'partner_religion_any' => 'Any',
+
+
 
     'ask_body_type' => "🏋️‍♂️ What is your *Body Type*?",
     'body_type_saved' => "✅ Body Type saved as *:value*.",
@@ -298,7 +306,7 @@ return [
     'ask_sub_caste' => "🕉️ Please select your *Sub Caste* from the list below.",
     'thanks_caste' => "✅ Caste saved as *:caste*.",
 
-     'ask_partner_caste' => "🕉️ Please select your *Partner Caste* from the list below.",
+    'ask_partner_caste' => "🕉️ Please select your *Partner Caste* from the list below.",
     'thanks_caste' => "✅ Caste saved as *:caste*.",
 
     'ask_partner_sub_caste' => "🕉️ Please select your *Partner Sub Caste* from the list below.",
@@ -315,11 +323,44 @@ return [
 
     'partner_min_height_question' => '📏 Please select the *minimum partner height* from the list below.',
     'partner_min_height_saved' => '✅ Minimum partner height saved: :value',
+    'partner_height_invalid' => "❌ Please enter a valid height.",
 
+    
     'partner_max_height_question' => '📏 Please select the *maximum partner height* from the list below.',
     'partner_max_height_saved' => '✅ Maximum partner height saved: :value',
+
 
     'ask_partner_language' => "🌐 What is the *preferred Mother Tongue* of your partner?",
     'profile_already_complete' => '✅ Your profile is already complete! You can type /start anytime to view or edit it.',
 
+    // Mother Tongue
+    'messages.mother_tongue_hindi' => 'Hindi',
+    'messages.mother_tongue_bengali' => 'Bengali',
+    'messages.mother_tongue_marathi' => 'Marathi',
+    'messages.mother_tongue_telugu' => 'Telugu',
+    'messages.mother_tongue_tamil' => 'Tamil',
+    'messages.mother_tongue_gujarati' => 'Gujarati',
+    'messages.mother_tongue_urdu' => 'Urdu',
+    'messages.mother_tongue_kannada' => 'Kannada',
+    'messages.mother_tongue_odia' => 'Odia/Oriya',
+    'messages.mother_tongue_malayalam' => 'Malayalam',
+    'messages.mother_tongue_punjabi' => 'Punjabi',
+    'messages.mother_tongue_assamese' => 'Assamese',
+    'messages.mother_tongue_maithili' => 'Maithili',
+    'messages.mother_tongue_konkani' => 'Konkani',
+    'messages.mother_tongue_dogri' => 'Dogri',
+    'messages.mother_tongue_kashmiri' => 'Kashmiri',
+    'messages.mother_tongue_manipuri' => 'Manipuri',
+    'messages.mother_tongue_nepali' => 'Nepali',
+    'messages.mother_tongue_bodo' => 'Bodo',
+    'messages.mother_tongue_santali' => 'Santali',
+    'messages.mother_tongue_sanskrit' => 'Sanskrit',
+    'messages.mother_tongue_sindhi' => 'Sindhi',
+    'messages.mother_tongue_tulu' => 'Tulu',
+    'messages.mother_tongue_bhojpuri' => 'Bhojpuri',
+    'messages.mother_tongue_haryanvi' => 'Haryanvi',
+    'messages.mother_tongue_kutchhi' => 'Kutchhi',
+    'messages.mother_tongue_marwari' => 'Marwari',
+    'messages.mother_tongue_english' => 'English',
+    'mother_tongue_any' => 'Any'
 ];

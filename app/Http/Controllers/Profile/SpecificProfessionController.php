@@ -15,13 +15,12 @@ class SpecificProfessionController extends BaseQuestionController
     {
         $text = trim($text);
 
-        // Check if the selected profession exists in specific_professions table
         $allowedProfessions = self::allowedProfessions();
 
         if (!in_array($text, $allowedProfessions, true)) {
             return [
                 'text' => __('messages.invalid_option'),
-                'options' => self::getOptions($state), // Pass state to preserve previous category
+                'options' => self::getOptions($state),
                 'halt_flow' => true
             ];
         }

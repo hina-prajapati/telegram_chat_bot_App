@@ -24,12 +24,12 @@ class PartnerProfessionController extends BaseQuestionController
         }
 
         $answers = $state->answers;
-        $answers['profession'] = $text;
+        $answers['partner_profession'] = $text;
 
-        $this->saveAnswer($chatId, $state, 'profession', $text, Preference::class);
+        $this->saveAnswer($chatId, $state, 'partner_profession', $text, Preference::class);
 
         return [
-            'text' => __('messages.thanks_profession', ['profession' => $text]),
+            'text' => __('messages.thanks_partner_profession', ['partner_profession' => $text]),
             'options' => ['parse_mode' => 'Markdown']
         ];
     }

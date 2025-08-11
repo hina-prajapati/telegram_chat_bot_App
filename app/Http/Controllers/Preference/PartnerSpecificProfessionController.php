@@ -20,18 +20,18 @@ class PartnerSpecificProfessionController extends BaseQuestionController
         if (!in_array($text, $allowedProfessions, true)) {
             return [
                 'text' => __('messages.invalid_option'),
-                'options' => self::getOptions($state), // Pass state to preserve previous category
+                'options' => self::getOptions($state),
                 'halt_flow' => true
             ];
         }
 
         $answers = $state->answers;
-        $answers['specific_profession'] = $text;
+        $answers['partner_specific_profession'] = $text;
 
-        $this->saveAnswer($chatId, $state, 'specific_profession', $text, Preference::class);
+        $this->saveAnswer($chatId, $state, 'partner_specific_profession', $text, Preference::class);
 
         return [
-            'text' => __('messages.thanks_specific_profession', ['specific_profession' => $text]),
+            'text' => __('messages.thanks_partner_specific_profession', ['partner_specific_profession' => $text]),
             'options' => ['parse_mode' => 'Markdown']
         ];
     }

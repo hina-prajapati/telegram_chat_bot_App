@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,8 +38,12 @@ class Profile extends Model
         'bio',
         'income_range',
         'sub_caste',
-        'specific_profession'
-        
+        'specific_profession',
+        'chovihar',
+        'birth_time',
+        'birth_place',
+        'native_place',
+        'terms_and_conditions'
     ];
     // app/Models/Profile.php
 
@@ -56,8 +61,18 @@ class Profile extends Model
     {
         return $this->hasOne(\App\Models\Preference::class, 'profile_id', 'id');
     }
-public function gallery()
-{
-    return $this->hasOne(Gallery::class)->latestOfMany();
-}
+    public function gallery()
+    {
+        return $this->hasOne(Gallery::class)->latestOfMany();
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state'); // 'state' is foreign key
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city'); // 'city' is foreign key
+    }
 }

@@ -22,8 +22,9 @@ Route::get('/', function () {
 
 Route::post('/telegram-webhook', [TelegramController::class, 'handleUpdate']);
 
-Route::get('/getAllData', [TelegramController::class, 'index'])->name('getAllData');
-Route::get('profiles/{id}', [TelegramController::class, 'show'])->name('profiles.show');
+Route::get('/getAllData', [ProfileController::class, 'index'])->name('getAllData');
+Route::get('profiles/{id}', [ProfileController::class, 'show'])->name('profiles.show');
+Route::delete('/profiles/{id}', [ProfileController::class, 'destroy'])->name('profiles.destroy');
 
 
 Route::get('/profile/edit/{id}', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -37,3 +38,6 @@ Route::get('/test', function () {
 });
 
 Route::get('/get-cities/{state_id}', [ProfileController::class, 'getCities']);
+Route::get('/get-subcast/{caste_id}', [ProfileController::class, 'getSubCast']);
+Route::get('/get-specific-professions/{profession_id}', [ProfileController::class, 'getSpecificProfessions']);
+Route::get('/get-partner-specific-professions/{partnerProfessionId}', [ProfileController::class, 'getPartnerSpecificProfessions']);

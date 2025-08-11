@@ -45,11 +45,19 @@ use App\Http\Controllers\Profile\{
     JobStatusController,
     IncomeRangeController,
     SubCasteController,
-    SpecificProfessionController
+    SpecificProfessionController,
+    ChoviharController,
+    BirthTimeController,
+    BirthPlaceController,
+    NativePlaceController,
+    TermsAndConditionsController,
+    ReasonController
 };
 use App\Http\Controllers\Preference\{
     PartnerMaritalStatusController,
     PartnerCasteController,
+    PartnerChoviharController,
+    PartnerDietController,
     PartnerEducationLevelController,
     PartnerIncomeRangeController,
     PartnerJobStatusController,
@@ -59,9 +67,11 @@ use App\Http\Controllers\Preference\{
     PartnerMaxHeightController,
     // PartnerGenderController,
     PartnerLanguageController,
+    PartnerProfessionController,
     PartnerReligionController,
-    PartnerSubCasteController,
-    
+    PartnerSpecificProfessionController,
+    // PartnerSubCasteController,
+
 };
 
 class TelegramController extends Controller
@@ -123,7 +133,6 @@ class TelegramController extends Controller
 
             return $this->handleStartCommand($chatId, $state);
         }
-
 
         if (strtolower($text) === '/profile') {
 
@@ -197,14 +206,13 @@ class TelegramController extends Controller
                 return $this->sendMessage($chatId, "❌ Mismatch in profile linkage. Please contact support.");
             }
 
-            // $editUrl = "http://127.0.0.1:8000/profile/edit/$profileId";
-            $editUrl = "http://127.0.0.1:8000/profile/edit/$profileId";
+            $editUrl = "http://127.0.0.1:8000/profile/edit/{$profileId}?chat_id={$chatId}";
+
 
             return $this->sendMessage($chatId, "📝 Click the link below to update your profile:\n\n<a href='$editUrl'>Edit Profile</a>", [
                 'parse_mode' => 'HTML'
             ]);
         }
-
 
         if (strtolower($text) === '/pending') {
             $profile = Profile::where('telegram_user_id', $chatId)->first();
@@ -231,10 +239,17 @@ class TelegramController extends Controller
                 app(TelegramController::class)->showOtherProfile($chatId, $senderProfile->id, false);
 
                 // ✅ Now send buttons for approve/reject
+                // $buttons = [
+                //     [
+                //         ['text' => '✅ Approve', 'callback_data' => "approve_request__{$senderProfile->id}_{$profile->id}"],
+                //         ['text' => '❌ Reject', 'callback_data' => "reject_request__{$senderProfile->id}_{$profile->id}"]
+                //     ]
+                // ];
+
                 $buttons = [
                     [
-                        ['text' => '✅ Approve', 'callback_data' => "approve_request__{$senderProfile->id}_{$profile->id}"],
-                        ['text' => '❌ Reject', 'callback_data' => "reject_request__{$senderProfile->id}_{$profile->id}"]
+                        ['text' => '✅ Approve', 'callback_data' => "approve_request_{$senderProfile->id}_{$profile->id}"],
+                        ['text' => '❌ Reject', 'callback_data' => "reject_request_{$senderProfile->id}_{$profile->id}"]
                     ]
                 ];
 
@@ -247,6 +262,11 @@ class TelegramController extends Controller
             return response('ok');
         }
 
+        if (strtolower($text) === '/delete_profile' || $state->current_step === 'deletion_reason') {
+            $controller = new \App\Http\Controllers\Profile\ReasonController();
+            $controller = new ReasonController();
+            return $controller->handleDeletion($chatId, $text, $state);
+        }
 
         if ($currentStep === 'selecting_language') {
             return $this->handleLanguageSelection($chatId, $text, $state);
@@ -275,7 +295,7 @@ class TelegramController extends Controller
                 return $this->sendStructuredMessage($chatId, $response);
             }
 
-            $nextStep = $this->getNextStep($currentStep);
+            $nextStep = $this->getNextStep($currentStep, $state);
             if ($nextStep && isset($handlers[$nextStep])) {
                 $state->update(['current_step' => $nextStep]);
                 $nextController = app($handlers[$nextStep]);
@@ -307,6 +327,11 @@ class TelegramController extends Controller
             'awaiting_mobile' => MobileController::class,
             'awaiting_marital_status' => MaritalStatusController::class,
             'awaiting_dob' => DobController::class,
+            'awaiting_dob' => DobController::class,
+            'awaiting_birth_time' => BirthTimeController::class,
+            'awaiting_birth_place' => BirthPlaceController::class,
+            'awaiting_native_place' => NativePlaceController::class,
+            'awaiting_terms_and_conditions' => TermsAndConditionsController::class,
             'awaiting_state' => StateController::class,
             'awaiting_city' => CityController::class,
             'awaiting_mother_tongue' => MotherTongueController::class,
@@ -318,10 +343,11 @@ class TelegramController extends Controller
             'awaiting_job_status' => JobStatusController::class,
             'awaiting_working_sector' => WorkingSectorController::class,
             'awaiting_profession' => ProfessionController::class,
-            'awaiting_profession' => SpecificProfessionController::class,
+            'awaiting_specific_profession' => SpecificProfessionController::class,
             'awaiting_income_range' => IncomeRangeController::class,
             'awaiting_profile_photo' => ProfilePhotoController::class,
             'awaiting_diet' => DietController::class,
+            'awaiting_chovihar' => ChoviharController::class,
             'awaiting_smoking' => SmokingController::class,
             'awaiting_drinking' => DrinkingController::class,
             'awaiting_height' => HeightController::class,
@@ -329,10 +355,14 @@ class TelegramController extends Controller
             'awaiting_skin_tone' => SkinToneController::class,
             'awaiting_partner_marital_status' => PartnerMaritalStatusController::class,
             'awaiting_partner_caste' => PartnerCasteController::class,
-            'awaiting_partner_sub_caste' => PartnerSubCasteController::class,
+            // 'awaiting_partner_sub_caste' => PartnerSubCasteController::class,
+            'awaiting_partner_profession' => PartnerProfessionController::class,
+            'awaiting_partner_sepcific_profession' => PartnerSpecificProfessionController::class,
             'awaiting_partner_min_age' => PartnerMinAgeController::class,
             'awaiting_partner_max_age' => PartnerMaxAgeController::class,
             'awaiting_partner_religion' => PartnerReligionController::class,
+            'awaiting_partner_diet' => PartnerDietController::class,
+            'awaiting_partner_chovihar' => PartnerChoviharController::class,
             'awaiting_partner_education_level' => PartnerEducationLevelController::class,
             'awaiting_partner_job_status' => PartnerJobStatusController::class,
             'awaiting_partner_income_range' => PartnerIncomeRangeController::class,
@@ -440,54 +470,6 @@ class TelegramController extends Controller
         return $response->json();
     }
 
-    // public function sendPhoto($chatId, $photoUrlOrPath, $caption = '')
-    // {
-    //     // If it's a local path, use multipart
-    //     if (file_exists(public_path('uploads/profiles/' . basename($photoUrlOrPath)))) {
-    //         $response = Http::attach(
-    //             'photo',
-    //             file_get_contents(public_path('uploads/profiles/' . basename($photoUrlOrPath))),
-    //             basename($photoUrlOrPath)
-    //         )->post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendPhoto", [
-    //             'chat_id' => $chatId,
-    //             'caption' => $caption,
-    //             'parse_mode' => 'Markdown',
-    //         ]);
-    //     } else {
-    //         // Otherwise, fallback to URL
-    //         $response = Http::post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendPhoto", [
-    //             'chat_id' => $chatId,
-    //             'photo' => $photoUrlOrPath,
-    //             'caption' => $caption,
-    //             'parse_mode' => 'Markdown',
-    //         ]);
-    //     }
-
-    //     Log::info('sendPhoto response: ' . $response->body());
-    // }
-
-    // public function sendPhoto($chatId, $photoUrlOrPath, $caption = '')
-    // {
-    //     $fullPath = public_path('uploads/profiles/' . basename($photoUrlOrPath));
-
-    //     if (file_exists($fullPath) && is_readable($fullPath)) {
-    //         $response = Http::attach(
-    //             'photo',
-    //             file_get_contents($fullPath),
-    //             basename($fullPath)
-    //         )->post("https://api.telegram.org/bot" . env('TELEGRAM_BOT_TOKEN') . "/sendPhoto", [
-    //             'chat_id' => $chatId,
-    //             'caption' => $caption,
-    //             'parse_mode' => 'Markdown',
-    //         ]);
-    //     } else {
-    //         Log::error("❌ Image not found or unreadable: $fullPath");
-    //         $this->sendMessage($chatId, "⚠️ Profile image not found.");
-    //         return;
-    //     }
-
-    //     Log::info('sendPhoto response: ' . $response->body());
-    // }
     public function sendPhoto($chatId, $photoUrlOrPath, $caption = '', $extraOptions = [])
     {
         $isLocal = file_exists(public_path('uploads/profiles/' . basename($photoUrlOrPath)));
@@ -519,7 +501,93 @@ class TelegramController extends Controller
         Log::info('sendPhoto response: ' . $response->body());
     }
 
+    // public function showProfile($chatId, $answers = [])
+    // {
+    //     $profile = Profile::where('telegram_user_id', $chatId)->first();
+    //     $preference = Preference::where('telegram_user_id', $chatId)->first();
 
+    //     $gallery = Gallery::where('profile_id', $profile->id)
+    //         ->latest('created_at')
+    //         ->first();
+
+    //     if (!$profile || !$preference) {
+    //         return $this->sendMessage($chatId, "❌ Profile or preferences not found.");
+    //     }
+
+    //     // ✅ Build summary
+    //     $summary = "*👤 Your Profile:*\n";
+
+    //     $orderedFields = [
+    //         'name',
+    //         'email',
+    //         'bio',
+    //         'gender',
+    //         'marital_status',
+    //         'dob',
+    //         'state',
+    //         'city',
+    //         'mother_tongue',
+    //         'religion',
+    //         'caste',
+    //         'sub_caste',
+    //         'height',
+    //         'education_level',
+    //         'education_field',
+    //         'job_status',
+    //         'working_sector',
+    //         'profession',
+    //         'phone',
+    //         'profile_photo',
+    //         'diet',
+    //         'smoking',
+    //         'drinking',
+    //         'height',
+    //         'body_type',
+    //         'skin_tone',
+    //     ];
+
+    //     foreach ($orderedFields as $field) {
+    //         if (!empty($profile->$field)) {
+    //             $label = ucwords(str_replace('_', ' ', $field));
+
+    //             // 🎯 Format dob here
+    //             if ($field === 'dob') {
+    //                 $formattedDob = \Carbon\Carbon::parse($profile->dob)->format('d-m-Y');
+    //                 $summary .= "▪️ *$label*: $formattedDob\n";
+    //             } else {
+    //                 $summary .= "▪️ *$label*: {$profile->$field}\n";
+    //             }
+    //         }
+    //     }
+
+    //     $summary .= "\n*💘 Your Preferences:*\n";
+    //     foreach ($preference->getAttributes() as $key => $value) {
+    //         if (
+    //             !in_array($key, ['id', 'telegram_user_id', 'created_at', 'updated_at']) &&
+    //             !empty($value) // ✅ skip empty/null/false/'' values
+    //         ) {
+    //             $label = ucwords(str_replace('_', ' ', $key));
+    //             $summary .= "🔸 *$label*: $value\n";
+    //         }
+    //     }
+
+    //     $filename = ($gallery && $gallery->image_path)
+    //         ? $gallery->image_path
+    //         : 'profile_Pic.jpg'; // ✅ fallback default
+
+    //     $photoPath = public_path("uploads/profiles/{$filename}");
+
+    //     if (!file_exists($photoPath) || !is_readable($photoPath)) {
+    //         $photoPath = public_path("uploads/profiles/profile_Pic.jpg"); // fallback local path
+    //     }
+
+    //     $this->sendPhoto($chatId, $photoPath, $summary);
+
+    //     // ✅ Now show match button
+    //     // $matchController = app(\App\Http\Controllers\MatchController::class);
+    //     // return $matchController->findMatches($chatId, $profile);
+    //     // return $this->handleNextMatch($chatId, $profile);
+    // }
 
     public function showProfile($chatId, $answers = [])
     {
@@ -534,8 +602,8 @@ class TelegramController extends Controller
             return $this->sendMessage($chatId, "❌ Profile or preferences not found.");
         }
 
-        // ✅ Build summary
-        $summary = "*👤 Your Profile:*\n";
+        // Build profile summary (only profile fields)
+        $profileSummary = "*👤 Your Profile:*\n";
 
         $orderedFields = [
             'name',
@@ -557,11 +625,9 @@ class TelegramController extends Controller
             'working_sector',
             'profession',
             'phone',
-            'profile_photo',
             'diet',
             'smoking',
             'drinking',
-            'height',
             'body_type',
             'skin_tone',
         ];
@@ -570,56 +636,63 @@ class TelegramController extends Controller
             if (!empty($profile->$field)) {
                 $label = ucwords(str_replace('_', ' ', $field));
 
-                // 🎯 Format dob here
                 if ($field === 'dob') {
                     $formattedDob = \Carbon\Carbon::parse($profile->dob)->format('d-m-Y');
-                    $summary .= "▪️ *$label*: $formattedDob\n";
+                    $profileSummary .= "▪️ *$label*: $formattedDob\n";
                 } else {
-                    $summary .= "▪️ *$label*: {$profile->$field}\n";
+                    $profileSummary .= "▪️ *$label*: {$profile->$field}\n";
                 }
             }
         }
 
-        $summary .= "\n*💘 Your Preferences:*\n";
+        // Build preferences summary (only preference fields)
+        $preferenceSummary = "\n*💘 Your Preferences:*\n";
         foreach ($preference->getAttributes() as $key => $value) {
-            if (
-                !in_array($key, ['id', 'telegram_user_id', 'created_at', 'updated_at']) &&
-                !empty($value) // ✅ skip empty/null/false/'' values
-            ) {
+            if (!in_array($key, ['id', 'telegram_user_id', 'created_at', 'updated_at']) && !empty($value)) {
                 $label = ucwords(str_replace('_', ' ', $key));
-                $summary .= "🔸 *$label*: $value\n";
+                $preferenceSummary .= "🔸 *$label*: $value\n";
             }
         }
 
         $filename = ($gallery && $gallery->image_path)
             ? $gallery->image_path
-            : 'profile_Pic.jpg'; // ✅ fallback default
+            : 'profile_Pic.jpg'; // fallback default
 
-        // $photoPath = public_path('uploads/profiles/' . $filename);
-
-        // // ✅ Always send photo — either user's or default
-        // if (file_exists($photoPath)) {
-        //     $this->sendPhoto($chatId, $photoPath, $summary, ['parse_mode' => 'Markdown']);
-        // } else {
-        //     $photoUrl = secure_asset('uploads/profiles/' . $filename);
-        //     $this->sendPhoto($chatId, $photoUrl, $summary, ['parse_mode' => 'Markdown']);
-        // }
         $photoPath = public_path("uploads/profiles/{$filename}");
 
         if (!file_exists($photoPath) || !is_readable($photoPath)) {
             $photoPath = public_path("uploads/profiles/profile_Pic.jpg"); // fallback local path
         }
+        $this->sendPhoto($chatId, $photoPath, $profileSummary);
+        // $this->sendPhoto($chatId, $photoPath, "👤 Here is your profile photo.");
 
-        $this->sendPhoto($chatId, $photoPath, $summary);
+        // $this->sendMessage($chatId, $profileSummary);
 
-        // ✅ Now show match button
-        $matchController = app(\App\Http\Controllers\MatchController::class);
-        return $matchController->findMatches($chatId, $profile);
-        // return $this->handleNextMatch($chatId, $profile);
+        // $this->sendMessage($chatId, $preferenceSummary);
+        $this->sendMessage($chatId, $preferenceSummary, [
+            'parse_mode' => 'Markdown',
+            'reply_markup' => ['remove_keyboard' => true]
+        ]);
     }
 
-    private function getNextStep(string $currentStep): ?string
+    private function getNextStep(string $currentStep, TelegramUserState $state): ?string
     {
+        if ($currentStep === 'awaiting_diet') {
+            if (($state->answers['diet'] ?? '') === 'Jain') {
+                return 'awaiting_chovihar';
+            } else {
+                return 'awaiting_smoking';
+            }
+        }
+
+        if ($currentStep === 'awaiting_partner_diet') {
+            if (($state->answers['partner_diet'] ?? '') === 'Jain') {
+                return 'awaiting_partner_chovihar';
+            } else {
+                return 'awaiting_partner_education_level';
+            }
+        }
+
         $steps = array_keys($this->getHandlers());
         $index = array_search($currentStep, $steps);
         return $steps[$index + 1] ?? null;
@@ -695,7 +768,7 @@ class TelegramController extends Controller
         $allowedSkips = $skipCommands[$lang] ?? $skipCommands['en'];
 
         if (in_array(mb_strtolower(trim($text)), array_map('mb_strtolower', $allowedSkips))) {
-            $nextStep = $this->getNextStep('awaiting_profile_photo');
+            $nextStep = $this->getNextStep('awaiting_profile_photo', $state);
             $state->update(['current_step' => $nextStep]);
 
             $nextController = app($handlers[$nextStep]);
@@ -708,7 +781,7 @@ class TelegramController extends Controller
         }
 
         if (isset($message['photo'])) {
-            Log::info('📸 Handling profile photo upload');
+            // Log::info('📸 Handling profile photo upload');
             $response = $controller->handle($chatId, $message['photo'], $state);
             return $this->sendStructuredMessage($chatId, $response);
         }
@@ -998,19 +1071,5 @@ class TelegramController extends Controller
             $summary,
             ['parse_mode' => 'Markdown']
         );
-    }
-
-    public function index()
-    {
-        $records = Profile::with('preference', 'gallery')->get();
-        // dd($records);
-        return view('getAllData', compact('records'));
-    }
-
-    public function show($id)
-    {
-        $record = Profile::with('preference')->findOrFail($id);
-        // dd($record);
-        return view('profiles.show', compact('record'));
     }
 }

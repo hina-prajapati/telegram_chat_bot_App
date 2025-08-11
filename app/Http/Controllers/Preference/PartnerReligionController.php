@@ -25,11 +25,12 @@ class PartnerReligionController extends BaseQuestionController
             __('messages.partner_religion_any'),
         ];
 
+
         if (!in_array($text, $validOptions)) {
             return [
                 'text' => __('messages.invalid_option'),
                 'options' => self::getOptions(),
-                 'halt_flow' => true
+                'halt_flow' => true
             ];
         }
 
@@ -62,6 +63,7 @@ class PartnerReligionController extends BaseQuestionController
                     [['text' => __('messages.partner_religion_tribal')], ['text' => __('messages.partner_religion_none')]],
                     [['text' => __('messages.partner_religion_any')]],
                 ],
+
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true
             ])

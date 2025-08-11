@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Profile;
+namespace App\Http\Controllers\Preference;
 
 use App\Http\Controllers\BaseQuestionController;
-use App\Http\Controllers\Controller;
+use App\Models\Preference;
+use Illuminate\Http\Request;
 use App\Models\TelegramUserState;
-use App\Models\Profile;
 
-class DietController extends BaseQuestionController
+class PartnerDietController extends BaseQuestionController
 {
     public function handle($chatId, $text, TelegramUserState $state)
     {
-        $validOptions = ['Veg', 'Non-Veg', 'Jain', 'Any'];
+    // Log::info('User state updated', $state->toArray());
 
+
+        $validOptions = ['Veg', 'Non-Veg', 'Jain', 'Any'];
         if (!in_array($text, $validOptions)) {
             return [
                 'text' => __('messages.invalid_diet'),
@@ -21,8 +23,28 @@ class DietController extends BaseQuestionController
             ];
         }
 
-        $this->saveAnswer($chatId, $state, 'diet', $text, Profile::class);
+        $this->saveAnswer($chatId, $state, 'partner_diet', $text, Preference::class);
 
+        if($text === 'jain'){
+            $state->current_step = 'chovihar';
+             $state->save();
+        
+
+        return [
+                'text' => "Do you observe *Chovihar*?",
+                'options' => [
+                    'parse_mode' => 'Markdown',
+                    'reply_markup' => json_encode([
+                        'keyboard' => [
+                            [['text' => 'Yes'], ['text' => 'No']]
+                        ],
+                        'resize_keyboard' => true,
+                        'one_time_keyboard' => true
+                    ])
+                ],
+                'halt_flow' => true
+            ];
+        }
 
         return [
             'text' => __('messages.saved_diet', ['diet' => $text]),
@@ -50,4 +72,3 @@ class DietController extends BaseQuestionController
         ];
     }
 }
-

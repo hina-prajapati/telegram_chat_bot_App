@@ -70,14 +70,16 @@
         <hr>
 
         <h3>📘 How to Use:</h3>
-        <ul> 
+        <ul>
             <li><strong>/start</strong> – Create your profile if you're new.</li>
             <li><strong>/profile</strong> – View your profile details.</li>
             <li><strong>/matches</strong> – See your suggested matches.</li>
             <li><strong>/approved</strong> – View profiles you've approved.</li>
             <li><strong>/pending</strong> – View Pending Profiles.</li>
-            <li><strong>/update_profile </strong> - Update Your profile";</li>
+            <li><strong>/update_profile</strong> – Update your profile.</li>
+            <li><strong>/delete_profile</strong> – Delete your profile with a reason.</li>
         </ul>
+
         <p>Open the bot and type any of these commands to get started!</p>
     </div>
 

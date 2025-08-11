@@ -201,10 +201,22 @@ class MatchController extends TelegramController
             if ($preference->partner_max_height) {
                 $query->where('height', '<=', $preference->partner_max_height);
             }
+
+            // Religion
             if ($preference->partner_religion && strtolower($preference->partner_religion) !== 'any') {
-                $query->where('religion', $preference->partner_religion);
+                $query->where(function ($q) use ($preference) {
+                    $q->where('religion', $preference->partner_religion)
+                        ->orWhere('religion', 'Other');
+                });
             }
 
+            // Caste
+            if ($preference->partner_caste && strtolower($preference->partner_caste) !== 'any') {
+                $query->where(function ($q) use ($preference) {
+                    $q->where('caste', $preference->partner_caste)
+                        ->orWhere('caste', 'Other');
+                });
+            }
             $results = $query->get();
 
             if ($preference->partner_income_range !== 'Any') {
@@ -221,7 +233,7 @@ class MatchController extends TelegramController
 
             $match = $results->first();
             if ($match) {
-                $matchMessage = "🔍 Profile found based on some of your preferences (e.g., gender, age, height, religion, and income).";
+                $matchMessage = "🔍 Profile found based on some of your preferences (e.g., gender, age, height, religion, caste and income).";
             }
         }
 
@@ -289,8 +301,6 @@ class MatchController extends TelegramController
             $path = public_path('uploads/profiles/' . $image);
 
             $senderProfile = Profile::where('telegram_user_id', $chatId)->first();
-
-
             $gallery = Gallery::where('profile_id', $match->id)
                 ->latest('created_at')
                 ->first();
@@ -506,6 +516,35 @@ class MatchController extends TelegramController
                     ->orWhere('job_status', 'Other');
             });
         }
+        // profession
+        if ($preference->profession && strtolower($preference->profession)) {
+            $query->where(function ($q) use ($preference) {
+                $q->where('profession', $preference->profession)
+                    ->orWhere('profession', 'Other');
+            });
+        }
+
+
+        if ($preference->specific_profession && strtolower($preference->specific_profession)) {
+            $query->where(function ($q) use ($preference) {
+                $q->where('specific_profession', $preference->specific_profession)
+                    ->orWhere('specific_profession', 'Other');
+            });
+        }
+
+         // 🍽️ Diet + Chovihar Logic
+        if ($preference->partner_diet && strtolower($preference->partner_diet) !== 'any') {
+            $query->where('diet', $preference->partner_diet);
+
+            // 🪷 Only check chovihar if diet is Jain and user specified a preference
+            if (
+                strtolower($preference->partner_diet) === 'jain' &&
+                isset($preference->partner_chovihar) &&
+                strtolower($preference->partner_chovihar) !== "doesn't matter"
+            ) {
+                $query->where('chovihar', $preference->partner_chovihar);
+            }
+        }
 
         // Log query for debugging
         Log::info('SQL:', [$query->toSql()]);
@@ -543,3 +582,4 @@ class MatchController extends TelegramController
         return $profiles; // final filtered result
     }
 }
+

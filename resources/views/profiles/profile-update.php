@@ -175,33 +175,19 @@
                                     @php
                                         $tongues = [
                                             'Hindi' => 'Hindi',
-                                            'Bengali' => 'Bengali',
                                             'Marathi' => 'Marathi',
-                                            'Telugu' => 'Telugu',
-                                            'Tamil' => 'Tamil',
                                             'Gujarati' => 'Gujarati',
+                                            'Punjabi' => 'Punjabi',
+                                            'Tamil' => 'Tamil',
+                                            'Telugu' => 'Telugu',
+                                            'Bengali' => 'Bengali',
                                             'Urdu' => 'Urdu',
                                             'Kannada' => 'Kannada',
-                                            'Odia/Oriya' => 'Odia/Oriya',
                                             'Malayalam' => 'Malayalam',
-                                            'Punjabi' => 'Punjabi',
+                                            'Odia' => 'Odia',
                                             'Assamese' => 'Assamese',
-                                            'Maithili' => 'Maithili',
-                                            'Konkani' => 'Konkani',
-                                            'Dogri' => 'Dogri',
-                                            'Kashmiri' => 'Kashmiri',
-                                            'Manipuri' => 'Manipuri',
                                             'Nepali' => 'Nepali',
-                                            'Bodo' => 'Bodo',
-                                            'Santali' => 'Santali',
-                                            'Sanskrit' => 'Sanskrit',
                                             'Sindhi' => 'Sindhi',
-                                            'Tulu' => 'Tulu',
-                                            'Bhojpuri' => 'Bhojpuri',
-                                            'Haryanvi' => 'Haryanvi',
-                                            'Kutchhi' => 'Kutchhi',
-                                            'Marwari' => 'Marwari',
-                                            'English' => 'English',
                                             'Other' => 'Other',
                                         ];
 
@@ -224,14 +210,14 @@
                                 <select name="religion" class="form-control">
                                     @php
                                         $religions = [
-                                            'Hinduism' => 'Hinduism',
-                                            'Islam' => 'Islam',
-                                            'Christianity' => 'Christianity',
-                                            'Sikhism' => 'Sikhism',
-                                            'Buddhism' => 'Buddhism',
-                                            'Jainism' => 'Jainism',
+                                            'Hindu' => 'Hindu',
+                                            'Muslim' => 'Muslim',
+                                            'Christian' => 'Christian',
+                                            'Sikh' => 'Sikh',
+                                            'Buddhist' => 'Buddhist',
+                                            'Jain' => 'Jain',
                                             'Parsi (Zoroastrian)' => 'Parsi (Zoroastrian)',
-                                            'Judaism' => 'Judaism',
+                                            'Jewish' => 'Jewish',
                                             'Tribal / Indigenous' => 'Tribal / Indigenous',
                                             'No Religion / Atheist' => 'No Religion / Atheist',
                                             'Other' => 'Other',
@@ -249,11 +235,9 @@
                             </div>
                         </div>
 
-                        {{-- caste --}}
-
-                        <div class="col-md-6 col-lg-3">
+                        {{-- <div class="col-md-6 col-lg-3">
                             <div class="form-group">
-                                <label for="caste">Caste:</label>
+                                <label for="name">Caste:</label>
                                 <select id="caste" name="caste" class="form-control">
                                     @foreach ($casts as $cast)
                                         <option value="{{ $cast->caste_id }}"
@@ -267,19 +251,17 @@
 
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
-                                <label for="subCaste">Sub Caste:</label>
+                                <label for="name">Sub Caste:</label>
                                 <select id="subCaste" name="sub_caste" class="form-control">
-                                    @foreach ($subcasts as $subcast)
-                                        <option value="{{ $subcast->sub_caste_id }}"
-                                            {{ old('sub_caste', $profile->sub_caste ?? '') == $subcast->sub_caste_name ? 'selected' : '' }}>
-                                            {{ $subcast->sub_caste_name }}
+                                    @foreach ($subcasts as $cast)
+                                        <option value="{{ $cast->sub_caste_id }}"
+                                            {{ old('caste', $profile->sub_caste ?? '') == $cast->sub_caste_name ? 'selected' : '' }}>
+                                            {{ $cast->sub_caste_name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-
-
+                        </div> --}}
 
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
@@ -287,19 +269,12 @@
                                 <select name="education_level" class="form-control">
                                     @php
                                         $educationLevels = [
-                                            'High School (or equivalent like 10th Pass)' =>
-                                                'High School (or equivalent like 10th Pass)',
-                                            'Intermediate/Diploma (12th Pass, ITI, etc.)' =>
-                                                'Intermediate/Diploma (12th Pass, ITI, etc.)',
-                                            "Bachelor's Degree" => "Bachelor's Degree",
-                                            "Master's Degree" => "Master's Degree",
-                                            'Doctorate/Ph.D.' => 'Doctorate/Ph.D.',
-                                            'Post Doctorate' => 'Post Doctorate',
-                                            'Professional Degree (e.g., CA, CS, MBBS, etc.)' =>
-                                                'Professional Degree (e.g., CA, CS, MBBS, etc.)',
+                                            'High School' => 'High School',
+                                            'Diploma' => 'Diploma',
+                                            "Bachelor's" => "Bachelor's",
+                                            "Master's" => "Master's",
+                                            'PhD' => 'PhD',
                                             'Other' => 'Other',
-                                            'Did not complete high school' => 'Did not complete high school',
-                                            'Prefer not to say' => 'Prefer not to say',
                                         ];
 
                                     @endphp
@@ -320,23 +295,10 @@
                                 <select name="education_field" class="form-control">
                                     @php
                                         $educationFields = [
-                                            'Arts/Humanities' => 'Arts/Humanities',
-                                            'Science' => 'Science',
-                                            'Commerce' => 'Commerce',
                                             'Engineering' => 'Engineering',
-                                            'Medical' => 'Medical',
-                                            'Law' => 'Law',
-                                            'Management (MBA, BBA, etc.)' => 'Management (MBA, BBA, etc.)',
-                                            'Information Technology (IT)' => 'Information Technology (IT)',
-                                            'Architecture' => 'Architecture',
-                                            'Pharmacy' => 'Pharmacy',
-                                            'Agriculture' => 'Agriculture',
-                                            'Media/Journalism' => 'Media/Journalism',
-                                            'Fine Arts/Performing Arts' => 'Fine Arts/Performing Arts',
-                                            'Education' => 'Education',
-                                            'Vocational' => 'Vocational',
-                                            'Designing' => 'Designing',
-                                            'Sports' => 'Sports',
+                                            'Arts' => 'Arts',
+                                            'Commerce' => 'Commerce',
+                                            'Science' => 'Science',
                                             'Other' => 'Other',
                                         ];
 
@@ -359,13 +321,9 @@
                                     @php
                                         $jobStatuses = [
                                             'Employed' => 'Employed',
-                                            'Self-Employed / Business' => 'Self-Employed / Business',
-                                            'Homemaker/Housewife' => 'Homemaker/Housewife',
-                                            'Not Working' => 'Not Working',
+                                            'Self-employed' => 'Self-employed',
                                             'Student' => 'Student',
-                                            'Retired' => 'Retired',
-                                            'Unemployed / Looking for a Job' => 'Unemployed / Looking for a Job',
-                                            'Prefer not to say' => 'Prefer not to say',
+                                            'Unemployed' => 'Unemployed',
                                         ];
 
                                     @endphp
@@ -386,24 +344,12 @@
                                 <select name="working_sector" class="form-control">
                                     @php
                                         $workingSectors = [
-                                            'Government/Public Sector' => 'Government/Public Sector',
-                                            'Private Sector' => 'Private Sector',
-                                            'Self-Employed / Business' => 'Self-Employed / Business',
-                                            'NGO/Social Services' => 'NGO/Social Services',
-                                            'Defense/Civil Services' =>
-                                                'Defense/Civil Services (e.g., IAS, IPS, Army, Navy, etc.)',
-                                            'Education/Academia' => 'Education/Academia',
-                                            'Healthcare' => 'Healthcare',
-                                            'Information Technology (IT)' => 'Information Technology (IT)',
-                                            'Banking/Finance' => 'Banking/Finance',
-                                            'Media/Entertainment' => 'Media/Entertainment',
-                                            'Hospitality' => 'Hospitality',
-                                            'Retail/FMCG' => 'Retail/FMCG',
-                                            'Manufacturing' => 'Manufacturing',
-                                            'Agriculture/Farming' => 'Agriculture/Farming',
-                                            'Real Estate/Construction' => 'Real Estate/Construction',
-                                            'Legal' => 'Legal',
-                                            'Creative Arts' => 'Creative Arts',
+                                            'Private' => 'Private',
+                                            'Government' => 'Government',
+                                            'Business' => 'Business',
+                                            'Freelance' => 'Freelance',
+                                            'Student' => 'Student',
+                                            'Not Working' => 'Not Working',
                                             'Other' => 'Other',
                                         ];
 
@@ -418,9 +364,7 @@
                                 </select>
                             </div>
                         </div>
-
-                        {{-- profession --}}
-
+{{-- 
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
                                 <label for="name">Profession:</label>
@@ -438,17 +382,17 @@
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
                                 <label for="name">Specific Profession:</label>
-                                <select name="specific_profession" class="form-control" id="specificProfession">
-                                    @foreach ($specificProfession as $category)
-                                        <option value="{{ $category->id }}"
-                                            {{ old('specific_profession', $profile->specific_profession ?? '') == $category->name ? 'selected' : '' }}>
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                               <select name="specific_profession" class="form-control" id="specificProfession">
+                                @foreach ($specificProfession as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ old('specific_profession', $profile->specific_profession ?? '') == $category->name ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
 
+                            </div>
+                        </div> --}}
 
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
@@ -533,26 +477,6 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-lg-3" id="choviharWrap" style="display: none;">
-                            <div class="form-group">
-                                <label for="name">Partner Chovihar:</label>
-                                <select name="chovihar" class="form-control">
-                                    @php
-                                        $choviharOptions = [
-                                            'Yes' => 'Yes',
-                                            'No' => 'No',
-                                        ];
-                                    @endphp
-                                    @foreach ($choviharOptions as $key => $label)
-                                        <option value="{{ $key }}"
-                                            {{ old('partner_chovihar', $profile->preference->partner_chovihar ?? '') == $key ? 'selected' : '' }}>
-                                            {{ $label }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
                                 <label for="name">Smoking:</label>
@@ -629,12 +553,9 @@
                                     @php
                                         $bodyTypes = [
                                             'Slim' => 'Slim',
-                                            'Athletic / Fit' => 'Athletic / Fit',
+                                            'Athletic' => 'Athletic',
                                             'Average' => 'Average',
-                                            'Heavy / Large' => 'Heavy / Large',
-                                            'Well-Built' => 'Well-Built',
-                                            'Curvy' => 'Curvy',
-                                            'Prefer not to say' => 'Prefer not to say',
+                                            'Heavy' => 'Heavy',
                                         ];
 
                                     @endphp
@@ -658,11 +579,8 @@
                                         $skinTones = [
                                             'Fair' => 'Fair',
                                             'Wheatish' => 'Wheatish',
-                                            'Wheatish Brown' => 'Wheatish Brown',
+                                            'Dusky' => 'Dusky',
                                             'Dark' => 'Dark',
-                                            'Olive' => 'Olive',
-                                            'Brown' => 'Brown',
-                                            'Prefer not to say' => 'Prefer not to say',
                                         ];
 
                                     @endphp
@@ -727,8 +645,6 @@
                             </div>
                         </div>
 
-                        {{-- partnerCast --}}
-
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
                                 <label for="name">Partner Diet:</label>
@@ -772,17 +688,14 @@
                                 </select>
                             </div>
                         </div>
-                        {{-- Partner Profession --}}
 
-
-                        <!-- Partner Profession Dropdown -->
-                        <div class="col-md-6 col-lg-3">
+                        {{-- <div class="col-md-6 col-lg-3">
                             <div class="form-group">
-                                <label for="partnerprofession">Partner Profession:</label>
-                                <select id="partnerprofession" name="partner_profession" class="form-control">
-                                    @foreach ($partnerProfession_categories as $category)
+                                <label for="name">Partner Profession:</label>
+                                <select name="partner_profession" class="form-control" id="partnerprofession">
+                                    @foreach ($profession_categories as $category)
                                         <option value="{{ $category->id }}"
-                                            {{ old('partner_profession', $preference->partner_profession ?? '') == $category->name ? 'selected' : '' }}>
+                                            {{ old('partner_profession', $profile->preference->partner_profession ?? '') == $category->id ? 'selected' : '' }}>
                                             {{ $category->name }}
                                         </option>
                                     @endforeach
@@ -790,56 +703,21 @@
                             </div>
                         </div>
 
-                        <!-- Partner Specific Profession Dropdown -->
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
-                                <label for="partnerspecificProfession">Partner Specific Profession:</label>
-                                <select id="partnerspecificProfession" name="partner_specific_profession"
-                                    class="form-control">
-                                    @foreach ($partnerSpecificProfession as $specific)
-                                        <option value="{{ $specific->id }}"
-                                            {{ old('partner_specific_profession', $preference->partner_specific_profession ?? '') === $specific->name ? 'selected' : '' }}>
-                                            {{ $specific->name }}
-                                        </option>
-                                    @endforeach
-
-                                </select>
-                            </div>
-                        </div>
-
-
-                        <div class="col-md-6 col-lg-3">
-                            <div class="form-group">
-                                <label for="name">Partner Education Level:</label>
-                                <select name="partner_education_level" class="form-control">
-                                    @php
-                                        $educationLevels = [
-                                            'High School (or equivalent like 10th Pass)' =>
-                                                'High School (or equivalent like 10th Pass)',
-                                            'Intermediate/Diploma (12th Pass, ITI, etc.)' =>
-                                                'Intermediate/Diploma (12th Pass, ITI, etc.)',
-                                            "Bachelor's Degree" => "Bachelor's Degree",
-                                            "Master's Degree" => "Master's Degree",
-                                            'Doctorate/Ph.D.' => 'Doctorate/Ph.D.',
-                                            'Post Doctorate' => 'Post Doctorate',
-                                            'Professional Degree (e.g., CA, CS, MBBS, etc.)' =>
-                                                'Professional Degree (e.g., CA, CS, MBBS, etc.)',
-                                            'Any' => 'Any',
-                                            'Did not complete high school' => 'Did not complete high school',
-                                            'Prefer not to say' => 'Prefer not to say',
-                                        ];
-
-                                    @endphp
-
-                                    @foreach ($educationLevels as $value => $label)
-                                        <option value="{{ $value }}"
-                                            {{ old('partner_education_level', $profile->preference->partner_education_level ?? '') == $value ? 'selected' : '' }}>
-                                            {{ $label }}
+                                <label for="name">Partner Specific Profession:</label>
+                                <select name="partner_specific_profession" class="form-control"
+                                    id="partspecificProfession">
+                                    @foreach ($specificProfession as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('partner_specific_profession', $profile->preference->partner_specific_profession ?? '') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
+
 
                         <div class="col-md-6 col-lg-3">
                             <div class="form-group">
@@ -905,17 +783,17 @@
                                 <select name="partner_religion" class="form-control">
                                     @php
                                         $partnerReligions = [
-                                            'Hinduism' => 'Hinduism',
-                                            'Islam' => 'Islam',
-                                            'Christianity' => 'Christianity',
-                                            'Sikhism' => 'Sikhism',
-                                            'Buddhism' => 'Buddhism',
-                                            'Jainism' => 'Jainism',
+                                            'Hindu' => 'Hindu',
+                                            'Muslim' => 'Muslim',
+                                            'Christian' => 'Christian',
+                                            'Sikh' => 'Sikh',
+                                            'Buddhist' => 'Buddhist',
+                                            'Jain' => 'Jain',
                                             'Parsi (Zoroastrian)' => 'Parsi (Zoroastrian)',
-                                            'Judaism' => 'Judaism',
+                                            'Jewish' => 'Jewish',
                                             'Tribal / Indigenous' => 'Tribal / Indigenous',
                                             'No Religion / Atheist' => 'No Religion / Atheist',
-                                            'Any' => 'Any',
+                                            'Other' => 'Other',
                                         ];
 
                                     @endphp
@@ -937,13 +815,9 @@
                                     @php
                                         $partnerJobStatuses = [
                                             'Employed' => 'Employed',
-                                            'Self-Employed / Business' => 'Self-Employed / Business',
-                                            'Homemaker/Housewife' => 'Homemaker/Housewife',
-                                            'Not Working' => 'Not Working',
+                                            'Self-employed' => 'Self-employed',
                                             'Student' => 'Student',
-                                            'Retired' => 'Retired',
-                                            'Unemployed / Looking for a Job' => 'Unemployed / Looking for a Job',
-                                            'Prefer not to say' => 'Prefer not to say',
+                                            'Unemployed' => 'Unemployed',
                                         ];
 
                                     @endphp
@@ -963,40 +837,27 @@
                                 <label for="name">Partner Mother Tongue:</label>
                                 <select name="partner_language" class="form-control">
                                     @php
-                                        $partnertongues = [
+                                        $tongues = [
                                             'Hindi' => 'Hindi',
-                                            'Bengali' => 'Bengali',
                                             'Marathi' => 'Marathi',
-                                            'Telugu' => 'Telugu',
-                                            'Tamil' => 'Tamil',
                                             'Gujarati' => 'Gujarati',
+                                            'Punjabi' => 'Punjabi',
+                                            'Tamil' => 'Tamil',
+                                            'Telugu' => 'Telugu',
+                                            'Bengali' => 'Bengali',
                                             'Urdu' => 'Urdu',
                                             'Kannada' => 'Kannada',
-                                            'Odia/Oriya' => 'Odia/Oriya',
                                             'Malayalam' => 'Malayalam',
-                                            'Punjabi' => 'Punjabi',
+                                            'Odia' => 'Odia',
                                             'Assamese' => 'Assamese',
-                                            'Maithili' => 'Maithili',
-                                            'Konkani' => 'Konkani',
-                                            'Dogri' => 'Dogri',
-                                            'Kashmiri' => 'Kashmiri',
-                                            'Manipuri' => 'Manipuri',
                                             'Nepali' => 'Nepali',
-                                            'Bodo' => 'Bodo',
-                                            'Santali' => 'Santali',
-                                            'Sanskrit' => 'Sanskrit',
                                             'Sindhi' => 'Sindhi',
-                                            'Tulu' => 'Tulu',
-                                            'Bhojpuri' => 'Bhojpuri',
-                                            'Haryanvi' => 'Haryanvi',
-                                            'Kutchhi' => 'Kutchhi',
-                                            'Marwari' => 'Marwari',
-                                            'English' => 'English',
-                                            'Any' => 'Any',
+                                            'Other' => 'Other',
                                         ];
+
                                     @endphp
 
-                                    @foreach ($partnertongues as $key => $label)
+                                    @foreach ($tongues as $key => $label)
                                         <option value="{{ $key }}"
                                             {{ old('partner_language', $profile->preference->partner_language ?? '') == $key ? 'selected' : '' }}>
                                             {{ $label }}
@@ -1114,68 +975,24 @@
         });
     </script>
     <script>
-        function togglePartnerChovihar() {
+        function toggleChovihar() {
             const dietSelect = document.querySelector('select[name="partner_diet"]');
             const choviharWrapper = document.getElementById('choviharWrapper');
 
-            if (dietSelect && choviharWrapper) {
-                if (dietSelect.value === 'Jain') {
-                    choviharWrapper.style.display = 'block';
-                } else {
-                    choviharWrapper.style.display = 'none';
-                }
+            if (dietSelect.value === 'Jain') {
+                choviharWrapper.style.display = 'block';
+            } else {
+                choviharWrapper.style.display = 'none';
             }
         }
 
-        function toggleUserChovihar() {
-            const dietSelect = document.querySelector('select[name="diet"]');
-            const choviharWrapper = document.getElementById('choviharWrap');
-
-            if (dietSelect && choviharWrapper) {
-                if (dietSelect.value === 'Jain') {
-                    choviharWrapper.style.display = 'block';
-                } else {
-                    choviharWrapper.style.display = 'none';
-                }
-            }
-        }
-
+        // Run when the page loads
         document.addEventListener('DOMContentLoaded', function() {
-            togglePartnerChovihar();
-            toggleUserChovihar();
-
-            const partnerDietSelect = document.querySelector('select[name="partner_diet"]');
-            if (partnerDietSelect) {
-                partnerDietSelect.addEventListener('change', togglePartnerChovihar);
-            }
-
-            const userDietSelect = document.querySelector('select[name="diet"]');
-            if (userDietSelect) {
-                userDietSelect.addEventListener('change', toggleUserChovihar);
-            }
+            toggleChovihar(); // initial check
+            document.querySelector('select[name="partner_diet"]').addEventListener('change', toggleChovihar);
         });
     </script>
-
-
-    <script>
-        document.getElementById('partnerprofession').addEventListener('change', function() {
-            const professionId = this.value;
-
-            fetch(`/get-partner-specific-professions/${professionId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const specificDropdown = document.getElementById('partnerspecificProfession');
-                    specificDropdown.innerHTML = '';
-
-                    data.forEach(profession => {
-                        const option = document.createElement('option');
-                        option.value = profession.id;
-                        option.text = profession.name;
-                        specificDropdown.appendChild(option);
-                    });
-                });
-        });
-    </script>
+ 
 
 </body>
 

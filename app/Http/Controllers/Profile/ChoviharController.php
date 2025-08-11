@@ -2,37 +2,36 @@
 
 namespace App\Http\Controllers\Profile;
 
-use App\Http\Controllers\BaseQuestionController;
-use App\Http\Controllers\Controller;
-use App\Models\TelegramUserState;
 use App\Models\Profile;
+use Illuminate\Http\Request;
+use App\Models\TelegramUserState;
+use App\Http\Controllers\BaseQuestionController;
 
-class DietController extends BaseQuestionController
+class ChoviharController extends BaseQuestionController
 {
     public function handle($chatId, $text, TelegramUserState $state)
     {
-        $validOptions = ['Veg', 'Non-Veg', 'Jain', 'Any'];
+        $validOptions = ['Yes', 'No', "Doesn't Matter"];
 
         if (!in_array($text, $validOptions)) {
             return [
-                'text' => __('messages.invalid_diet'),
+                'text' => "Invalid option. Please select Yes, No, or Doesn't Matter.",
                 'options' => self::getOptions(),
                 'halt_flow' => true
             ];
         }
 
-        $this->saveAnswer($chatId, $state, 'diet', $text, Profile::class);
-
+        $this->saveAnswer($chatId, $state, 'chovihar', $text, \App\Models\Profile::class);
 
         return [
-            'text' => __('messages.saved_diet', ['diet' => $text]),
+            'text' => "✅ Your Chovihar preference has been saved.",
             'options' => ['parse_mode' => 'Markdown']
         ];
     }
 
     public static function getQuestion(): string
     {
-        return __('messages.ask_diet');
+        return "Do you observe *Chovihar*?";
     }
 
     public static function getOptions(): array
@@ -41,8 +40,8 @@ class DietController extends BaseQuestionController
             'parse_mode' => 'Markdown',
             'reply_markup' => json_encode([
                 'keyboard' => [
-                    [['text' => 'Veg'], ['text' => 'Non-Veg']],
-                    [['text' => 'Jain'], ['text' => 'Any']]
+                    [['text' => 'Yes'], ['text' => 'No']],
+                    [["text" => "Doesn't Matter"]],
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true
@@ -50,4 +49,5 @@ class DietController extends BaseQuestionController
         ];
     }
 }
+
 
