@@ -134,7 +134,7 @@ class TelegramController extends Controller
 
         if (strtolower($text) === '/start') {
         if ($this->hasCompletedProfile($chatId)) {
-            return $this->sendMessage($chatId, "✅ You already have a completed profile. Use /profile to view or /editprofile to update.");
+            return $this->sendMessage($chatId, "✅ You already have a completed profile.");
         }
 
         // Otherwise continue onboarding
@@ -329,6 +329,8 @@ class TelegramController extends Controller
     {
         return [
             'awaiting_name' => NameController::class,
+             'awaiting_income_range' => IncomeRangeController::class,
+             'awaiting_partner_income_range' => PartnerIncomeRangeController::class,
             'awaiting_bio' => BioController::class,
             'awaiting_email' => EmailController::class,
             'awaiting_gender' => GenderController::class,
@@ -379,109 +381,69 @@ class TelegramController extends Controller
         ];
     }
 
-    // private function hasCompletedProfile($chatId)
-    // {
-    //     $profile = Profile::where('telegram_user_id', $chatId)->first();
-    //     $preference = Preference::where('telegram_user_id', $chatId)->first();
-
-    //     if (!$profile || !$preference) {
-    //         Log::info('❌ Missing profile or preference data');
-    //         return false;
-    //     }
-
-    //     $requiredProfileFields = [
-    //         'name',
-    //         'email',
-    //         'marital_status',
-    //         'dob',
-    //         'state',
-    //         'city',
-    //         'mother_tongue',
-    //         'religion',
-    //         'caste',
-    //         'education_level',
-    //         'education_field',
-    //         'job_status',
-    //         'working_sector',
-    //         'profession',
-    //         'phone',
-    //         'diet',
-    //         'smoking',
-    //         'drinking',
-    //         'height',
-    //         'body_type',
-    //         'skin_tone',
-    //         'gender'
-    //         // ✅ Removed 'profile_photo' to make it optional
-    //     ];
-
-    //     $requiredPreferenceFields = [
-    //         'partner_marital_status',
-    //         'partner_caste',
-    //         'partner_min_age',
-    //         'partner_max_age',
-    //         'partner_min_height',
-    //         'partner_max_height',
-    //         // 'partner_gender',
-    //         'partner_language'
-    //     ];
-
-    //     foreach ($requiredProfileFields as $field) {
-    //         if (empty($profile->$field)) {
-    //             Log::info("❌ Missing profile field: $field");
-    //             return false;
-    //         }
-    //     }
-
-    //     foreach ($requiredPreferenceFields as $field) {
-    //         if (empty($preference->$field)) {
-    //             Log::info("❌ Missing preference field: $field");
-    //             return false;
-    //         }
-    //     }
-
-    //     return true;
-    // }
-
     private function hasCompletedProfile($chatId)
-{
-    $profile = Profile::where('telegram_user_id', $chatId)->first();
-    $preference = Preference::where('telegram_user_id', $chatId)->first();
+    {
+        $profile = Profile::where('telegram_user_id', $chatId)->first();
+        $preference = Preference::where('telegram_user_id', $chatId)->first();
 
-    if (!$profile || !$preference) {
-        Log::info("❌ Missing profile or preference for chat_id: $chatId");
-        return false;
-    }
-
-    $requiredProfileFields = [
-        'name', 'email', 'marital_status', 'dob',
-        'state', 'city', 'mother_tongue', 'religion', 'caste',
-        'education_level', 'education_field', 'job_status', 'working_sector', 'profession',
-        'phone', 'diet', 'smoking', 'drinking', 'height', 'body_type', 'skin_tone', 'gender'
-    ];
-
-    $requiredPreferenceFields = [
-        'partner_marital_status', 'partner_caste', 'partner_min_age', 'partner_max_age',
-        'partner_min_height', 'partner_max_height', 'partner_language'
-    ];
-
-    foreach ($requiredProfileFields as $field) {
-        if (empty($profile->$field)) {
-            Log::info("❌ Missing profile field [$field] for chat_id: $chatId");
+        if (!$profile || !$preference) {
+            Log::info('❌ Missing profile or preference data');
             return false;
         }
-    }
 
-    foreach ($requiredPreferenceFields as $field) {
-        if (empty($preference->$field)) {
-            Log::info("❌ Missing preference field [$field] for chat_id: $chatId");
-            return false;
+        $requiredProfileFields = [
+            'name',
+            'email',
+            'marital_status',
+            'dob',
+            'state',
+            'city',
+            'mother_tongue',
+            'religion',
+            'caste',
+            'education_level',
+            'education_field',
+            'job_status',
+            'working_sector',
+            'profession',
+            'phone',
+            'diet',
+            'smoking',
+            'drinking',
+            'height',
+            'body_type',
+            'skin_tone',
+            'gender'
+            // ✅ Removed 'profile_photo' to make it optional
+        ];
+
+        $requiredPreferenceFields = [
+            'partner_marital_status',
+            'partner_caste',
+            'partner_min_age',
+            'partner_max_age',
+            'partner_min_height',
+            'partner_max_height',
+            // 'partner_gender',
+            'partner_language'
+        ];
+
+        foreach ($requiredProfileFields as $field) {
+            if (empty($profile->$field)) {
+                Log::info("❌ Missing profile field: $field");
+                return false;
+            }
         }
+
+        foreach ($requiredPreferenceFields as $field) {
+            if (empty($preference->$field)) {
+                Log::info("❌ Missing preference field: $field");
+                return false;
+            }
+        }
+
+        return true;
     }
-
-    return true;
-}
-
 
     private function sendStructuredMessage($chatId, $data)
     {

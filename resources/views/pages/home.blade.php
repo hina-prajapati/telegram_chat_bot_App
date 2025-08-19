@@ -199,7 +199,12 @@
 
                     <div class="col-md-4">
                         <div class="workng_img">
-                            <img src="images/banner.jpeg" alt="image">
+                          <video autoplay muted loop playsinline width="100%" height="100%">
+    <source src="images/video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+                            {{-- <img src="images/banner.jpeg" alt="image"> --}}
                         </div>
                     </div>
 

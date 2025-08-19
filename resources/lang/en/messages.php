@@ -380,6 +380,8 @@
 //     'messages.mother_tongue_english' => 'English',
 //     'mother_tongue_any' => 'Any'
 // ];
+
+
 return [
     'language_select' => "🌐 Please choose your language",
     'language_invalid' => '❌ Invalid input. Please choose a language by tapping one of the buttons below.',
@@ -578,7 +580,7 @@ return [
     'ask_profession' => "What is your profession? Tell us what you do! 👩‍⚕️",
     'thanks_profession' => "✅ Profession saved as *:profession*.",
 
-    'ask_specific_profession' => "And what is your specific profession? We need more details! 📈",
+    'ask_specific_profession' => "And what is your specific profession? We need more details!",
     'thanks_profession' => "✅ Profession saved as *:profession*.",
 
     'ask_partner_profession' => "What should be your preferred partner's profession? 🤝",
@@ -590,20 +592,17 @@ return [
     'partner_specific_profession_invalid_option' => '❌ Please select a valid option from the keyboard.',
 
 
-    // 'profession_software_engineer' => 'Software Engineer',
-    // 'profession_doctor' => 'Doctor',
-    // 'profession_teacher' => 'Teacher',
-    // 'profession_businessman' => 'Businessman',
-    // 'profession_student' => 'Student',
-    // 'profession_house_maker' => 'House Maker',
-    // 'profession_other' => 'Other',
-
-    // Profile income
-    'ask_income_range' => 'What is your annual income range? 💰*',
+    // 'ask_income_range' => 'What is your annual income range?*',
+    //     // Profile income
+    'ask_income_range' => '💰 *Please select your Income Range (Annual Income):*',
     'income_saved' => '✅ Income range saved as *:value*.',
 
-    // Partner income preference
-    'ask_partner_income_range' => 'And what annual income range do you prefer for your partner? 💸*',
+    // 'ask_partner_income_range' => 'And what annual income range do you prefer for your partner? 💸*',
+    // 'partner_income_saved' => '✅ Preferred partner income saved as *:value*.',
+
+
+         // Partner income preference
+    'ask_partner_income_range' => '💸 *What is annual income range do you prefer for your partner?*',
     'partner_income_saved' => '✅ Preferred partner income saved as *:value*.',
 
     'ask_mobile' => "What's your 10-digit mobile number? We'll keep it safe. 📱",
@@ -620,8 +619,7 @@ return [
     'skip_photo' => 'Done',
     'please_send_another_photo' => 'Got another one? We\'d love to see a second photo! 🖼️',
 
-    // 'ask_chovihar' => 'Do you observe Chovihar? We\'d love to know more about your lifestyle. ✨',
-    // 'ask_partner_chovihar' => 'Do you observe *Chovihar*?',
+ 
 
     'ask_diet' => 'What\'s on your plate? 🥗',
     'invalid_diet' => '❌ Please select a valid diet option from the buttons below.',
@@ -725,7 +723,6 @@ return [
     'height_max_less_than_min' => '⚠️ *Maximum height* should be greater than or equal to *minimum height* (:min cm). Please select a valid height.',
 
     'ask_partner_language' => "What mother tongue do you prefer for your partner? 🗣️",
-    // 'profile_already_complete' => '✅ Your profile is already complete! You can type /start anytime to view or edit it.',
 
     // Mother Tongue
     'messages.mother_tongue_hindi' => 'Hindi',
