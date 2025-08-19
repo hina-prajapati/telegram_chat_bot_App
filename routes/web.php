@@ -41,3 +41,6 @@ Route::get('/get-cities/{state_id}', [ProfileController::class, 'getCities']);
 Route::get('/get-subcast/{caste_id}', [ProfileController::class, 'getSubCast']);
 Route::get('/get-specific-professions/{profession_id}', [ProfileController::class, 'getSpecificProfessions']);
 Route::get('/get-partner-specific-professions/{partnerProfessionId}', [ProfileController::class, 'getPartnerSpecificProfessions']);
+
+Route::get('/terms-conditions', [ProfileController::class, 'termsConditions'])->name('terms-conditions');
+Route::get('/', [ProfileController::class, 'home'])->name('pages.home');

@@ -9,33 +9,6 @@ use App\Models\Profile;
 
 class HeightController extends BaseQuestionController
 {
-    // public function handle($chatId, $text, TelegramUserState $state)
-    // {
-    //     if (!is_numeric($text) || (int)$text < 100 || (int)$text > 250) {
-    //         return [
-    //             'text' => __('messages.height_invalid'),
-    //             'options' => [
-    //                 'parse_mode' => 'Markdown',
-    //                 'reply_markup' => json_encode([
-    //                     'force_reply' => true,
-    //                     'input_field_placeholder' => 'e.g., 170'
-    //                 ])
-    //             ]
-    //         ];
-    //     }
-
-    //     $answers = $state->answers;
-    //     $answers['height'] = (int)$text;
-
-    //     $this->saveAnswer($chatId, $state, 'height', $text, Profile::class);
-
-    //     return [
-    //         'text' => __('messages.height_saved', ['value' => $text]),
-    //         'options' => ['parse_mode' => 'Markdown']
-    //     ];
-
-    // }
-
     public function handle($chatId, $text, TelegramUserState $state)
     {
         // Accept only from the format: 5 ft 7 in → 170 cm

@@ -1,49 +1,429 @@
 <?php
 
+// return [
+//     'language_select' => "🌐 Please choose your language",
+//     'language_invalid' => '❌ Invalid input. Please choose a language by tapping one of the buttons below.',
+
+//     'registration_welcome' => "💖 *Welcome to Matchease!* 💖\n\nLet's start by knowing a bit about you!",
+//     'ask_name' => "👉 *Enter your Full name?*",
+//     'thanks_name' => "✅ Thanks, :name!",
+
+//     'ask_bio' => "📝 Please write a short *bio* about yourself (max 255 characters):",
+//     'thanks_bio' => "✅ Thanks! Your bio has been saved:\n\n:bio",
+//     'bio_too_long' => "❌ Bio is too long. Please limit it to :max characters.",
+
+//     'ask_email' => "📧 Please enter your email address.",
+//     'thanks_email' => "✅ Thanks! Your email (:email) has been saved.",
+
+//     'ask_gender' => "👩👨 Please select your *Gender*:",
+//     'thanks_gender' => "✅ Gender saved as *:gender*.",
+//     'invalid_option' => '❌ Please select a valid option from the keyboard.',
+//     'gender_male' => "Male",
+//     'gender_female' => "Female",
+//     // 'gender_other' => "Other",
+
+//     'ask_marital_status' => "💍 *Please select your marital status:*",
+//     'thanks_marital_status' => "✅ Marital status saved as *:status*.",
+//     'status_single' => "Single",
+//     'status_married' => "Married",
+//     'status_divorced' => "Divorced",
+//     'status_widowed' => "Widowed",
+
+//     'ask_birth_year' => "📅 *Please select your Birth Year:*",
+//     'ask_birth_year_val' => " *Please select your Birth Year Text Based Not accepted:*",
+//     'ask_birth_month' => "📆 *Please select your Birth Month:*",
+//     'ask_birth_day' => "🗓️ *Please select your Birth Day:*",
+//     'thanks_dob' => "✅ Date of birth saved as *:dob*.",
+
+//     'ask_state' => "🏞️ *Please select your State:*",
+//     'invalid_state_selection' => '⚠️ Please select a state from the options below.',
+//     'thanks_state' => "✅ State saved as *:state*.",
+
+//     'ask_city' => "🏙️ *Please select your City:*",
+//     'thanks_city' => "✅ City saved as *:city*.",
+//     'select_state_first' => "Please select state first",
+
+//     'ask_mother_tongue' => "🗣️ *Please select your Mother Tongue:*.",
+//     'invalid_option' => '❌ Please select an option from the keyboard.',
+//     'thanks_mother_tongue' => "✅ Saved *:tongue*. Please wait...",
+
+//     // Mother Tongue
+//     'mother_tongue_hindi' => 'Hindi',
+//     'mother_tongue_bengali' => 'Bengali',
+//     'mother_tongue_marathi' => 'Marathi',
+//     'mother_tongue_telugu' => 'Telugu',
+//     'mother_tongue_tamil' => 'Tamil',
+//     'mother_tongue_gujarati' => 'Gujarati',
+//     'mother_tongue_urdu' => 'Urdu',
+//     'mother_tongue_kannada' => 'Kannada',
+//     'mother_tongue_odia' => 'Odia/Oriya',
+//     'mother_tongue_malayalam' => 'Malayalam',
+//     'mother_tongue_punjabi' => 'Punjabi',
+//     'mother_tongue_assamese' => 'Assamese',
+//     'mother_tongue_maithili' => 'Maithili',
+//     'mother_tongue_konkani' => 'Konkani',
+//     'mother_tongue_dogri' => 'Dogri',
+//     'mother_tongue_kashmiri' => 'Kashmiri',
+//     'mother_tongue_manipuri' => 'Manipuri',
+//     'mother_tongue_nepali' => 'Nepali',
+//     'mother_tongue_bodo' => 'Bodo',
+//     'mother_tongue_santali' => 'Santali',
+//     'mother_tongue_sanskrit' => 'Sanskrit',
+//     'mother_tongue_sindhi' => 'Sindhi',
+//     'mother_tongue_tulu' => 'Tulu',
+//     'mother_tongue_bhojpuri' => 'Bhojpuri',
+//     'mother_tongue_haryanvi' => 'Haryanvi',
+//     'mother_tongue_kutchhi' => 'Kutchhi',
+//     'mother_tongue_marwari' => 'Marwari',
+//     'mother_tongue_english' => 'English',
+//     'mother_tongue_other' => 'Other',
+
+
+//     'ask_religion' => "🙏 Please select your *Religion*:",
+//     'invalid_option' => '❌ Please select a valid option from the keyboard.',
+//     'thanks_religion' => "✅ Religion saved as *:religion*.",
+//     'religion_hinduism' => 'Hinduism',
+//     'religion_islam' => 'Islam',
+//     'religion_christianity' => 'Christianity',
+//     'religion_sikhism' => 'Sikhism',
+//     'religion_buddhism' => 'Buddhism',
+//     'religion_jainism' => 'Jainism',
+//     'religion_none' => 'No Religion / Atheist',
+//     'religion_other' => 'Other',
+
+
+//     'ask_education' => "🎓 *Please select your Highest Education Level:*",
+//     'thanks_education' => "✅ Education level saved as *:education*.",
+//     'invalid_option' => '❌ Please select an option from the keyboard below.',
+
+//     'education_highschool' => 'High School (or equivalent like 10th Pass)',
+//     'education_diploma' => 'Intermediate/Diploma (12th Pass, ITI, etc.)',
+//     'education_bachelor' => "Bachelor's Degree",
+//     'education_master' => "Master's Degree",
+//     'education_phd' => 'Doctorate/Ph.D.',
+//     'education_postdoc' => 'Post Doctorate',
+//     'education_professional' => 'Professional Degree (e.g., CA, CS, MBBS, etc.)',
+//     'education_incomplete' => 'Did not complete high school',
+//     'education_prefer_not_say' => 'Prefer not to say',
+//     'education_any' => 'Any',
+
+//     'ask_partner_education' => "🎓 *Please select your preferred partner's highest education level:*",
+//     'thanks_education' => "✅ Education level saved as *:education*.",
+//     'invalid_option' => '❌ Please select an option from the keyboard below.',
+
+//     'education_highschool' => 'High School (or equivalent like 10th Pass)',
+//     'education_diploma' => 'Intermediate/Diploma (12th Pass, ITI, etc.)',
+//     'education_bachelor' => "Bachelor's Degree",
+//     'education_master' => "Master's Degree",
+//     'education_phd' => 'Doctorate/Ph.D.',
+//     'education_postdoc' => 'Post Doctorate',
+//     'education_professional' => 'Professional Degree (e.g., CA, CS, MBBS, etc.)',
+//     'education_incomplete' => 'Did not complete high school',
+//     'education_prefer_not_say' => 'Prefer not to say',
+//     'education_other' => 'Other',
+
+//     'ask_education_field' => "🔬 *Please Select your Education Stream*:",
+//     'thanks_education_field' => "✅ Field of study saved as *:field*.",
+//     'invalid_option' => '❌ Please select an option from the keyboard below.',
+//     'field_arts' => 'Arts/Humanities',
+//     'field_science' => 'Science',
+//     'field_commerce' => 'Commerce',
+//     'field_engineering' => 'Engineering',
+//     'field_medical' => 'Medical',
+//     'field_law' => 'Law',
+//     'field_management' => 'Management (MBA, BBA, etc.)',
+//     'field_it' => 'Information Technology (IT)',
+//     'field_architecture' => 'Architecture',
+//     'field_pharmacy' => 'Pharmacy',
+//     'field_agriculture' => 'Agriculture',
+//     'field_media' => 'Media/Journalism',
+//     'field_fine_arts' => 'Fine Arts/Performing Arts',
+//     'field_education' => 'Education',
+//     'field_vocational' => 'Vocational',
+//     'field_designing' => 'Designing',
+//     'field_sports' => 'Sports',
+//     'other' => 'Other',
+
+
+//     'ask_partner_job_status' => '💼 *What is your preferred partner\'s job status?*',
+//     'thanks_partner_job_status' => '✅ Preferred partner job status saved as *:status*.',
+//     'job_employed' => 'Employed',
+//     'job_self_employed' => 'Self-Employed / Business',
+//     'job_house_maker' => 'Homemaker/Housewife',
+//     'job_unemployed' => 'Unemployed / Looking for a Job',
+//     'job_service' => 'Service/Job',
+//     'job_student' => 'Student',
+//     'job_retired' => 'Retired',
+//     'job_prefer_not' => 'Prefer not to say',
+//     'job_other' => 'Other',
+
+
+//     'ask_job_status' => '💼 *Select your current job status:*',
+//     'thanks_job_status' => '✅ Your job status has been saved as *:status*.',
+//     'invalid_option' => '❌ Please select a valid option from the keyboard.',
+//     'job_employed' => 'Employed',
+//     'job_self_employed' => 'Self-Employed / Business',
+//     'job_house_maker' => 'Homemaker/Housewife',
+//     'job_unemployed' => 'Unemployed / Looking for a Job',
+//     'job_service' => 'Service/Job',
+//     'job_student' => 'Student',
+//     'job_retired' => 'Retired',
+//     'job_prefer_not' => 'Prefer not to say',
+//     'job_any' => 'Any',
+
+
+//     'ask_working_sector' => "💼 *Please select your Working Sector:*.",
+//     'thanks_working_sector' => "✅ Working sector saved as *:sector*.",
+//     'sector_government' => 'Government/Public Sector',
+//     'sector_private' => 'Private Sector',
+//     'sector_business' => 'Self-Employed / Business',
+//     'sector_ngo' => 'NGO/Social Services',
+//     'sector_defense' => 'Defense/Civil Services',
+//     'sector_education' => 'Education/Academia',
+//     'sector_healthcare' => 'Healthcare',
+//     'sector_it' => 'Information Technology (IT)',
+//     'sector_finance' => 'Banking/Finance',
+//     'sector_media' => 'Media/Entertainment',
+//     'sector_hospitality' => 'Hospitality',
+//     'sector_retail' => 'Retail/FMCG',
+//     'sector_manufacturing' => 'Manufacturing',
+//     'sector_agriculture' => 'Agriculture/Farming',
+//     'sector_real_estate' => 'Real Estate/Construction',
+//     'sector_legal' => 'Legal',
+//     'sector_arts' => 'Creative Arts',
+//     'other' => 'Other',
+
+//     'ask_profession' => "💼 *Please select your Profession*.",
+//     'thanks_profession' => "✅ Profession saved as *:profession*.",
+
+//     'ask_specific_profession' => "💼 *Please select your Specific Profession*.",
+//     'thanks_profession' => "✅ Profession saved as *:profession*.",
+
+//     'ask_partner_profession' => "💼 *Please select your preferred partner profession*.",
+//     'thanks_profession' => "✅ Profession saved as *:profession*.",
+//     'partner_profession_invalid_option' => "❌ Invalid option selected. Please try again.",
+
+//     'ask_partner_specific_profession' => "💼 *Please select your preferred partner specific profession*.",
+//     'thanks_profession' => "✅ Profession saved as *:profession*.",
+//     'partner_specific_profession_invalid_option' => '❌ Please select a valid option from the keyboard.',
+
+
+//     // 'profession_software_engineer' => 'Software Engineer',
+//     // 'profession_doctor' => 'Doctor',
+//     // 'profession_teacher' => 'Teacher',
+//     // 'profession_businessman' => 'Businessman',
+//     // 'profession_student' => 'Student',
+//     // 'profession_house_maker' => 'House Maker',
+//     // 'profession_other' => 'Other',
+
+//     // Profile income
+//     'ask_income_range' => '💰 *Please select your Income Range (Annual Income):*',
+//     'income_saved' => '✅ Income range saved as *:value*.',
+
+//     // Partner income preference
+//     'ask_partner_income_range' => '💸 *What is annual income range do you prefer for your partner?*',
+//     'partner_income_saved' => '✅ Preferred partner income saved as *:value*.',
+
+//     'ask_mobile' => "📱 *Please enter your 10-digit mobile number*",
+//     'invalid_mobile' => "❌ Invalid number. Please enter a *valid 10-digit* mobile number.",
+//     'thanks_mobile' => "✅ Mobile number saved as *:mobile*.",
+
+
+//     'ask_profile_photo' => "📸 *Please upload your Profile Photo* as an image attachment:",
+//     'profile_photo_required' => '📸 Please upload at least one profile photo before proceeding.',
+//     'profile_photo_uploaded_first' => '✅ Photo uploaded. You can upload another or press *Done* to continue.',
+//     'profile_photo_uploaded_second' => '✅ Second photo uploaded. Press *Done* to continue.',
+//     'profile_photo_limit_reached' => '⚠️ You have already uploaded the maximum of 2 photos.',
+//     'profile_photo_invalid_text' => '❌ Invalid input. Please upload a valid photo.',
+//     'upload_another_photo' => 'Upload another photo',
+//     'skip_photo' => 'Done',
+//     'please_send_another_photo' => '📸 Please send another photo.',
+
+//     // 'ask_chovihar' => "Do you observe *Chovihar*?",
+//     // 'ask_partner_chovihar' => "Do you observe *Chovihar*?",
+
+//     'ask_diet' => '🍽️ *What is your diet preference?*',
+//     'invalid_diet' => "❌ Please select a valid diet option from the buttons below.",
+//     'saved_diet' => '✅ Your diet preference has been saved as *:diet*.',
+
+//     'ask_partner_diet' => '🍽️ *What is your preferred partner\'s diet?*',
+//     'partner_invalid_diet' => "❌ Please select a valid diet option from the buttons below.",
+//     'saved_diet' => '✅ Your diet preference has been saved as *:diet*.',
+
+//     'ask_smoke' => "🚬 Do you *Smoke*?",
+//     'saved_smoking' => "✅ Smoking preference saved as *:value*.",
+//     'option_yes' => "Yes",
+//     'option_no' => "No",
+//     'option_occasionally' => "Occasionally",
+
+//     'drinking_question' => "🍻 Do you *Drink Alcohol*?",
+//     'drinking_saved' => "✅ Drinking preference saved as *:value*.",
+//     'invalid_option' => "❌ Please select an option from the buttons below.",
+//     'yes' => 'Yes',
+//     'no' => 'No',
+//     'occasionally' => 'Occasionally',
+
+//     'ask_height_select' => '📏 *Please select your height* from the list below.',
+
+
+//     'ask_partner_religion' => "🙏 What is your *preferred partner's religion*?",
+//     'thanks_partner_religion' => "✅ Preferred partner religion saved as *:partner_religion*.",
+
+//     'partner_religion_hindu' => 'Hinduism',
+//     'partner_religion_muslim' => 'Islam',
+//     'partner_religion_christian' => 'Christianity',
+//     'partner_religion_sikh' => 'Sikhism',
+//     'partner_religion_buddhist' => 'Buddhism',
+//     'partner_religion_jain' => 'Jainism',
+//     'partner_religion_parsi' => 'Parsi (Zoroastrian)',
+//     'partner_religion_jewish' => 'Jewish',
+//     'partner_religion_tribal' => 'Tribal / Indigenous',
+//     'partner_religion_none' => 'No Religion / Atheist',
+//     'partner_religion_any' => 'Any',
+
+
+
+//     'ask_body_type' => "🏋️‍♂️ What is your *Body Type*?",
+//     'body_type_saved' => "✅ Body Type saved as *:value*.",
+
+//     'body_type_slim' => 'Slim',
+//     'body_type_athletic' => 'Athletic / Fit',
+//     'body_type_average' => 'Average',
+//     'body_type_heavy' => 'Heavy / Large',
+//     'body_type_well_built' => 'Well-Built',
+//     'body_type_curvy' => 'Curvy',
+//     'body_type_prefer_not_to_say' => 'Prefer not to say',
+//     'body_type_other' => 'Other',
+
+//     'ask_skin_tone' => "🧜‍♀️ Please select your *Skin Tone*:",
+//     'skin_tone_saved' => "✅ Skin Tone saved as *:value*.",
+
+//     'skin_fair' => 'Fair',
+//     'skin_wheatish' => 'Wheatish',
+//     'skin_wheatish_brown' => 'Wheatish Brown',
+//     'skin_dark' => 'Dark',
+//     'skin_olive' => 'Olive',
+//     'skin_brown' => 'Brown',
+//     'skin_prefer_not_to_say' => 'Prefer not to say',
+//     'skin_other' => 'Other',
+
+
+//     'ask_partner_marital_status' => "💍 What is your *preferred partner's marital status*?",
+//     'invalid_option' => '❌ Please select a valid option from the keyboard.',
+//     'partner_marital_status_saved' => "✅ Partner marital status saved as *:value*.",
+//     'status_single' => 'Single',
+//     'status_divorced' => 'Divorced',
+//     'status_widowed' => 'Widowed',
+//     'status_any' => 'Any',
+
+//     'ask_caste' => "🕉️ Please select your *Caste* from the list below.",
+//     'thanks_caste' => "✅ Caste saved as *:caste*.",
+
+//     'ask_sub_caste' => "🕉️ Please select your *Sub Caste* from the list below.",
+//     'thanks_caste' => "✅ Caste saved as *:caste*.",
+
+//     'ask_partner_caste' => "🕉️ Please select your preferred caste for your partner from the list below.",
+//     'thanks_caste' => "✅ Caste saved as *:caste*.",
+
+//     'ask_partner_sub_caste' => "🕉️ Please select your *Partner preferred Sub Caste* from the list below.",
+//     'thanks_caste' => "✅ Caste saved as *:caste*.",
+
+//     'ask_partner_min_age' => "🎂 What is your *preferred minimum age* for your partner?",
+//     'invalid_age' => '❌ Please enter a valid age between 18 and 99.',
+//     'partner_min_age_saved' => "✅ Preferred minimum age saved as *:value*.",
+//     'example_age' => 'e.g., 25',
+
+//     'partner_max_age_question' => "🎂 What is your *preferred maximum age* for your partner?",
+//     'partner_max_age_saved' => "✅ Preferred *maximum age* saved as *:value*.",
+//     'partner_max_age_invalid' => "❌ Please enter a valid age between 18 and 100.",
+
+//     'partner_min_height_question' => '📏 Please select your *preferred minimum partner height* from the list below.',
+//     'partner_min_height_saved' => '✅ Minimum partner height saved: :value',
+//     'height_invalid' => '❌ Invalid format. Please select a height from the list or use the format: 5 ft 7 in → 170 cm.',
+
+//     'partner_max_height_question' => '📏 Please select your *preferred maximum partner height* from the list below.',
+//     'partner_max_height_saved' => '✅ Maximum partner height saved: :value',
+//     'height_invalid' => '❌ Invalid format. Please select a height from the list or use the format: 5 ft 7 in → 170 cm.',
+//     'height_max_less_than_min' => '⚠️ *Maximum height* should be greater than or equal to *minimum height* (:min cm). Please select a valid height.',
+
+//     'ask_partner_language' => "🌐 Please select your *preferred partner's mother tongue*.",
+//     // 'profile_already_complete' => '✅ Your profile is already complete! You can type /start anytime to view or edit it.',
+
+//     // Mother Tongue
+//     'messages.mother_tongue_hindi' => 'Hindi',
+//     'messages.mother_tongue_bengali' => 'Bengali',
+//     'messages.mother_tongue_marathi' => 'Marathi',
+//     'messages.mother_tongue_telugu' => 'Telugu',
+//     'messages.mother_tongue_tamil' => 'Tamil',
+//     'messages.mother_tongue_gujarati' => 'Gujarati',
+//     'messages.mother_tongue_urdu' => 'Urdu',
+//     'messages.mother_tongue_kannada' => 'Kannada',
+//     'messages.mother_tongue_odia' => 'Odia/Oriya',
+//     'messages.mother_tongue_malayalam' => 'Malayalam',
+//     'messages.mother_tongue_punjabi' => 'Punjabi',
+//     'messages.mother_tongue_assamese' => 'Assamese',
+//     'messages.mother_tongue_maithili' => 'Maithili',
+//     'messages.mother_tongue_konkani' => 'Konkani',
+//     'messages.mother_tongue_dogri' => 'Dogri',
+//     'messages.mother_tongue_kashmiri' => 'Kashmiri',
+//     'messages.mother_tongue_manipuri' => 'Manipuri',
+//     'messages.mother_tongue_nepali' => 'Nepali',
+//     'messages.mother_tongue_bodo' => 'Bodo',
+//     'messages.mother_tongue_santali' => 'Santali',
+//     'messages.mother_tongue_sanskrit' => 'Sanskrit',
+//     'messages.mother_tongue_sindhi' => 'Sindhi',
+//     'messages.mother_tongue_tulu' => 'Tulu',
+//     'messages.mother_tongue_bhojpuri' => 'Bhojpuri',
+//     'messages.mother_tongue_haryanvi' => 'Haryanvi',
+//     'messages.mother_tongue_kutchhi' => 'Kutchhi',
+//     'messages.mother_tongue_marwari' => 'Marwari',
+//     'messages.mother_tongue_english' => 'English',
+//     'mother_tongue_any' => 'Any'
+// ];
 return [
     'language_select' => "🌐 Please choose your language",
     'language_invalid' => '❌ Invalid input. Please choose a language by tapping one of the buttons below.',
 
-    'registration_welcome' => "💖 *Welcome to Matchease!* 💖\n\nLet's start by knowing a bit about you!",
-    'ask_name' => "👉 *Enter your Full name?*",
+    'registration_welcome' => "💖 *Welcome to MatchEase!* 💖\n\nLet's start by knowing a bit about you!",
+    'ask_name' => "👉 *Let's get to know you! What's the full name we should call you? 😉*",
     'thanks_name' => "✅ Thanks, :name!",
 
-    'ask_bio' => "📝 Please write a short *bio* about yourself (max 255 characters):",
+    'ask_bio' => "Time to tell us a little about you! What's a short bio that sums you up? 📝 (max 255 characters):",
     'thanks_bio' => "✅ Thanks! Your bio has been saved:\n\n:bio",
     'bio_too_long' => "❌ Bio is too long. Please limit it to :max characters.",
 
-    'ask_email' => "📧 Please enter your email address.",
+    'ask_email' => "📧 What's the best email to reach you at? We promise not to spam you! 🙏",
     'thanks_email' => "✅ Thanks! Your email (:email) has been saved.",
 
-    'ask_gender' => "👩👨 Please select your *Gender*:",
+    'ask_gender' => "Are you a gentleman or a lady? Let us know your gender below. 👫",
     'thanks_gender' => "✅ Gender saved as *:gender*.",
     'invalid_option' => '❌ Please select a valid option from the keyboard.',
     'gender_male' => "Male",
     'gender_female' => "Female",
     // 'gender_other' => "Other",
 
-    'ask_marital_status' => "💍 *Please select your marital status:*",
+    'ask_marital_status' => "What's your current marital status? Let us know where you're at on your life journey. 💍",
     'thanks_marital_status' => "✅ Marital status saved as *:status*.",
     'status_single' => "Single",
     'status_married' => "Married",
     'status_divorced' => "Divorced",
     'status_widowed' => "Widowed",
 
-    'ask_birth_year' => "📅 *Please select your Birth Year:*",
+    'ask_birth_year' => "Which year did you join the world? 🎂",
     'ask_birth_year_val' => " *Please select your Birth Year Text Based Not accepted:*",
-    'ask_birth_month' => "📆 *Please select your Birth Month:*",
-    'ask_birth_day' => "🗓️ *Please select your Birth Day:*",
+    'ask_birth_month' => "And what month was that? 🗓️",
+    'ask_birth_day' => "Last one for your birthday—what's the big day? 🎉",
     'thanks_dob' => "✅ Date of birth saved as *:dob*.",
 
-    'ask_state' => "🏞️ *Please select your State:*",
+    'ask_state' => "What state do you call home? 🏞️",
     'invalid_state_selection' => '⚠️ Please select a state from the options below.',
     'thanks_state' => "✅ State saved as *:state*.",
 
-    'ask_city' => "🏙️ *Please select your City:*",
+    'ask_city' => "And which city are you currently in? 🏙️",
     'thanks_city' => "✅ City saved as *:city*.",
     'select_state_first' => "Please select state first",
 
-    'ask_mother_tongue' => "🗣️ *Please select your Mother Tongue:*.",
+    'ask_mother_tongue' => "What's the first language you learned to speak? 🗣️",
     'invalid_option' => '❌ Please select an option from the keyboard.',
     'thanks_mother_tongue' => "✅ Saved *:tongue*. Please wait...",
 
@@ -79,7 +459,7 @@ return [
     'mother_tongue_other' => 'Other',
 
 
-    'ask_religion' => "🙏 Please select your *Religion*:",
+    'ask_religion' => "What is your religion? 🙏",
     'invalid_option' => '❌ Please select a valid option from the keyboard.',
     'thanks_religion' => "✅ Religion saved as *:religion*.",
     'religion_hinduism' => 'Hinduism',
@@ -89,14 +469,14 @@ return [
     'religion_buddhism' => 'Buddhism',
     'religion_jainism' => 'Jainism',
     'religion_none' => 'No Religion / Atheist',
-    'other' => 'Other',
+    'religion_other' => 'Other',
 
 
-    'ask_education' => "🎓 *Please select your Highest Education Level:*",
+    'ask_education' => "What's the highest level of education you've achieved? 🎓",
     'thanks_education' => "✅ Education level saved as *:education*.",
     'invalid_option' => '❌ Please select an option from the keyboard below.',
 
-      'education_highschool' => 'High School (or equivalent like 10th Pass)',
+    'education_highschool' => 'High School (or equivalent like 10th Pass)',
     'education_diploma' => 'Intermediate/Diploma (12th Pass, ITI, etc.)',
     'education_bachelor' => "Bachelor's Degree",
     'education_master' => "Master's Degree",
@@ -107,7 +487,7 @@ return [
     'education_prefer_not_say' => 'Prefer not to say',
     'education_any' => 'Any',
 
-    'ask_partner_education' => "🎓 *Please select your Partner Highest Education Level:*",
+    'ask_partner_education' => "What's the highest education level you'd prefer for your partner? 📚",
     'thanks_education' => "✅ Education level saved as *:education*.",
     'invalid_option' => '❌ Please select an option from the keyboard below.',
 
@@ -122,7 +502,7 @@ return [
     'education_prefer_not_say' => 'Prefer not to say',
     'education_other' => 'Other',
 
-    'ask_education_field' => "🔬 *Please enter your Education Stream* (e.g., Engineering, Arts, Commerce):",
+    'ask_education_field' => "Which field did you study? 🧑‍🎓",
     'thanks_education_field' => "✅ Field of study saved as *:field*.",
     'invalid_option' => '❌ Please select an option from the keyboard below.',
     'field_arts' => 'Arts/Humanities',
@@ -145,7 +525,7 @@ return [
     'other' => 'Other',
 
 
-    'ask_partner_job_status' => '💼 *What is your preferred partner\'s job status?*',
+    'ask_partner_job_status' => 'What\'s your ideal partner\'s job status? 💼',
     'thanks_partner_job_status' => '✅ Preferred partner job status saved as *:status*.',
     'job_employed' => 'Employed',
     'job_self_employed' => 'Self-Employed / Business',
@@ -158,55 +538,57 @@ return [
     'job_other' => 'Other',
 
 
-    'ask_job_status' => '💼 *Select your current job status:*',
+    'ask_job_status' => 'What\'s your current job status? 👩‍💼',
     'thanks_job_status' => '✅ Your job status has been saved as *:status*.',
     'invalid_option' => '❌ Please select a valid option from the keyboard.',
+
     'job_employed' => 'Employed',
     'job_self_employed' => 'Self-Employed / Business',
-    'job_house_maker' => 'Homemaker/Housewife',
+    'job_house_maker' => 'Homemaker / Housewife',
     'job_unemployed' => 'Unemployed / Looking for a Job',
-    'job_service' => 'Service/Job',
+    'job_service' => 'Service / Job',
     'job_student' => 'Student',
     'job_retired' => 'Retired',
     'job_prefer_not' => 'Prefer not to say',
     'job_any' => 'Any',
 
+    'ask_working_sector' => 'Which sector do you work in? 🏢',
+    'thanks_working_sector' => '✅ Working sector saved as *:sector*.',
 
-    'ask_working_sector' => "💼 *Please select your Working Sector:*.",
-    'thanks_working_sector' => "✅ Working sector saved as *:sector*.",
-    'sector_government' => 'Government/Public Sector',
+    'sector_government' => 'Government / Public Sector',
     'sector_private' => 'Private Sector',
     'sector_business' => 'Self-Employed / Business',
-    'sector_ngo' => 'NGO/Social Services',
-    'sector_defense' => 'Defense/Civil Services',
-    'sector_education' => 'Education/Academia',
+    'sector_ngo' => 'NGO / Social Services',
+    'sector_defense' => 'Defense / Civil Services',
+    'sector_education' => 'Education / Academia',
     'sector_healthcare' => 'Healthcare',
     'sector_it' => 'Information Technology (IT)',
-    'sector_finance' => 'Banking/Finance',
-    'sector_media' => 'Media/Entertainment',
+    'sector_finance' => 'Banking / Finance',
+    'sector_media' => 'Media / Entertainment',
     'sector_hospitality' => 'Hospitality',
-    'sector_retail' => 'Retail/FMCG',
+    'sector_retail' => 'Retail / FMCG',
     'sector_manufacturing' => 'Manufacturing',
-    'sector_agriculture' => 'Agriculture/Farming',
-    'sector_real_estate' => 'Real Estate/Construction',
+    'sector_agriculture' => 'Agriculture / Farming',
+    'sector_real_estate' => 'Real Estate / Construction',
     'sector_legal' => 'Legal',
     'sector_arts' => 'Creative Arts',
     'other' => 'Other',
 
-    'ask_profession' => "💼 *Please select your Profession*.",
+
+    'ask_profession' => "What is your profession? Tell us what you do! 👩‍⚕️",
     'thanks_profession' => "✅ Profession saved as *:profession*.",
 
-    'ask_specific_profession' => "💼 *Please select your Specific Profession*.",
+    'ask_specific_profession' => "And what is your specific profession? We need more details! 📈",
     'thanks_profession' => "✅ Profession saved as *:profession*.",
 
-    'ask_partner_profession' => "💼 *Please select your Partner Profession*.",
+    'ask_partner_profession' => "What should be your preferred partner's profession? 🤝",
     'thanks_profession' => "✅ Profession saved as *:profession*.",
     'partner_profession_invalid_option' => "❌ Invalid option selected. Please try again.",
 
-    'ask_partner_specific_profession' => "💼 *Please select your Partner Specific Profession*.",
+    'ask_partner_specific_profession' => "And what should be your preferred partner's specific profession? 🌟",
     'thanks_profession' => "✅ Profession saved as *:profession*.",
-    'partner_specific_profession_invalid_option' => " *Invalid option selected. Please try again.",
-    
+    'partner_specific_profession_invalid_option' => '❌ Please select a valid option from the keyboard.',
+
 
     // 'profession_software_engineer' => 'Software Engineer',
     // 'profession_doctor' => 'Doctor',
@@ -217,70 +599,55 @@ return [
     // 'profession_other' => 'Other',
 
     // Profile income
-    'ask_income_range' => '💰 *Please select your Income Range (Annual Income):*',
+    'ask_income_range' => 'What is your annual income range? 💰*',
     'income_saved' => '✅ Income range saved as *:value*.',
 
     // Partner income preference
-    'ask_partner_income_range' => '💸 *What is annual income range do you prefer for your partner?*',
+    'ask_partner_income_range' => 'And what annual income range do you prefer for your partner? 💸*',
     'partner_income_saved' => '✅ Preferred partner income saved as *:value*.',
 
-    'ask_mobile' => "📱 *Please enter your 10-digit mobile number*",
+    'ask_mobile' => "What's your 10-digit mobile number? We'll keep it safe. 📱",
     'invalid_mobile' => "❌ Invalid number. Please enter a *valid 10-digit* mobile number.",
     'thanks_mobile' => "✅ Mobile number saved as *:mobile*.",
 
-    'ask_profile_photo' => "📸 *Please upload your Profile Photo* as an image attachment:",
-    // 'skip_photo' => 'Skip Photo',
-    // // 'upload_another_photo' => 'Upload Another Photo',
-    // 'profile_photo_skipped' => "✅ Got it! Let's move on to the next question.",
-    // 'profile_photo_invalid_text' => "❌ Please send a valid photo or tap *Done* to continue.",
-    // 'profile_photo_invalid' => "❌ Please send a valid photo.",
-    // 'profile_photo_process_failed' => "❌ Could not process image.",
-    // 'profile_photo_save_failed' => "❌ Failed to save the image.",
-    // 'profile_photo_uploaded' => "🖼️ Photo added to your gallery!",
- 'upload_more' => 'Upload more',
-'continue' => 'Continue',
-'profile_photo_required' => '❌ Please upload a photo before continuing.',
-'profile_photo_invalid_text' => '❌ Please upload a photo or use the buttons below.',
-'profile_photo_uploaded_first' => '✅ Your photo has been uploaded. You can upload one more or continue.',
-'profile_photo_uploaded_max' => '✅ You’ve uploaded two photos. Let’s continue.',
-'profile_photo_prompt_second' => 'You can upload another photo or continue.',
-'profile_photo_max_reached' => '⚠️ Maximum of 2 photos allowed.',
-'profile_photo_invalid' => '❌ Invalid input. Please upload a photo.',
-'profile_photo_process_failed' => '❌ Failed to process the photo.',
-'profile_photo_save_failed' => '❌ Failed to save the photo.',
-'ask_diet' => '🍽️ What is your dietary preference?', // Or your actual message
+    'ask_profile_photo' => 'Time for a photo! Please upload your best profile picture as an image. 📸',
+    'profile_photo_required' => '📸 Please upload at least one profile photo before proceeding.',
+    'profile_photo_uploaded_first' => '✅ Photo uploaded. You can upload another or press *Done* to continue.',
+    'profile_photo_uploaded_second' => '✅ Second photo uploaded. Press *Done* to continue.',
+    'profile_photo_limit_reached' => '⚠️ You have already uploaded the maximum of 2 photos.',
+    'profile_photo_invalid_text' => '❌ Invalid input. Please upload a valid photo.',
+    'upload_another_photo' => 'Upload another photo',
+    'skip_photo' => 'Done',
+    'please_send_another_photo' => 'Got another one? We\'d love to see a second photo! 🖼️',
 
+    // 'ask_chovihar' => 'Do you observe Chovihar? We\'d love to know more about your lifestyle. ✨',
+    // 'ask_partner_chovihar' => 'Do you observe *Chovihar*?',
 
-
-    // 'ask_chovihar' => "Do you observe *Chovihar*?",
-    // 'ask_partner_chovihar' => "Do you observe *Chovihar*?",
-
-    'ask_diet' => '🍽️ *What is your diet preference?*',
-    'invalid_diet' => "❌ Please select a valid diet option from the buttons below.",
+    'ask_diet' => 'What\'s on your plate? 🥗',
+    'invalid_diet' => '❌ Please select a valid diet option from the buttons below.',
     'saved_diet' => '✅ Your diet preference has been saved as *:diet*.',
 
-     'ask_partner_diet' => '🍽️ *What is your Parnter diet preference?*',
-    'partner_invalid_diet' => "❌ Please select a valid diet option from the buttons below.",
-    'saved_diet' => '✅ Your diet preference has been saved as *:diet*.',
+    'ask_partner_diet' => 'And what kind of diet do you prefer for your partner? 😋',
+    'partner_invalid_diet' => '❌ Please select a valid diet option from the buttons below.',
+    'saved_partner_diet' => '✅ Partner diet preference has been saved as *:diet*.',
 
-    'ask_smoke' => "🚬 Do you *Smoke*?",
-    'saved_smoking' => "✅ Smoking preference saved as *:value*.",
-    'option_yes' => "Yes",
-    'option_no' => "No",
-    'option_occasionally' => "Occasionally",
+    'ask_smoke' => 'Do you smoke? 🚬',
+    'saved_smoking' => '✅ Smoking preference saved as *:value*.',
+    'option_yes' => 'Yes',
+    'option_no' => 'No',
+    'option_occasionally' => 'Occasionally',
 
-    'drinking_question' => "🍻 Do you *Drink Alcohol*?",
-    'drinking_saved' => "✅ Drinking preference saved as *:value*.",
-    'invalid_option' => "❌ Please select an option from the buttons below.",
+    'drinking_question' => 'Do you drink alcohol? 🥂',
+    'drinking_saved' => '✅ Drinking preference saved as *:value*.',
+    'invalid_option' => '❌ Please select an option from the buttons below.',
     'yes' => 'Yes',
     'no' => 'No',
     'occasionally' => 'Occasionally',
 
-    'ask_height_select' => '📏 *Please select your height* from the list below.',
+    'ask_height_select' => 'How tall are you? 📏',
 
-
-    'ask_partner_religion' => "🙏 What is your *preferred partner's religion*?",
-    'thanks_partner_religion' => "✅ Preferred partner religion saved as *:partner_religion*.",
+    'ask_partner_religion' => 'What religion do you prefer for your future partner? ❤️',
+    'thanks_partner_religion' => '✅ Preferred partner religion saved as *:partner_religion*.',
 
     'partner_religion_hindu' => 'Hinduism',
     'partner_religion_muslim' => 'Islam',
@@ -294,9 +661,7 @@ return [
     'partner_religion_none' => 'No Religion / Atheist',
     'partner_religion_any' => 'Any',
 
-
-
-    'ask_body_type' => "🏋️‍♂️ What is your *Body Type*?",
+    'ask_body_type' => "What's your body type? 🏋️",
     'body_type_saved' => "✅ Body Type saved as *:value*.",
 
     'body_type_slim' => 'Slim',
@@ -306,9 +671,9 @@ return [
     'body_type_well_built' => 'Well-Built',
     'body_type_curvy' => 'Curvy',
     'body_type_prefer_not_to_say' => 'Prefer not to say',
+    'body_type_other' => 'Other',
 
-
-    'ask_skin_tone' => "🧜‍♀️ Please select your *Skin Tone*:",
+    'ask_skin_tone' => "What's your skin tone? ✨",
     'skin_tone_saved' => "✅ Skin Tone saved as *:value*.",
 
     'skin_fair' => 'Fair',
@@ -321,7 +686,7 @@ return [
     'skin_other' => 'Other',
 
 
-    'ask_partner_marital_status' => "💍 What is your *preferred partner's marital status*?",
+    'ask_partner_marital_status' => "What's your preferred partner's marital status? ❤️",
     'invalid_option' => '❌ Please select a valid option from the keyboard.',
     'partner_marital_status_saved' => "✅ Partner marital status saved as *:value*.",
     'status_single' => 'Single',
@@ -329,38 +694,38 @@ return [
     'status_widowed' => 'Widowed',
     'status_any' => 'Any',
 
-    'ask_caste' => "🕉️ Please select your *Caste* from the list below.",
+    'ask_caste' => "Which community do you belong to? We need to know your caste to help find the right match. 🤝",
     'thanks_caste' => "✅ Caste saved as *:caste*.",
 
-    'ask_sub_caste' => "🕉️ Please select your *Sub Caste* from the list below.",
+    'ask_sub_caste' => "And what is your sub-caste? 🌳",
     'thanks_caste' => "✅ Caste saved as *:caste*.",
 
-    'ask_partner_caste' => "🕉️ Please select your *Partner Caste* from the list below.",
+    'ask_partner_caste' => "What's the caste you prefer for your partner? 🤝",
     'thanks_caste' => "✅ Caste saved as *:caste*.",
 
-    'ask_partner_sub_caste' => "🕉️ Please select your *Partner Sub Caste* from the list below.",
+    'ask_partner_sub_caste' => "And their preferred sub-caste? 🌳",
     'thanks_caste' => "✅ Caste saved as *:caste*.",
 
-    'ask_partner_min_age' => "🎂 What is your *preferred minimum age* for your partner?",
+    'ask_partner_min_age' => "What's the minimum age you'd prefer for your partner?",
     'invalid_age' => '❌ Please enter a valid age between 18 and 99.',
     'partner_min_age_saved' => "✅ Preferred minimum age saved as *:value*.",
     'example_age' => 'e.g., 25',
 
-    'partner_max_age_question' => "🎂 What is your *preferred maximum age* for your partner?",
+    'partner_max_age_question' => "And what's the maximum age? 👵",
     'partner_max_age_saved' => "✅ Preferred *maximum age* saved as *:value*.",
     'partner_max_age_invalid' => "❌ Please enter a valid age between 18 and 100.",
 
-    'partner_min_height_question' => '📏 Please select the *minimum partner height* from the list below.',
+    'partner_min_height_question' => 'What\'s the minimum height you\'d prefer for your partner? 📏',
     'partner_min_height_saved' => '✅ Minimum partner height saved: :value',
     'height_invalid' => '❌ Invalid format. Please select a height from the list or use the format: 5 ft 7 in → 170 cm.',
 
-    'partner_max_height_question' => '📏 Please select the *maximum partner height* from the list below.',
+    'partner_max_height_question' => 'And what\'s the maximum height you\'d prefer for your partner?',
     'partner_max_height_saved' => '✅ Maximum partner height saved: :value',
     'height_invalid' => '❌ Invalid format. Please select a height from the list or use the format: 5 ft 7 in → 170 cm.',
     'height_max_less_than_min' => '⚠️ *Maximum height* should be greater than or equal to *minimum height* (:min cm). Please select a valid height.',
 
-    'ask_partner_language' => "🌐 What is the *preferred Mother Tongue* of your partner?",
-    'profile_already_complete' => '✅ Your profile is already complete! You can type /start anytime to view or edit it.',
+    'ask_partner_language' => "What mother tongue do you prefer for your partner? 🗣️",
+    // 'profile_already_complete' => '✅ Your profile is already complete! You can type /start anytime to view or edit it.',
 
     // Mother Tongue
     'messages.mother_tongue_hindi' => 'Hindi',

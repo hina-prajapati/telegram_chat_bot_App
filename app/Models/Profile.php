@@ -61,10 +61,10 @@ class Profile extends Model
     {
         return $this->hasOne(\App\Models\Preference::class, 'profile_id', 'id');
     }
-    public function gallery()
-    {
-        return $this->hasOne(Gallery::class)->latestOfMany();
-    }
+    // public function gallery()
+    // {
+    //     return $this->hasOne(Gallery::class)->latestOfMany();
+    // }
 
     public function state()
     {
@@ -75,4 +75,10 @@ class Profile extends Model
     {
         return $this->belongsTo(City::class, 'city'); // 'city' is foreign key
     }
+
+    public function gallery()
+{
+    return $this->hasMany(Gallery::class);
+}
+
 }

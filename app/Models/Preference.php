@@ -32,6 +32,9 @@ class Preference extends Model
         'partner_chovihar'
     ];
 
+    protected $hidden = ['profile_id'];
+
+
     public function profile()
     {
         return $this->belongsTo(\App\Models\Profile::class, 'profile_id', 'id');

@@ -719,7 +719,7 @@
                                     @endforeach
 
                                     <option value="Any"
-                                        {{ strtolower(old('partner_caste', $profile->partner_caste ?? '')) == 'any' ? 'selected' : '' }}>
+                                        {{ strtolower(old('partner_caste', $profile->preference->partner_caste ?? '')) == 'any' ? 'selected' : '' }}>
                                         Any
                                     </option>
                                 </select>

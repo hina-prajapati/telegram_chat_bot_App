@@ -115,24 +115,32 @@ class TelegramController extends Controller
         $currentStep = $state->current_step;
         $answers = $state->answers ?? [];
 
+
+
         // if (strtolower($text) === '/start') {
+        //     // Send instructions to the user
+        //     $instructions = "📌 Welcome! Here are the commands you can use:\n"
+        //         . "/start - Create your profile\n"
+        //         . "/profile - View your profile\n"
+        //         . "/matches - See your matches\n"
+        //         . "/approved - View approved matches\n"
+        //         . "/pending - View pending profiles"
+        //         . "/update_profile - Update Your profile";
+
+        //     $this->sendMessage($chatId, $instructions);
+
         //     return $this->handleStartCommand($chatId, $state);
         // }
 
         if (strtolower($text) === '/start') {
-            // Send instructions to the user
-            $instructions = "📌 Welcome! Here are the commands you can use:\n"
-                . "/start - Create your profile\n"
-                . "/profile - View your profile\n"
-                . "/matches - See your matches\n"
-                . "/approved - View approved matches\n"
-                . "/pending - View pending profiles"
-                . "/update_profile - Update Your profile";
-
-            $this->sendMessage($chatId, $instructions);
-
-            return $this->handleStartCommand($chatId, $state);
+        if ($this->hasCompletedProfile($chatId)) {
+            return $this->sendMessage($chatId, "✅ You already have a completed profile. Use /profile to view or /editprofile to update.");
         }
+
+        // Otherwise continue onboarding
+        return $this->handleStartCommand($chatId, $state);
+    }
+
 
         if (strtolower($text) === '/profile') {
 
@@ -206,7 +214,7 @@ class TelegramController extends Controller
                 return $this->sendMessage($chatId, "❌ Mismatch in profile linkage. Please contact support.");
             }
 
-            $editUrl = "http://127.0.0.1:8000/profile/edit/{$profileId}?chat_id={$chatId}";
+            $editUrl = "http://127.0.0.1:8000/profile/edit/{$profileId}?chat_id={$chatId}";$editUrl = "http://127.0.0.1:8000/profile/edit/{$profileId}?chat_id={$chatId}";
 
 
             return $this->sendMessage($chatId, "📝 Click the link below to update your profile:\n\n<a href='$editUrl'>Edit Profile</a>", [
@@ -321,7 +329,6 @@ class TelegramController extends Controller
     {
         return [
             'awaiting_name' => NameController::class,
-            'awaiting_profile_photo' => ProfilePhotoController::class,
             'awaiting_bio' => BioController::class,
             'awaiting_email' => EmailController::class,
             'awaiting_gender' => GenderController::class,
@@ -372,69 +379,109 @@ class TelegramController extends Controller
         ];
     }
 
-    private function hasCompletedProfile($chatId)
-    {
-        $profile = Profile::where('telegram_user_id', $chatId)->first();
-        $preference = Preference::where('telegram_user_id', $chatId)->first();
+    // private function hasCompletedProfile($chatId)
+    // {
+    //     $profile = Profile::where('telegram_user_id', $chatId)->first();
+    //     $preference = Preference::where('telegram_user_id', $chatId)->first();
 
-        if (!$profile || !$preference) {
-            Log::info('❌ Missing profile or preference data');
+    //     if (!$profile || !$preference) {
+    //         Log::info('❌ Missing profile or preference data');
+    //         return false;
+    //     }
+
+    //     $requiredProfileFields = [
+    //         'name',
+    //         'email',
+    //         'marital_status',
+    //         'dob',
+    //         'state',
+    //         'city',
+    //         'mother_tongue',
+    //         'religion',
+    //         'caste',
+    //         'education_level',
+    //         'education_field',
+    //         'job_status',
+    //         'working_sector',
+    //         'profession',
+    //         'phone',
+    //         'diet',
+    //         'smoking',
+    //         'drinking',
+    //         'height',
+    //         'body_type',
+    //         'skin_tone',
+    //         'gender'
+    //         // ✅ Removed 'profile_photo' to make it optional
+    //     ];
+
+    //     $requiredPreferenceFields = [
+    //         'partner_marital_status',
+    //         'partner_caste',
+    //         'partner_min_age',
+    //         'partner_max_age',
+    //         'partner_min_height',
+    //         'partner_max_height',
+    //         // 'partner_gender',
+    //         'partner_language'
+    //     ];
+
+    //     foreach ($requiredProfileFields as $field) {
+    //         if (empty($profile->$field)) {
+    //             Log::info("❌ Missing profile field: $field");
+    //             return false;
+    //         }
+    //     }
+
+    //     foreach ($requiredPreferenceFields as $field) {
+    //         if (empty($preference->$field)) {
+    //             Log::info("❌ Missing preference field: $field");
+    //             return false;
+    //         }
+    //     }
+
+    //     return true;
+    // }
+
+    private function hasCompletedProfile($chatId)
+{
+    $profile = Profile::where('telegram_user_id', $chatId)->first();
+    $preference = Preference::where('telegram_user_id', $chatId)->first();
+
+    if (!$profile || !$preference) {
+        Log::info("❌ Missing profile or preference for chat_id: $chatId");
+        return false;
+    }
+
+    $requiredProfileFields = [
+        'name', 'email', 'marital_status', 'dob',
+        'state', 'city', 'mother_tongue', 'religion', 'caste',
+        'education_level', 'education_field', 'job_status', 'working_sector', 'profession',
+        'phone', 'diet', 'smoking', 'drinking', 'height', 'body_type', 'skin_tone', 'gender'
+    ];
+
+    $requiredPreferenceFields = [
+        'partner_marital_status', 'partner_caste', 'partner_min_age', 'partner_max_age',
+        'partner_min_height', 'partner_max_height', 'partner_language'
+    ];
+
+    foreach ($requiredProfileFields as $field) {
+        if (empty($profile->$field)) {
+            Log::info("❌ Missing profile field [$field] for chat_id: $chatId");
             return false;
         }
-
-        $requiredProfileFields = [
-            'name',
-            'email',
-            'marital_status',
-            'dob',
-            'state',
-            'city',
-            'mother_tongue',
-            'religion',
-            'caste',
-            'education_level',
-            'education_field',
-            'job_status',
-            'working_sector',
-            'profession',
-            'phone',
-            'diet',
-            'smoking',
-            'drinking',
-            'height',
-            'body_type',
-            'skin_tone',
-            'gender'
-            // ✅ Removed 'profile_photo' to make it optional
-        ];
-
-        $requiredPreferenceFields = [
-            'partner_marital_status',
-            'partner_caste',
-            'partner_min_age',
-            'partner_max_age',
-            'partner_min_height',
-            'partner_max_height',
-            // 'partner_gender',
-            'partner_language'
-        ];
-
-        foreach ($requiredProfileFields as $field) {
-            if (empty($profile->$field)) {
-                Log::info("❌ Missing profile field: $field");
-                return false;
-            }
-        }
-
-        foreach ($requiredPreferenceFields as $field) {
-            if (empty($preference->$field)) {
-                Log::info("❌ Missing preference field: $field");
-                return false;
-            }
-        }
-
-        return true;
     }
+
+    foreach ($requiredPreferenceFields as $field) {
+        if (empty($preference->$field)) {
+            Log::info("❌ Missing preference field [$field] for chat_id: $chatId");
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
     private function sendStructuredMessage($chatId, $data)
     {
@@ -501,102 +548,18 @@ class TelegramController extends Controller
         Log::info('sendPhoto response: ' . $response->body());
     }
 
-    // public function showProfile($chatId, $answers = [])
-    // {
-    //     $profile = Profile::where('telegram_user_id', $chatId)->first();
-    //     $preference = Preference::where('telegram_user_id', $chatId)->first();
-
-    //     $gallery = Gallery::where('profile_id', $profile->id)
-    //         ->latest('created_at')
-    //         ->first();
-
-    //     if (!$profile || !$preference) {
-    //         return $this->sendMessage($chatId, "❌ Profile or preferences not found.");
-    //     }
-
-    //     // ✅ Build summary
-    //     $summary = "*👤 Your Profile:*\n";
-
-    //     $orderedFields = [
-    //         'name',
-    //         'email',
-    //         'bio',
-    //         'gender',
-    //         'marital_status',
-    //         'dob',
-    //         'state',
-    //         'city',
-    //         'mother_tongue',
-    //         'religion',
-    //         'caste',
-    //         'sub_caste',
-    //         'height',
-    //         'education_level',
-    //         'education_field',
-    //         'job_status',
-    //         'working_sector',
-    //         'profession',
-    //         'phone',
-    //         'profile_photo',
-    //         'diet',
-    //         'smoking',
-    //         'drinking',
-    //         'height',
-    //         'body_type',
-    //         'skin_tone',
-    //     ];
-
-    //     foreach ($orderedFields as $field) {
-    //         if (!empty($profile->$field)) {
-    //             $label = ucwords(str_replace('_', ' ', $field));
-
-    //             // 🎯 Format dob here
-    //             if ($field === 'dob') {
-    //                 $formattedDob = \Carbon\Carbon::parse($profile->dob)->format('d-m-Y');
-    //                 $summary .= "▪️ *$label*: $formattedDob\n";
-    //             } else {
-    //                 $summary .= "▪️ *$label*: {$profile->$field}\n";
-    //             }
-    //         }
-    //     }
-
-    //     $summary .= "\n*💘 Your Preferences:*\n";
-    //     foreach ($preference->getAttributes() as $key => $value) {
-    //         if (
-    //             !in_array($key, ['id', 'telegram_user_id', 'created_at', 'updated_at']) &&
-    //             !empty($value) // ✅ skip empty/null/false/'' values
-    //         ) {
-    //             $label = ucwords(str_replace('_', ' ', $key));
-    //             $summary .= "🔸 *$label*: $value\n";
-    //         }
-    //     }
-
-    //     $filename = ($gallery && $gallery->image_path)
-    //         ? $gallery->image_path
-    //         : 'profile_Pic.jpg'; // ✅ fallback default
-
-    //     $photoPath = public_path("uploads/profiles/{$filename}");
-
-    //     if (!file_exists($photoPath) || !is_readable($photoPath)) {
-    //         $photoPath = public_path("uploads/profiles/profile_Pic.jpg"); // fallback local path
-    //     }
-
-    //     $this->sendPhoto($chatId, $photoPath, $summary);
-
-    //     // ✅ Now show match button
-    //     // $matchController = app(\App\Http\Controllers\MatchController::class);
-    //     // return $matchController->findMatches($chatId, $profile);
-    //     // return $this->handleNextMatch($chatId, $profile);
-    // }
-
     public function showProfile($chatId, $answers = [])
     {
         $profile = Profile::where('telegram_user_id', $chatId)->first();
         $preference = Preference::where('telegram_user_id', $chatId)->first();
 
+        // $gallery = Gallery::where('profile_id', $profile->id)
+        //     ->latest('created_at')
+        //     ->first();
         $gallery = Gallery::where('profile_id', $profile->id)
-            ->latest('created_at')
+            ->orderBy('id', 'asc')
             ->first();
+
 
         if (!$profile || !$preference) {
             return $this->sendMessage($chatId, "❌ Profile or preferences not found.");
@@ -604,6 +567,7 @@ class TelegramController extends Controller
 
         // Build profile summary (only profile fields)
         $profileSummary = "*👤 Your Profile:*\n";
+
 
         $orderedFields = [
             'name',
@@ -632,11 +596,31 @@ class TelegramController extends Controller
             'skin_tone',
         ];
 
+        // foreach ($orderedFields as $field) {
+        //     if (!empty($profile->$field)) {
+        //         $label = ucwords(str_replace('_', ' ', $field));
+
+        //         if ($field === 'dob') {
+        //             $formattedDob = \Carbon\Carbon::parse($profile->dob)->format('d-m-Y');
+        //             $profileSummary .= "▪️ *$label*: $formattedDob\n";
+        //         } else {
+        //             $profileSummary .= "▪️ *$label*: {$profile->$field}\n";
+        //         }
+        //     }
+        // }
         foreach ($orderedFields as $field) {
             if (!empty($profile->$field)) {
                 $label = ucwords(str_replace('_', ' ', $field));
 
-                if ($field === 'dob') {
+                if ($field === 'height') {
+                    $cm = (int) $profile->height;
+                    $ft = floor($cm / 30.48);
+                    $remainingCm = $cm - ($ft * 30.48);
+                    $in = round($remainingCm / 2.54);
+
+                    $formattedHeight = "{$ft} ft {$in} in → {$cm} cm";
+                    $profileSummary .= "▪️ *$label*: {$formattedHeight}\n";
+                } elseif ($field === 'dob') {
                     $formattedDob = \Carbon\Carbon::parse($profile->dob)->format('d-m-Y');
                     $profileSummary .= "▪️ *$label*: $formattedDob\n";
                 } else {
@@ -646,10 +630,28 @@ class TelegramController extends Controller
         }
 
         // Build preferences summary (only preference fields)
+        // foreach ($preference->getAttributes() as $key => $value) {
+        //     if (!in_array($key, ['id', 'telegram_user_id', 'created_at', 'updated_at']) && !empty($value)) {
+        //         $label = ucwords(str_replace('_', ' ', $key));
+        //         $preferenceSummary .= "🔸 *$label*: $value\n";
+        //     }
+        // }
+        $excluded = ['id', 'telegram_user_id', 'created_at', 'updated_at', 'profile_id'];
         $preferenceSummary = "\n*💘 Your Preferences:*\n";
+
         foreach ($preference->getAttributes() as $key => $value) {
-            if (!in_array($key, ['id', 'telegram_user_id', 'created_at', 'updated_at']) && !empty($value)) {
+            if (!in_array($key, $excluded) && !empty($value)) {
                 $label = ucwords(str_replace('_', ' ', $key));
+
+                // Format min and max partner height fields
+                if (in_array($key, ['partner_min_height', 'partner_max_height'])) {
+                    $cm = (int) $value;
+                    $ft = floor($cm / 30.48);
+                    $remainingCm = $cm - ($ft * 30.48);
+                    $in = round($remainingCm / 2.54);
+                    $value = "{$ft} ft {$in} in → {$cm} cm";
+                }
+
                 $preferenceSummary .= "🔸 *$label*: $value\n";
             }
         }
@@ -673,6 +675,9 @@ class TelegramController extends Controller
             'parse_mode' => 'Markdown',
             'reply_markup' => ['remove_keyboard' => true]
         ]);
+
+        $matchController = app(\App\Http\Controllers\MatchController::class);
+        return $matchController->findMatches($chatId, $profile);
     }
 
     private function getNextStep(string $currentStep, TelegramUserState $state): ?string
@@ -794,9 +799,46 @@ class TelegramController extends Controller
         );
     }
 
+    // protected function handlePhotoUpload($chatId, $message, $text, $state, $controller, $handlers)
+    // {
+    //     // Multilingual skip/done commands
+    //     $skipCommands = [
+    //         'en' => ['skip photo', 'done'],
+    //         'hi' => ['फोटो छोड़ें', 'पूरा हुआ'],
+    //         'mr' => ['फोटो वगळा', 'झाले'],
+    //         'gu' => ['ફોટો છોડો', 'પૂર્ણ થયું'],
+    //     ];
+
+    //     $lang = $state->language ?? 'en';
+    //     $allowedSkips = $skipCommands[$lang] ?? $skipCommands['en'];
+
+    //     if (in_array(mb_strtolower(trim($text)), array_map('mb_strtolower', $allowedSkips))) {
+    //         $nextStep = $this->getNextStep('awaiting_profile_photo', $state);
+    //         $state->update(['current_step' => $nextStep]);
+
+    //         $nextController = app($handlers[$nextStep]);
+
+    //         return $this->sendMessage(
+    //             $chatId,
+    //             $nextController::getQuestion(),
+    //             method_exists($nextController, 'getOptions') ? $nextController::getOptions($state->answers ?? []) : []
+    //         );
+    //     }
+
+    //     if (isset($message['photo'])) {
+    //         // Log::info('📸 Handling profile photo upload');
+    //         $response = $controller->handle($chatId, $message['photo'], $state);
+    //         return $this->sendStructuredMessage($chatId, $response);
+    //     }
+
+    //     return $this->sendMessage(
+    //         $chatId,
+    //         __('messages.profile_photo_invalid_text') // Fallback localized text
+    //     );
+    // }
+
     protected function handlePhotoUpload($chatId, $message, $text, $state, $controller, $handlers)
     {
-        // Multilingual skip/done commands
         $skipCommands = [
             'en' => ['skip photo', 'done'],
             'hi' => ['फोटो छोड़ें', 'पूरा हुआ'],
@@ -806,31 +848,98 @@ class TelegramController extends Controller
 
         $lang = $state->language ?? 'en';
         $allowedSkips = $skipCommands[$lang] ?? $skipCommands['en'];
+        $textNormalized = mb_strtolower(trim($text));
 
-        if (in_array(mb_strtolower(trim($text)), array_map('mb_strtolower', $allowedSkips))) {
-            $nextStep = $this->getNextStep('awaiting_profile_photo', $state);
-            $state->update(['current_step' => $nextStep]);
+        $profile = Profile::where('telegram_user_id', $chatId)->first();
+        $uploadedCount = $profile ? $profile->gallery()->count() : 0;
 
-            $nextController = app($handlers[$nextStep]);
-
+        // ✅ Handle "Upload another photo" button click
+        if ($textNormalized === mb_strtolower(__('messages.upload_another_photo'))) {
             return $this->sendMessage(
                 $chatId,
-                $nextController::getQuestion(),
-                method_exists($nextController, 'getOptions') ? $nextController::getOptions($state->answers ?? []) : []
+                __('messages.please_send_another_photo')
             );
         }
 
-        if (isset($message['photo'])) {
-            // Log::info('📸 Handling profile photo upload');
-            $response = $controller->handle($chatId, $message['photo'], $state);
-            return $this->sendStructuredMessage($chatId, $response);
+        // ✅ SKIP/DONE logic (only after at least 1 photo uploaded)
+        if (in_array($textNormalized, array_map('mb_strtolower', $allowedSkips))) {
+            if ($uploadedCount >= 1) {
+                $nextStep = $this->getNextStep('awaiting_profile_photo', $state);
+                $state->update(['current_step' => $nextStep]);
+
+                $nextController = app($handlers[$nextStep]);
+
+                return $this->sendMessage(
+                    $chatId,
+                    $nextController::getQuestion(),
+                    method_exists($nextController, 'getOptions') ? $nextController::getOptions($state->answers ?? []) : [
+                        'reply_markup' => json_encode(['remove_keyboard' => true])
+                    ]
+                );
+            } else {
+                return $this->sendMessage(
+                    $chatId,
+                    __('messages.profile_photo_required') // "Please upload at least one profile photo"
+                );
+            }
         }
 
+        // ✅ HANDLE PHOTO UPLOAD
+        if (isset($message['photo'])) {
+            if ($uploadedCount >= 2) {
+                return $this->sendMessage(
+                    $chatId,
+                    __('messages.profile_photo_limit_reached') // "You have already uploaded 2 photos"
+                );
+            }
+
+            $response = $controller->handle($chatId, $message['photo'], $state);
+
+            $uploadedCount++; // Local increment
+
+            if ($uploadedCount === 1) {
+                // ✅ First photo uploaded
+                return $this->sendMessage(
+                    $chatId,
+                    __('messages.profile_photo_uploaded_first'),
+                    [
+                        'reply_markup' => json_encode([
+                            'keyboard' => [
+                                [['text' => __('messages.upload_another_photo')]],
+                                [['text' => __('messages.skip_photo')]],
+                            ],
+                            'resize_keyboard' => true,
+                            'one_time_keyboard' => false,
+                        ]),
+                        'parse_mode' => 'Markdown'
+                    ]
+                );
+            } elseif ($uploadedCount === 2) {
+                // ✅ Second photo uploaded
+                return $this->sendMessage(
+                    $chatId,
+                    __('messages.profile_photo_uploaded_second'),
+                    [
+                        'reply_markup' => json_encode([
+                            'keyboard' => [
+                                [['text' => __('messages.skip_photo')]]
+                            ],
+                            'resize_keyboard' => true,
+                            'one_time_keyboard' => false,
+                        ]),
+                        'parse_mode' => 'Markdown'
+                    ]
+                );
+            }
+        }
+
+        // ❌ Fallback for anything else
         return $this->sendMessage(
             $chatId,
-            __('messages.profile_photo_invalid_text') // Fallback localized text
+            __('messages.profile_photo_invalid_text') // "Please upload a valid photo."
         );
     }
+
 
     protected function handleCallback(array $callback)
     {
@@ -952,30 +1061,54 @@ class TelegramController extends Controller
                 $match = $matchRecord->matchedProfile;
                 if (!$match) continue;
 
+                $heightSummary = '';
+                if (!empty($match->height)) {
+                    $cm = (int) $match->height;
+                    $ft = floor($cm / 30.48);
+                    $remainingCm = $cm - ($ft * 30.48);
+                    $in = round($remainingCm / 2.54);
+                    $heightSummary = "{$ft} ft {$in} in → {$cm} cm";
+                } else {
+                    $heightSummary = 'N/A';
+                }
+
                 $summary = "*👤 Previous Match:*\n";
                 $summary .= "▪️ *Name:* {$match->name}\n";
                 $summary .= "▪️ *Gender:* {$match->gender}\n";
                 $summary .= "▪️ *Caste:* {$match->caste}\n";
-                $summary .= "▪️ *Height:* {$match->height} ft\n";
+                $summary .= "▪️ *Height:* {$heightSummary}\n";
                 $summary .= "▪️ *City:* {$match->city}\n";
-                // $summary .= "▪️ *Phone:* {$match->phone}\n";
+                $summary .= "▪️ *State:* {$match->state}\n";
 
-                // 📸 Send photo
-                // $image = $match->profile_photo ?? 'profile_Pic.jpg';
-                // $photoUrl = asset('uploads/profiles/' . $image);
+                $summary .= "▪️ *Religion:* {$match->religion}\n";
+                $summary .= "▪️ *Education:* {$match->education_level} - {$match->education_field}\n";
+                $summary .= "▪️ *Profession:* {$match->profession}\n";
+                $summary .= "▪️ *Specific Profession:* {$match->specific_profession}\n";
+                $summary .= "▪️ *Working Sector:* {$match->working_sector}\n";
+                $summary .= "▪️ *Income Range:* {$match->income_range}\n";
+                $summary .= "▪️ *Marital Status:* {$match->marital_status}\n";
+                $summary .= "▪️ *DOB:* {$match->dob}\n";
+                $summary .= "▪️ *Diet:* {$match->diet}\n";
+                $summary .= "▪️ *Smoking:* {$match->smoking}\n";
+                $summary .= "▪️ *Drinking:* {$match->drinking}\n";
+                $summary .= "▪️ *Body Type:* {$match->body_type}\n";
+                $summary .= "▪️ *Skin Tone:* {$match->skin_tone}\n";
+                $summary .= "▪️ *Job Status:* {$match->job_status}\n";
+                $summary .= "▪️ *Sub-Caste:* {$match->sub_caste}\n";
+                $summary .= "▪️ *Chovihar:* {$match->chovihar}\n";
+                $summary .= "▪️ *Birth Time:* {$match->birth_time}\n";
+                $summary .= "▪️ *Birth Place:* {$match->birth_place}\n";
+                $summary .= "▪️ *Native Place:* {$match->native_place}\n";
 
                 $gallery = Gallery::where('profile_id', $match->id)
-                    ->latest('created_at')
+                    ->orderBy('created_at', 'asc')
                     ->first();
 
                 $filename = ($gallery && $gallery->image_path)
                     ? $gallery->image_path
                     : 'profile_Pic.jpg';
 
-                // $this->sendPhoto($chatId, $photoUrl);
                 $senderProfile = Profile::where('telegram_user_id', $chatId)->first();
-
-                // ✅ Check if request already sent
                 $existingRequest = \App\Models\MatchRequest::where('sender_id', $senderProfile->id)
                     ->where('receiver_id', $match->id)
                     ->whereIn('status', ['pending', 'approved'])
@@ -989,12 +1122,6 @@ class TelegramController extends Controller
 
                 $buttons[] = [['text' => '⏭️ Next Match', 'callback_data' => 'next_match']];
 
-                // $this->sendMessage($chatId, $summary, [
-                //     'parse_mode' => 'Markdown',
-                //     'reply_markup' => json_encode([
-                //         'inline_keyboard' => $buttons
-                //     ])
-                // ]);
                 $photoPath = public_path("uploads/profiles/{$filename}");
 
                 if (!file_exists($photoPath) || !is_readable($photoPath)) {
@@ -1014,52 +1141,98 @@ class TelegramController extends Controller
         return response('ok');
     }
 
+    // public function handleSendRequest($chatId, $matchId)
+    // {
+    //     $matchUser = Profile::find($matchId);
+    //     $currentUser = Profile::where('telegram_user_id', $chatId)->first();
+
+    //     if (!$matchUser || !$currentUser) {
+    //         return $this->sendMessage($chatId, "❌ Unable to send request.");
+    //     }
+
+    //     $alreadyRequested = MatchRequest::where('sender_id', $currentUser->id) // ✅ Use profile.id
+    //         ->where('receiver_id', $matchUser->id)
+    //         ->exists();
+
+    //     if ($alreadyRequested) {
+    //         return $this->sendMessage($chatId, "⚠️ You've already sent a request to {$matchUser->name}.");
+    //     }
+
+    //     // Save to DB
+    //     MatchRequest::create([
+    //         'sender_id' => $currentUser->id,  // Not telegram ID
+    //         'receiver_id' => $matchUser->id,
+    //         'status' => 'pending',
+    //     ]);
+
+    //     // Send Telegram notification
+    //     $matchUser->notify(new RequestReceivedNotification($currentUser));
+
+    //     return $this->sendMessage($chatId, "✅ Request sent to *{$matchUser->name}*!", [
+    //         'parse_mode' => 'Markdown'
+    //     ]);
+    // }
     public function handleSendRequest($chatId, $matchId)
     {
         $matchUser = Profile::find($matchId);
         $currentUser = Profile::where('telegram_user_id', $chatId)->first();
 
         if (!$matchUser || !$currentUser) {
-            return $this->sendMessage($chatId, "❌ Unable to send request.");
+            return $this->sendMessage($chatId, "❌ Unable to send request. User not found.");
         }
 
-        $alreadyRequested = MatchRequest::where('sender_id', $currentUser->id) // ✅ Use profile.id
+        if (empty($matchUser->telegram_user_id)) {
+            return $this->sendMessage($chatId, "⚠️ This user has not connected their Telegram yet, so we cannot send the request.");
+        }
+
+        // Check if request already exists
+        $alreadyRequested = MatchRequest::where('sender_id', $currentUser->id)
             ->where('receiver_id', $matchUser->id)
             ->exists();
 
         if ($alreadyRequested) {
-            return $this->sendMessage($chatId, "⚠️ You've already sent a request to {$matchUser->name}.");
+            // Re-send notification
+            $this->sendMessage($matchUser->telegram_user_id, "📩 Reminder: {$currentUser->name} has sent you a request!");
+            return $this->sendMessage($chatId, "⚠️ You've already sent a request to *{$matchUser->name}*. We've reminded them again.", [
+                'parse_mode' => 'Markdown'
+            ]);
         }
 
-        // Save to DB
+        // Create new request
         MatchRequest::create([
-            'sender_id' => $currentUser->id,  // Not telegram ID
+            'sender_id' => $currentUser->id,
             'receiver_id' => $matchUser->id,
             'status' => 'pending',
         ]);
 
-        // Send Telegram notification
-        $matchUser->notify(new RequestReceivedNotification($currentUser));
+        // ✅ Send Telegram message directly instead of notify()
+        $this->sendMessage($matchUser->telegram_user_id, "💌 You have a new request from *{$currentUser->name}*!", [
+            'parse_mode' => 'Markdown'
+        ]);
 
         return $this->sendMessage($chatId, "✅ Request sent to *{$matchUser->name}*!", [
             'parse_mode' => 'Markdown'
         ]);
     }
 
+
     public function showOtherProfile($chatId, $profileId, $revealContact = false)
     {
         $profile = Profile::find($profileId);
         $preference = Preference::where('telegram_user_id', $profile->telegram_user_id ?? null)->first();
-        $gallery = Gallery::where('profile_id', $profileId)->latest('created_at')->first();
 
         if (!$profile || !$preference) {
             return $this->sendMessage($chatId, "❌ Profile or preferences not found.");
         }
 
-        $summary = "*👤 Profile Details:*\n";
-
+        // --------------------------
+        // 📋 PART 1: Profile Summary
+        // --------------------------
+        $profileSummary = "*👤 Profile Details:*\n";
         $fields = [
             'name',
+            'email',
+            'bio',
             'gender',
             'marital_status',
             'dob',
@@ -1068,10 +1241,14 @@ class TelegramController extends Controller
             'mother_tongue',
             'religion',
             'caste',
+            'sub_caste',
             'height',
             'education_level',
+            'education_field',
             'job_status',
+            'working_sector',
             'profession',
+            'phone',
             'diet',
             'smoking',
             'drinking',
@@ -1090,26 +1267,63 @@ class TelegramController extends Controller
                 $value = $field === 'dob'
                     ? \Carbon\Carbon::parse($profile->dob)->format('d-m-Y')
                     : $profile->$field;
-                $summary .= "▪️ *$label*: $value\n";
+                $profileSummary .= "▪️ *$label*: $value\n";
             }
         }
 
-        $summary .= "\n*💘 Preferences:*\n";
+        // --------------------------
+        // 📋 PART 2: Preference Info
+        // --------------------------
+        $preferenceSummary = "*💘 Preferences:*\n";
         foreach ($preference->getAttributes() as $key => $value) {
-            if (!in_array($key, ['id', 'telegram_user_id', 'created_at', 'updated_at']) && !empty($value)) {
+            if (!in_array($key, ['id', 'telegram_user_id', 'created_at', 'updated_at', 'profile_id']) && !empty($value)) {
                 $label = ucwords(str_replace('_', ' ', $key));
-                $summary .= "🔸 *$label*: $value\n";
+                $preferenceSummary .= "🔸 *$label*: $value\n";
             }
         }
 
-        $filename = $gallery->image_path ?? 'profile_Pic.jpg';
-        $photoPath = public_path('uploads/profiles/' . $filename);
+        // --------------------------
+        // 🖼️ Image Handling
+        // --------------------------
+        $galleryImages = Gallery::where('profile_id', $profileId)
+            ->orderBy('id', 'asc')
+            ->take(2)
+            ->get();
+
+        if ($galleryImages->isEmpty()) {
+            // No images: use fallback
+            $this->sendPhoto(
+                $chatId,
+                public_path('uploads/profiles/profile_Pic.jpg'),
+                $profileSummary,
+                ['parse_mode' => 'Markdown']
+            );
+            $this->sendMessage($chatId, $preferenceSummary, ['parse_mode' => 'Markdown']);
+            return;
+        }
+
+        // First image with profile details
+        $firstImagePath = public_path('uploads/profiles/' . $galleryImages[0]->image_path);
+        if (!file_exists($firstImagePath)) {
+            $firstImagePath = public_path('uploads/profiles/profile_Pic.jpg');
+        }
 
         $this->sendPhoto(
             $chatId,
-            file_exists($photoPath) ? $photoPath : secure_asset('uploads/profiles/' . $filename),
-            $summary,
+            $firstImagePath,
+            $profileSummary,
             ['parse_mode' => 'Markdown']
         );
+
+        // Send preferences as separate message
+        $this->sendMessage($chatId, $preferenceSummary, ['parse_mode' => 'Markdown']);
+
+        // Send second image if available
+        if ($galleryImages->count() > 1) {
+            $secondImagePath = public_path('uploads/profiles/' . $galleryImages[1]->image_path);
+            if (file_exists($secondImagePath)) {
+                $this->sendPhoto($chatId, $secondImagePath); // no caption
+            }
+        }
     }
 }

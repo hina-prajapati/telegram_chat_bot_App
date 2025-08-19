@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Profile;
 
 use App\Models\Profile;
@@ -11,31 +12,36 @@ use App\Models\Gallery;
 
 class ProfilePhotoController extends Controller
 {
-
     public function handle($chatId, $photoOrText, TelegramUserState $state)
     {
-        // Define localized skip/done commands
         $skipCommands = [
-            'en' => ['skip photo', 'done'],
+            'en' => ['leave', 'done'],
             'hi' => ['फोटो छोड़ें', 'पूरा हुआ'],
             'mr' => ['फोटो वगळा', 'झाले'],
             'gu' => ['ફોટો છોડો', 'પૂર્ણ થયું']
         ];
 
-        // Get current language
         $currentLang = $state->language ?? 'en';
         $localizedSkips = $skipCommands[$currentLang] ?? $skipCommands['en'];
+
+        $profile = Profile::where('telegram_user_id', $chatId)->first();
+        $uploadedCount = $profile ? $profile->gallery()->count() : 0;
 
         if (is_string($photoOrText)) {
             $text = mb_strtolower(trim($photoOrText));
 
             if (in_array($text, array_map('mb_strtolower', $localizedSkips))) {
-                return [
-                    'text' => __('messages.profile_photo_skipped'),
-                    'options' => [
-                        'parse_mode' => 'Markdown'
-                    ]
-                ];
+                if ($uploadedCount >= 1) {
+                    return [
+                        'text' => __('messages.profile_photo_skipped'),
+                        'options' => ['parse_mode' => 'Markdown']
+                    ];
+                } else {
+                    return [
+                        'text' => __('messages.profile_photo_required'),
+                        'options' => ['parse_mode' => 'Markdown']
+                    ];
+                }
             }
 
             return ['text' => __('messages.profile_photo_invalid_text')];
@@ -43,6 +49,10 @@ class ProfilePhotoController extends Controller
 
         if (!is_array($photoOrText)) {
             return ['text' => __('messages.profile_photo_invalid')];
+        }
+
+        if ($uploadedCount >= 2) {
+            return ['text' => __('messages.profile_photo_limit_reached')];
         }
 
         $fileId = end($photoOrText)['file_id'] ?? null;
@@ -55,7 +65,6 @@ class ProfilePhotoController extends Controller
             return ['text' => __('messages.profile_photo_save_failed')];
         }
 
-        $profile = Profile::where('telegram_user_id', $chatId)->first();
         if ($profile) {
             Gallery::create([
                 'profile_id' => $profile->id,
@@ -63,14 +72,33 @@ class ProfilePhotoController extends Controller
             ]);
         }
 
+        $uploadedCount++;
+
+        // If 2 images uploaded, suggest proceeding
+        if ($uploadedCount >= 2) {
+            return [
+                'text' => __('messages.profile_photo_max_reached'),
+                'options' => [
+                    'parse_mode' => 'Markdown',
+                    'reply_markup' => json_encode([
+                        'keyboard' => [
+                            [['text' => __('messages.skip_photo')]]
+                        ],
+                        'resize_keyboard' => true,
+                        'one_time_keyboard' => false
+                    ])
+                ]
+            ];
+        }
+
+        // Allow user to upload more or skip
         return [
             'text' => __('messages.profile_photo_uploaded'),
             'options' => [
                 'parse_mode' => 'Markdown',
                 'reply_markup' => json_encode([
                     'keyboard' => [
-                        // [[ 'text' => __('messages.upload_another_photo') ]],
-                        [[ 'text' => __('messages.skip_photo') ]] // show localized "Done" button
+                        [['text' => __('messages.skip_photo')]]
                     ],
                     'resize_keyboard' => true,
                     'one_time_keyboard' => false
@@ -79,29 +107,10 @@ class ProfilePhotoController extends Controller
         ];
     }
 
-    // public static function getQuestion(): string
-    // {
-    //     return "📸 *Please upload your Profile Photo* as an image attachment:";
-    // }
-
     public static function getQuestion(): string
     {
         return __('messages.ask_profile_photo');
     }
-
-    // public static function getOptions(): array
-    // {
-    //     return [
-    //         'parse_mode' => 'Markdown',
-    //         'reply_markup' => json_encode([
-    //             'keyboard' => [
-    //                 [['text' => 'Skip Photo']]
-    //             ],
-    //             'resize_keyboard' => true,
-    //             'one_time_keyboard' => true
-    //         ])
-    //     ];
-    // }
 
     public static function getOptions(): array
     {
@@ -148,5 +157,4 @@ class ProfilePhotoController extends Controller
 
         return $filename;
     }
-
 }

@@ -18,8 +18,8 @@ class ReligionController extends BaseQuestionController
         __('messages.religion_sikhism'),
         __('messages.religion_buddhism'),
         __('messages.religion_jainism'),
-        __('messages.other'),
         __('messages.religion_none'),
+         __('messages.religion_other'),
     ];
 
 
@@ -56,7 +56,7 @@ class ReligionController extends BaseQuestionController
         [['text' => __('messages.religion_hinduism')], ['text' => __('messages.religion_islam')]],
         [['text' => __('messages.religion_christianity')], ['text' => __('messages.religion_sikhism')]],
         [['text' => __('messages.religion_buddhism')], ['text' => __('messages.religion_jainism')]],
-        [['text' => __('messages.other')], ['text' => __('messages.religion_none')]],
+        [['text' => __('messages.religion_none')], ['text' => __('messages.religion_other')]],
     ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true

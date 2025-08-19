@@ -128,8 +128,6 @@ class MatchController extends TelegramController
     //         $this->sendMessage($chatId, $summary, ['parse_mode' => 'Markdown']);
     //     }
     // }
-
-    
     public function findMatches($chatId)
     {
         $preference = Preference::where('telegram_user_id', $chatId)->first();
@@ -150,7 +148,14 @@ class MatchController extends TelegramController
         // ----------- LEVEL 1: Strict Preference Match -----------
         try {
             $profiles = $this->buildQuery($preference, $chatId, $oppositeGender);
+            // Filter out already shown matches
+            // $profiles = $profiles->whereNotIn('id', $shownIds)->values();
             $profiles = $profiles->reject(fn($p) => in_array($p->id, $shownIds))->values();
+
+            // $profiles = $this->buildQuery($preference, $chatId, $oppositeGender)
+            //     ->whereNotIn('id', $shownIds)
+            //     ->get()
+            //     ->values();
         } catch (\Exception $e) {
             Log::error('Match Query Error', [
                 'chat_id' => $chatId,
@@ -169,6 +174,16 @@ class MatchController extends TelegramController
 
 
         if (!$match) {
+
+            Log::info('Running match 2 : Gender, Age, Height, and Income', [
+                'chat_id' => $chatId,
+                'opposite_gender' => $oppositeGender,
+                'min_age' => $preference->partner_min_age,
+                'max_age' => $preference->partner_max_age,
+                'min_height' => $preference->partner_min_height,
+                'max_height' => $preference->partner_max_height,
+                'income_range' => $preference->partner_income_range,
+            ]);
             $query = Profile::query()
                 ->where('id', '!=', $userProfile->id)
                 ->whereRaw('LOWER(gender) = ?', [$oppositeGender])
@@ -222,6 +237,24 @@ class MatchController extends TelegramController
             }
         }
 
+        // ----------- LEVEL 3: Gender + Location (State/City) -----------
+        // if (!$match) {
+        //     Log::info('Running 3nd level match:', [
+        //         'chat_id' => $chatId,
+        //         'opposite_gender' => $oppositeGender,
+        //     ]);
+        //     $query = Profile::query()
+        //         ->where('telegram_user_id', '!=', $chatId)
+        //         ->whereRaw('LOWER(gender) = ?', [$oppositeGender])
+        //         // ->where('state', $userProfile->state)
+        //         ->whereNotIn('id', $shownIds);
+
+        //     // Optionally, also filter by city
+        //     // ->where('city', $userProfile->city);
+
+        //     $match = $query->first();
+        // }
+
         // ----------- No Match Found -----------
         if (!$match) {
             $lastMatch = DailyMatch::where('telegram_user_id', $chatId)
@@ -252,6 +285,15 @@ class MatchController extends TelegramController
             'matched_user_id' => $match->id,
             'shown_at' => now(),
         ]);
+
+        // ----------- Build match summary -----------
+        // $summary = "*👤 Match Found:*\n";
+        // $summary .= $matchMessage . "\n\n"; // ✅ First time is fine
+        // $summary .= "▪️ *Name:* {$match->name}\n";
+        // $summary .= "▪️ *Gender:* {$match->gender}\n";
+        // $summary .= "▪️ *Caste:* {$match->caste}\n";
+        // $summary .= "▪️ *Height:* {$match->height} ft\n";
+        // $summary .= "▪️ *City:* {$match->city}\n";
 
         $summary = "*👤 Match Found:*\n";
         $summary .= $matchMessage . "\n\n";

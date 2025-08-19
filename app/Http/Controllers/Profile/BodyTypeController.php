@@ -32,6 +32,7 @@ class BodyTypeController extends BaseQuestionController
             __('messages.body_type_well_built'),
             __('messages.body_type_curvy'),
             __('messages.body_type_prefer_not_to_say'),
+            __('messages.body_type_other'),
         ];
 
         if (!in_array($text, $validOptions)) {
@@ -66,7 +67,7 @@ class BodyTypeController extends BaseQuestionController
                     [['text' => __('messages.body_type_slim')], ['text' => __('messages.body_type_athletic')]],
                     [['text' => __('messages.body_type_average')], ['text' => __('messages.body_type_heavy')]],
                     [['text' => __('messages.body_type_well_built')], ['text' => __('messages.body_type_curvy')]],
-                    [['text' => __('messages.body_type_prefer_not_to_say')]],
+                    [['text' => __('messages.body_type_prefer_not_to_say')], ['text' => __('messages.body_type_other')]],
                 ],
                 'resize_keyboard' => true,
                 'one_time_keyboard' => true

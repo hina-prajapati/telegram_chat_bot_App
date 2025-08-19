@@ -6,18 +6,22 @@ use App\Models\Preference;
 use Illuminate\Http\Request;
 use App\Models\TelegramUserState;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\BaseQuestionController;
 
 class PartnerSpecificProfessionController extends BaseQuestionController
 {
-     public function handle($chatId, $text, TelegramUserState $state)
+    public function handle($chatId, $text, TelegramUserState $state)
     {
         $text = trim($text);
 
         // Check if the selected profession exists in specific_professions table
         $allowedProfessions = self::allowedProfessions();
+        // Log::info("Partner profession input: " . $text);
+        // Log::info("Allowed options: ", $allowedProfessions);
 
-        if (!in_array($text, $allowedProfessions, true)) {
+
+        if (!in_array($text, $allowedProfessions)) {
             return [
                 'text' => __('messages.partner_specific_profession_invalid_option'),
                 'options' => self::getOptions($state),

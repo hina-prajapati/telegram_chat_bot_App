@@ -27,7 +27,7 @@
                                          alt="Profile" width="40" height="40" class="rounded-circle shadow-sm">
                                 </td> --}}
                                 <td>
-                                    @php
+                                    {{-- @php
                                         $imagePath =
                                             $record->gallery && $record->gallery->image_path
                                                 ? 'uploads/profiles/' . $record->gallery->image_path
@@ -35,7 +35,17 @@
                                     @endphp
 
                                     <img src="{{ asset($imagePath) }}" alt="Profile" width="40" height="40"
-                                        class="rounded-circle shadow-sm">
+                                        class="rounded-circle shadow-sm"> --}}
+                                        @php
+                                    $galleryImage = $record->gallery->first(); // or ->last() if you prefer
+                                    $imagePath = $galleryImage
+                                        ? 'uploads/profiles/' . $galleryImage->image_path
+                                        : 'uploads/profiles/' . ($record->profile_photo ?? 'profile_Pic.jpg');
+                                @endphp
+
+                                <img src="{{ asset($imagePath) }}" alt="Profile" width="40" height="40"
+                                    class="rounded-circle shadow-sm">
+
                                 </td>
 
                                 <td class="fw-semibold">{{ $record->name }}</td>

@@ -282,7 +282,7 @@ class ProfileController extends Controller
         // Update or create preference
         $preferenceData = [
             'partner_marital_status' => $validated['partner_marital_status'],
-            'partner_caste' => $validated['partner_caste'],
+            // 'partner_caste' => $validated['partner_caste'],
             'partner_min_age' => $validated['partner_min_age'],
             'partner_max_age' => $validated['partner_max_age'],
             'partner_max_height' => $validated['partner_max_height'],
@@ -298,9 +298,14 @@ class ProfileController extends Controller
             'partner_specific_profession' => $partnerSpecificProfessionName,
         ];
 
+        // $profile->preference()->updateOrCreate(
+        //     ['profile_id' => $profile->id],
+        //     $preferenceData
+        // );
+
         $profile->preference()->updateOrCreate(
-            ['profile_id' => $profile->id],
-            $preferenceData
+        ['profile_id' => $profile->id], // condition
+        array_merge(['partner_caste' => $request->partner_caste], $preferenceData) // values
         );
 
         // Handle images
@@ -403,5 +408,11 @@ class ProfileController extends Controller
         return redirect()->back()->with('success', 'Profile and preference deleted successfully.');
     }
 
+    public function termsConditions(){
+        return view('terms-conditions');
+    }
 
+    public function home(){
+        return view('pages.home');
+    }
 }
